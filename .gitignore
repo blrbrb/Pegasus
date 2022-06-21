@@ -1,6 +1,17 @@
 # Prerequisites
 *.d
 
+#visual studio caches 
+/.vs 
+
+#Application Resources 
+*.png
+*.wav
+*.jpeg. 
+*.ttf
+*.tif
+
+
 # Compiled Object files
 *.slo
 *.lo

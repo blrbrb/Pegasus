@@ -6,6 +6,7 @@
 //  Copyright © 2020 Eli Reynolds. All rights reserved.
 //
 
+#include "stdafx.h"
 #include "Consumable_Item.hpp"
 
 Consumable_Item::Consumable_Item(unsigned value) :Item(value)

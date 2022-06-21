@@ -5,13 +5,7 @@
 @author Eli Reynolds on 2/5/20
 @copyright © 2020 Eli Reynolds. 
 */
-#include<SFML/Audio.hpp> 
-#include<SFML/Graphics.hpp> 
-#include <SFML/Window.hpp>
-#include <iostream>
-#include <cmath>
-#include <vector> 
-#include <stack> 
+
 
 #ifndef GUI_hpp
 #define GUI_hpp

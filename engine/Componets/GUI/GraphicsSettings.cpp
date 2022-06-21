@@ -18,6 +18,7 @@ GraphicsSettings::GraphicsSettings()
     this->vsync = false;
     this->windowSettings.antialiasingLevel = 0;
     this->Videomodes = sf::VideoMode::getFullscreenModes();
+    
 
             
 }
@@ -53,10 +54,14 @@ void GraphicsSettings::loadfromfile(const std::string path)
                in >> this->resolution.width >> this->resolution.height;
                in >> fullscreen;
                in >> framerate_limit;
+               std::cout << framerate_limit << std::endl; 
                in >> vsync;
                in >> this->windowSettings.antialiasingLevel;
            }
            
            in.close();
            
+           std::cout << "the window init file is being read properly" << std::endl; 
+
+          
        }

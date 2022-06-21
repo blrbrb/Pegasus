@@ -13,12 +13,11 @@
 #ifndef MainMenuState_hpp
 #define MainMenuState_hpp
 
-#include "engineFramework/States/GameState/GameState.hpp" 
-#include "engineFramework/States/Editor/EditorState.hpp"
-#include "Componets/GUI/GUI.hpp"
-#include "engineFramework/States/SettingsState.hpp" 
-#include "Componets/GUI/GraphicsSettings.hpp" 
-
+#include "GameState.hpp" 
+#include "EditorState.hpp"
+#include "GUI.hpp"
+#include "SettingsState.hpp" 
+#include "GraphicsSettings.hpp" 
 
 
 class MainMenuState : public State

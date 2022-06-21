@@ -25,6 +25,7 @@ BattleState::BattleState(StateData* state_data, GameStateData* gamestatedata, Pl
     catch (std::runtime_error& e)
     {
         std::cout << e.what() << std::endl; 
+       
     }
     
     //Player always takes first turn

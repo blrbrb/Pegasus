@@ -80,16 +80,17 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
 
 
 GUI::Button::Button(float x, float y, float width, float height, sf::Font *font, std::string text, unsigned int character_size, const std::string idle_texture, const std::string active_texture, const std::string hover_texture, short unsigned ID)
-{
-    
-    this->ID = ID;
+{ 
+    //std::cout << "Button Constructor Works" << std::endl; 
+    this->ButtonState = IDLE_BUTTON;
+    this->ID = ID; 
        
        this->rectangle.setSize(sf::Vector2f(x,y));
        this->rectangle.setPosition(width, height);
        
-       this->ButtonState = IDLE_BUTTON;
+      
        
-    this-> font = font;
+    this->font = font;
     this->text.setFont(*this->font);
     this->text.setString(text);
     this->text.setFillColor(text_idlecolor);
@@ -114,7 +115,7 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
     }
     catch (std::invalid_argument& e)
     {
-        std::cout << e.exception::what() << std::endl;
+        std::cerr << e.exception::what() << std::endl;
         std::cout << e.what() << std::endl;
         std::cout << "GUI::BUTTON(float x, float y, float width, float height, sf::Font *font, std::string text, unsigned int" << std::endl << "character_size, const std::string idle_texture, const std::string active_texture, const std::string" << std::endl << "hover_texture, short unsigned ID)" << std::endl;
     }

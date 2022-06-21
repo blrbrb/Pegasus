@@ -7,7 +7,8 @@
 //
 
 #include "stdafx.h"
-#include "AnimationComponet.hpp"
+#include "AnimationComponet.hpp" 
+
 
 
 AnimationComponet::AnimationComponet(sf::Sprite& sprite, sf::Texture& texturesheet) :

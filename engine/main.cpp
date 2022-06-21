@@ -11,7 +11,7 @@
 //This code sucks, you know it and I know it.
 //change for commit 
 
-int WinMain(int, char const**)
+int main() 
 {
     system("dir");
     Game game;

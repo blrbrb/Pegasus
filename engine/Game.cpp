@@ -10,7 +10,7 @@
 
 Game::Game() {
     
-   
+    std::cout << "init game" << std::endl; 
     this->initVariables();
     this->initwindow();
     this->initGraphicsSettings();
@@ -18,8 +18,7 @@ Game::Game() {
     this->initstatedata();
     this->initstates(); 
     
-   
-    
+  
     }
 
 
@@ -56,7 +55,7 @@ void Game::initkeys() {
  
  
   */
-   std::ifstream ifs("Supported_Keys.ini");
+   std::ifstream ifs("Init/Supported_Keys.ini");
 
    if (ifs.is_open())
    {
@@ -92,7 +91,8 @@ void Game::initstates() {
 
 void Game::initGraphicsSettings() {
     
-    this->gfxsettings.loadfromfile("Window.ini"); 
+    this->gfxsettings.loadfromfile("Init/Window.ini");
+   
   
 }
 
@@ -108,25 +108,24 @@ void Game::initwindow() {
 */
     
     
-    sf::Image icon;
-    if(!icon.loadFromFile("Blrb.png"))
-    {
-        
-        std::cout << "ERROR CODE GAME::101 || INITWINDOW || UNABLE_TO_LOAD_ICON" << std::endl;
-    }
-   
+    std::string title; 
+    title = "test"; 
     
-    if(this->gfxsettings.fullscreen)
+     if(this->gfxsettings.fullscreen)
         this->window = new sf::RenderWindow(this->gfxsettings.resolution, this->gfxsettings.title, sf::Style::Fullscreen, this->gfxsettings.windowSettings);
-    else
+   
+     else
         this->window = new sf::RenderWindow(this->gfxsettings.resolution, this->gfxsettings.title, sf::Style::Titlebar | sf::Style::Close, this->gfxsettings.windowSettings);
         
+      
         
-        
-    this->window->setFramerateLimit(this->gfxsettings.framerate_limit);
-    this->window->setVerticalSyncEnabled(this->gfxsettings.vsync);
+   this->window->setFramerateLimit(this->gfxsettings.framerate_limit);
+    this->window->setVerticalSyncEnabled(this->gfxsettings.vsync);    
+
+
+    std::cout << "window created" << std::endl; 
     
-    //is->window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+  
     
 }
 
@@ -236,23 +235,23 @@ void Game::UpdateEvents() {
 
 void Game::render() {
     
-    this->window->clear(); 
+    this->window->clear(sf::Color::Black); 
 
-    if (!this->states.empty()) {
-        this->states.top()->render();
-    }
-
-   this->window->display();
+    if (!this->states.empty()) 
+         this->states.top()->render();
     
+  
+   this->window->display();
+                                                       
     
   }
         
 void Game::UpdateDT()
 {
     
-    //Updates the time variable with the time taken for each frame to render
+   // Updates the time variable with the time taken for each frame to render
     this-> dt = this -> dtClock.restart().asSeconds();
-    //std::cout << this->dt  << std::endl;
+    std::cout << this->dt  << std::endl;
 
     
 }
@@ -261,9 +260,7 @@ void Game::UpdateDT()
 void Game::running() {
     
     while (this->window->isOpen()) {
-        
       
-    
         this->UpdateDT();
         this->Update();
          this->render();

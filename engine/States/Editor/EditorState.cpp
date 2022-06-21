@@ -7,9 +7,9 @@
 //
 #include "stdafx.h"
 #include "EditorState.hpp"
-#include "engineFramework/States/Editor/EnemyEditorMode.hpp"
-#include "engineFramework/States/Editor/EnviornmentalMode.hpp"
-#include "engineFramework/States/Editor/DefaultMode.hpp" 
+#include "EnemyEditorMode.hpp"
+#include "EnviornmentalMode.hpp"
+#include "DefaultMode.hpp" 
 
 EditorState::EditorState(StateData* state_data)
 : State(state_data)

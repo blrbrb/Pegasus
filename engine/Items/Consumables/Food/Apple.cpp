@@ -6,6 +6,7 @@
 //  Copyright © 2020 Eli Reynolds. All rights reserved.
 //
 
+#include "stdafx.h"
 #include "Apple.hpp"
 
 Apple::Apple(unsigned int value) : Consumable_Item(value)

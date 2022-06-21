@@ -13,12 +13,12 @@
 
 //Core
 #include "Enemy.hpp"
-#include "EnemySystem/EnemySystem.hpp"
+#include "EnemySystem.hpp"
 
 
 //Blrb
-#include "Blrb/Blrb.hpp"
-#include "Blerb/Blerb.hpp"
+#include "Blrb.hpp"
+#include "Blerb.hpp"
 
 
 #define Enemies_Include_h

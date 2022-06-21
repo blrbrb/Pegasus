@@ -163,7 +163,7 @@ void PlayerGUI::updateCharacterInfoTag()
 
 void PlayerGUI::updateCharacterText() 
 {
-    this->character_info.setString("test"); 
+   // this->character_info.setString("test"); 
 
 }
 
@@ -211,8 +211,8 @@ void PlayerGUI::renderEXPbar(sf::RenderTarget& target)
 
 void PlayerGUI::renderCharacterInfo(sf::RenderTarget& target) 
 {
-    target.draw(this->info_tag_interior); 
-    target.draw(this->character_info);
+   // target.draw(this->info_tag_interior); 
+   // target.draw(this->character_info);
 
 
 

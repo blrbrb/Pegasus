@@ -14,6 +14,7 @@ State::State(StateData* state_data)  {
     
     if (state_data != nullptr) {
         this->state_data = state_data;
+        std::cout << "state data is working" << std::endl; 
     } 
     else 
     {

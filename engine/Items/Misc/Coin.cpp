@@ -6,6 +6,7 @@
 //  Copyright © 2020 Eli Reynolds. Apache License .
 //
 
+#include "stdafx.h"
 #include "Coin.hpp"
 
 
