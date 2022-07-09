@@ -76,6 +76,9 @@ private:
         void initGUI();
         void initmodes(); 
       
+        //Exception Handler Functions 
+        void handlefonts(); 
+
      
     
 

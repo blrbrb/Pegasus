@@ -44,8 +44,6 @@ public:
     void clear();
    
  
-    const bool loadfromfile(const std::string filename);
-    const bool savetofile(const std::string filename);
  
     
     //Accessors

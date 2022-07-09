@@ -342,7 +342,7 @@ const sf::Texture* TileMap::getTileSheet() const
     return &this->tileTextureSheet;
 }
 
-void TileMap::savetofile(const std::string filename)
+bool TileMap::savetofile(const std::string filename)
 {
     
 /*!
@@ -401,14 +401,19 @@ void TileMap::savetofile(const std::string filename)
     {
         std::cout << "ERROR CODE TILEMAP:392 || TILEMAP::SAVETOFILE || COULD NOT SAVE" << std::endl;
         
-        throw std::runtime_error("ERROR CODE TILEMAP:392 || TILEMAP::SAVETOFILE || COULD NOT SAVE");
+        throw std::runtime_error("ERROR CODE TILEMAP:392 || TILEMAP::SAVETOFILE || COULD NOT SAVE"); 
+
+        return false; 
         
     }
     
     out.close();
     
 
-    //exeption handling block
+
+    return true; 
+    //Create a catch handler wherever this function is called, since the scope of the throw statement 
+    //makes it so that it's destroyed immediatley after the function has returned a value. 
     
 
 }
@@ -416,7 +421,7 @@ void TileMap::savetofile(const std::string filename)
 
 
 
-void TileMap::loadfromfile(const std::string filename)
+bool TileMap::loadfromfile(const std::string filename)
 {
    
     
@@ -516,9 +521,13 @@ void TileMap::loadfromfile(const std::string filename)
         std::cout << "ERROR CODE TILEMAP:3 || LOADFROMFILE || COULD NOT LOAD" << std::endl;
         
         throw std::runtime_error("ERROR CODE TILEMAP:3 || LOADFROMFILE || COULD NOT LOAD");
+
+        return false; 
     }
     
-    in.close();
+    in.close(); 
+
+    return true; 
 }
 
 void TileMap::update(Entity *entity, const float& dt)

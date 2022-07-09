@@ -27,8 +27,8 @@ Player::Player(float x, float y, sf::Texture& texturesheet)
 Player::~Player()
 {
     
-    delete this->inventory; 
-    delete this->sword; 
+   // delete this->inventory; 
+  
     
 }
 
@@ -41,14 +41,14 @@ void Player::initcomponets()
     this->create_hitbox_componet(this->sprite, 5, 5, 55.f, 60.f);    //Note: is lower because cropped for more accurate collision
     this->create_attribute_componet(1);
     this->create_skill_component();
-    this->sword = new Sword(2, "sword.png");
+  
     
 
 }
 
 void Player::initinventory()
 {
-    this->inventory = new Inventory(100);
+   this->inventory = new Inventory(100);
 }
 
 
@@ -56,7 +56,7 @@ void Player::initinventory()
 
 void Player::initvariables()
 {
-    this->attacking = false; 
+    //this->attacking = false; 
 }
 
 void Player::initanimations()
@@ -149,7 +149,7 @@ void Player::render(sf::RenderTarget &target, sf::Shader* shader,const sf::Vecto
         shader->setUniform("hasTexture", true);
         shader->setUniform("light", light);
         target.draw(this->sprite, shader);
-        this->sword->render(target, shader);
+        
        
     }
 

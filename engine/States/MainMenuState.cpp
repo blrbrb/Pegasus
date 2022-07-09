@@ -136,12 +136,12 @@ void MainMenuState::initFonts() {
     try
     {
 
-        if (!this->font.loadFromFile("Resources/Fonts/PressStart2P.ttf"))
+        if (!this->font.loadFromFile("Resources/Assets/Fonts/PressStart2P.ttf"))
         {
             std::cout << "Font Not loading" << std::endl;
 
             std::cout << "ERROR CODE 07: MainMenuState::initFonts COULD NOT LOAD FONT FROM FILE" << std::endl;
-            throw std::runtime_error("ERROR CODE 07: MainMenuState::initFonts COULD NOT LOAD FONT FROM FILE");
+            throw std::runtime_error("ERROR unable to load font file MainMenuState lin 144");
         }
     }
         catch (std::runtime_error& e) {

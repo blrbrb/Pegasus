@@ -81,7 +81,7 @@ void PauseMenu::addbutton(const std::string key, const unsigned charSize, const 
      float x = this->container.getPosition().x / 4.f  + this->container.getSize().x / 4.f;
     
 
-    this->buttons[key] = new GUI::Button(width, height, x, y, &this->font, text, charSize, "red_button06.png", "red_button07.png", "red_button07.png");
+    this->buttons[key] = new GUI::Button(width, height, x, y, &this->font, text, charSize, "Resources/GUI/Buttons/red_button06.png", "Resources/GUI/Buttons/red_button07.png", "Resources/GUI/Buttons/red_button07.png");
   
     
    

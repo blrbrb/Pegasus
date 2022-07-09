@@ -47,12 +47,7 @@ void SettingsState::initGUI() {
     
     this->background.setSize(sf::Vector2f(static_cast<float>(vm.width), static_cast<float>(vm.height)));
     
-    if (!this->backgroundTexture.loadFromFile("EngineLogo.png"))
-    {
-        std::cout << "ERROR CODE 04: SettingsState::INITBACKGROUND unable to load background" << std::endl;
-        throw std::runtime_error("ERROR CODE 04: SettingsState::INITBACKGROUND unable to load background");
-    }
-    
+
     this->background.setTexture(&this->backgroundTexture);
     
     
@@ -119,7 +114,7 @@ void SettingsState::initFonts()
 {
     
     
-    if (!this->font.loadFromFile("PressStart2P.ttf"))
+    if (!this->font.loadFromFile("Resources/Fonts/PressStart2P.ttf"))
     {
         std::cout << "ERROR CODE 05: SettingsState::initFonts COULD NOT LOAD FONT FROM FILE" << std::endl;
         throw std::runtime_error("ERROR CODE 05: SettingsState::initFonts COULD NOT LOAD FONT FROM FILE");

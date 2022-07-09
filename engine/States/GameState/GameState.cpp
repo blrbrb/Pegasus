@@ -29,10 +29,16 @@ GameState::GameState(StateData* state_data)
         this->initdialougesystem();
         
     }
-    catch (std::runtime_error& e)
+    catch (std::exception& e)
     {
-        std::cerr << e.what();
-        
+        std::cout << e.what() << std::endl; 
+        std::cerr << e.what() << std::endl;  
+
+
+        //this->handlefonts(); 
+       // this->handletilemap(); 
+    
+  
     }
     
      //this->activEnemies.push_back(new Blrb(500.f, 800.f,this->textures["ENEMY_SHEET"]));
@@ -61,21 +67,22 @@ GameState::~GameState()
 
 
 void GameState::initvariables()
-{
+{ 
+    
     
 }
 
 
 void GameState::initdialougesystem()
 {
-    this->dialougeSystem = new DialougeSystem("PressStart2P.ttf");
+    this->dialougeSystem = new DialougeSystem("Resources/Assets/Fonts/PressStart2P.ttf");
 }
 
 void GameState::initdeferedrender() {
 
     if(!this->rendertexture.create(this->state_data->gfxsettings->resolution.width,this->state_data->gfxsettings->resolution.height))
     {
-        throw std::runtime_error("unable to create rendertextrue");
+        throw std::exception("unable to create rendertextrue GameState Line 78");
     }
 
     this->rendersprite.setTexture(this->rendertexture.getTexture());
@@ -100,13 +107,13 @@ void GameState::initworldbounds()
 }
 
 
+
+
 void GameState::initshaders()
 {
-    if(!this->core_shader.loadFromFile("vertex_shader.vert", "fragment_shader.frag"))
-    {
-        std::cout << "ERROR Unable to load core_shader Gamestate line 71" << std::endl;
-        
-        throw std::runtime_error("ERROR Unable to load core_shader Gamestate line 71");
+    if(!this->core_shader.loadFromFile("Data/Shader/vertex_shader.vert", "Data/Shader/fragment_shader.frag"))
+    { 
+        throw std::exception("ERROR Unable to load shaders Gamestate line 71");
         
     }
     
@@ -129,35 +136,34 @@ void GameState::initview()
 
 void GameState::initkeybinds() {
   
-    std::ifstream ifs("GameState_Keys.ini", std::ifstream::in);
+    std::ifstream ifs("Init/GameState_Keys.ini", std::ifstream::in);
 
-      if (ifs.is_open())
-      {
-          std::string key = "";
-          std::string key2 = "";
-          std::cout << "GAmestate Keybinds exist"; 
-          while (ifs >> key >> key2)
-          {
-              this->keybinds[key] = this->supportedkeys->at(key2);
-              std::cout << key << " " << key2; 
-          }
-      }
    
-    for (auto i : this->keybinds)
-     {
-        
-         std::cout << i.first << " " << i.second << "\n";
-         
-     }
-   
+    if (ifs.is_open())
+    {
+        std::string key = "";
+        std::string key2 = "";
+        //std::cout << "GAmestate Keybinds exist";
+        while (ifs >> key >> key2)
+        {
+            this->keybinds[key] = this->supportedkeys->at(key2);
+            std::cout << key << " " << key2;
+        }
+    }
+    else {
+        throw std::exception("ERROR unable to load GameState Keybinds GameState lin 145");
+    }
+            
+
+
+      
       ifs.close();
   }
 
 void GameState::initplayerGUI()
 {
     this->playerGUI = new PlayerGUI(this->player, this->state_data->gfxsettings->resolution);
-    this->buffer.loadFromFile("Beep.wav");
-    this->sound.setBuffer(buffer);
+    
     
 }
 
@@ -165,28 +171,28 @@ void GameState::initplayerGUI()
 void GameState::inittextures()
 {
     
-    if (!this->textures["PLAYER_SHEET"].loadFromFile("pony2.png"))
+    if (!this->textures["PLAYER_SHEET"].loadFromFile("Resources/Assets/Entity/PlayerSheets/pony3.png"))
     {
-        std::cout << "ERROR_C 02: GAMESTATE::INITTEXTURES Could Not Load PLAYER_SHEET textures" << std::endl;
+        std::cout << "ERROR Could not load Player Sheet texture GameState lin 168" << std::endl;
        
-        throw std::runtime_error("ERROR CODE 02: GAMESTATE::INITTEXTURES Could Not Load PLAYER_SHEET textures");
+        throw std::exception("ERROR Could not load Player Sheet texture GameState lin 168");
     }
     
-    if (!this->textures["ENEMY_SHEET"].loadFromFile( "Blrb.png"))
+    if (!this->textures["ENEMY_SHEET"].loadFromFile("Resources/Assets/Entity/EnemySheets/Blrb.png"))
     {
-        std::cout << "ERROR_C 02: GAMESTATE::INITTEXTURES Could Not Load ENEMY_SHEET textures" << std::endl;
+        std::cout << "ERROR Could Not load Enemy Sheet textures GameState lin 171" << std::endl;
         
-        throw std::runtime_error("ERROR CODE 02: GAMESTATE::INITTEXTURES Could Not Load ENEMY_SHEET textures");
+        throw std::exception("ERROR Could Not load Enemy Sheet textures GameState lin 175");
     }
     
 }
 
 void GameState::initfonts()
 {
-    if (!this->font.loadFromFile("PressStart2P.ttf"))
+    if (!this->font.loadFromFile("Resources/Assets/PressStart2P.ttf"))
        {
-           std::cout << "ERROR_C_03: GameState::initFonts COULD NOT LOAD FONT FROM FILE" << std::endl;
-           throw std::runtime_error("ERROR_C_03: GameState::initFonts COULD NOT LOAD FONT FROM FILE");
+           std::cout << "ERROR Could not load font from font file" << std::endl;
+           throw std::exception("ERROR Could not load font from font file GameState lin 185");                           
        }
 }
 
@@ -219,8 +225,12 @@ void GameState::initpausemenu()
 
 void GameState::inittilemap()
 {
-    this->Tilemap = new TileMap(this->state_data->gridsize, 100, 100, "TileMap.png");
-    this->Tilemap->loadfromfile("text.slmp");
+    this->Tilemap = new TileMap(this->state_data->gridsize, 100, 100, "Resources/Assets/Tiles/sheet.png");
+   
+    
+  
+   
+ 
 }
 
 
@@ -392,7 +402,7 @@ void GameState::render(sf::RenderTarget* target) {
     this->rendertexture.setView(this->view);
     
     this->Tilemap->renderlighttile(this->rendertexture, &this->core_shader);
-    
+   
     this->Tilemap->render(this->rendertexture,this->ViewGridPosition, false, &this->core_shader, this->player->getCenter());
     
     this->player->render(this->rendertexture, &this->core_shader, this->player->getCenter(), false);
@@ -405,7 +415,7 @@ void GameState::render(sf::RenderTarget* target) {
     
     this->Tilemap->DefferedRender(this->rendertexture, &this->core_shader,this->player->getCenter());
     
-    this->dialougeSystem->render(this->rendertexture);
+    //this->dialougeSystem->render(this->rendertexture);
     
     this->rendertexture.setView(this->rendertexture.getDefaultView());
     
@@ -504,7 +514,69 @@ void GameState::initenemysystem()
 
 }
 
+void GameState::handletilemap()
+{
+    std::cout << "Searching for useable custom TileMap data..." << std::endl;
+    std::string custom_tilemap_path = "";
 
+    for (auto& p : std::filesystem::recursive_directory_iterator("Data/TileMap/"))
+    {
+        if (p.path().extension() == ".slmp") {
+            std::cout << p.path().stem().string() << std::endl;
+            std::cout << "custom TileMap data found!" << std::endl;
+            custom_tilemap_path = p.path().string();
+            break;
+        }
+    }
+    std::cout << custom_tilemap_path << std::endl;
+    try {
+        this->Tilemap->loadfromfile(custom_tilemap_path);
+    } 
+
+    catch (std::runtime_error& e) 
+    {
+        std::cout << e.what() << std::endl; 
+        std::cerr << e.what() << std::endl; 
+    
+    
+    }
+    std::cout << "Custom TileMap data found!" << std::endl;
+
+}
+
+void GameState::handleshader()
+{
+
+
+}
+
+void GameState::handlekeybinds()
+{
+
+
+
+}
+
+void GameState::handlefonts() 
+{
+
+        std::cout << "Searching for useable custom font files..." << std::endl;
+        std::string custom_font_path = "";
+
+        for (auto & p : std::filesystem::recursive_directory_iterator("Resources/Assets/Fonts"))
+        {
+            if (p.path().extension() == ".ttf") {
+                std::cout << p.path().stem().string() << std::endl;
+                std::cout << "custom font files found!" << std::endl;
+                custom_font_path = p.path().string();
+                break;
+            }
+        }
+        std::cout << custom_font_path << std::endl;
+        this->font.loadFromFile(custom_font_path); 
+        std::cout << "Custom Font Files Loaded!" << std::endl; 
+       
+}
 
     
 

@@ -49,7 +49,7 @@ StatusComponet::~StatusComponet()
 
 void StatusComponet::initsounds()
 {
-    this->buffer.loadFromFile("LevelUp.wav");
+   //this->buffer.loadFromFile("LevelUp.wav");
     this->Levelsound.setBuffer(buffer);
 }
 

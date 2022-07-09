@@ -33,7 +33,7 @@ PlayerGUI::~PlayerGUI()
 
 void PlayerGUI::initMONEY()
 {
-    this->Coins = new GUI::Icon(GUI::pixelpercentX(92, vm), GUI::pixelpercentY(0, vm), "coins.png");
+    this->Coins = new GUI::Icon(GUI::pixelpercentX(92, vm), GUI::pixelpercentY(0, vm), "Resources/Assets/coins.png");
     this->CurrentCoins.setCharacterSize(GUI::calcCharSize(vm, 100));
     this->CurrentCoins.setFillColor(sf::Color::White);
     this->CurrentCoins.setFont(font);
@@ -77,7 +77,7 @@ void PlayerGUI::initinventory()
 
 void PlayerGUI::initfont()
 {
-    this->font.loadFromFile("PressStart2P.ttf");
+    this->font.loadFromFile("Resources/Assets/Fonts/PressStart2P.ttf");
 } 
 
 

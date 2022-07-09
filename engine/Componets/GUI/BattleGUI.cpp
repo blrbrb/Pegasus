@@ -42,7 +42,7 @@ void BattleGUI::inittext()
 
 void BattleGUI::initfont()
 {
-    if (!this->font.loadFromFile("PressStart2P.ttf"))
+    if (!this->font.loadFromFile("Resources/Assets/Fonts/PressStart2P.ttf"))
        {
            throw std::runtime_error("Error Code 34 || PlayerGUI::PlayerGUI::initfont() || unable to load font from file");
        }

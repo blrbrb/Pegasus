@@ -1,21 +1,4 @@
-﻿  animationComponet.cpp
-  Player.cpp
-  Game.cpp
-  Sword.cpp
-  main.cpp
-  TileMap.cpp
-  DefaultMode.cpp
-  EditorModes.cpp
-  EditorState.cpp
-  EnemyEditorMode.cpp
-  EnviornmentalMode.cpp
-  BattleState.cpp
-  GameState.cpp
-  MainMenuState.cpp
-  NormalTile.cpp
-  Tile.cpp
-  Generating Code...
-C:\Users\elire\source\repos\Pegasus\engine\map\TileMap.cpp(634): warning C4715: 'TileMap::TileEmpty': not all control paths return a value
+﻿  GameState.cpp
   Pegasus .vcxproj -> C:\Users\elire\source\repos\Pegasus\x64\Debug\Pegasus .exe
   C:\Users\elire\source\repos\Pegasus\packages\SFML-cpp.redist.2.5.1.1\build\native\bin\x64\Debug\openal32.dll
   1 File(s) copied

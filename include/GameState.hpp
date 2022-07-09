@@ -151,6 +151,14 @@ private:
     void initvariables();
     void initdialougesystem();
     void initworldbounds(); 
+
+
+    //Exception handler Functions 
+    void handletilemap(); 
+    void handleshader(); 
+    void handlekeybinds(); 
+    void handlefonts(); 
+  
   
 
     

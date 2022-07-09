@@ -111,8 +111,8 @@ public:
     
     //Functions
     void RemoveTile(const int x, const int y, const int z, const int type);
-    void savetofile(const std::string filename);
-    void loadfromfile(const std::string filename);
+    bool savetofile(const std::string filename);
+    bool loadfromfile(const std::string filename);
    
     
    

@@ -103,13 +103,3 @@ const bool Inventory::remove(const unsigned int index)
     return false; 
 }
 
-const bool Inventory::loadfromfile(const std::string filename)
-{
-    return false;
-}
-
-const bool Inventory::savetofile(const std::string filename)
-{
-    return false; 
-}
-

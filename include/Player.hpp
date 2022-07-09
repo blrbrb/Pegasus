@@ -11,8 +11,7 @@
 #include "Entity.hpp"
 #include "Inventory.hpp"
 #include "Item.hpp" 
-#include "Weapon.hpp" 
-#include "Sword.hpp"
+#include "PlayerGUI.hpp"
 
 class Entity; 
 
@@ -28,16 +27,12 @@ private:
     
     
     
-    Sword* sword; 
+   
     
     Inventory* inventory;
     
     //Variables
-    bool attacking;
-    
-    
-    sf::Texture weapon;
-    sf::Sprite Weapon; 
+ 
 
 public:
 

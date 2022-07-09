@@ -17,6 +17,7 @@ class DialougeSystem
     
 private:
     class Textbox
+
     {
     private:
         

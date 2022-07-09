@@ -52,7 +52,7 @@ private:
     
 public:
     
-    DefaultMode(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata);
+    DefaultMode(StateData* statedata,TileMap* tilemap, EditorStateData* editorstatedata);
     virtual ~DefaultMode();
     
     //Functions

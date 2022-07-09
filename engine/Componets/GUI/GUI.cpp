@@ -512,8 +512,8 @@ GUI::TextureSelector::TextureSelector(float x, float y,float width, float height
     this->active = false;
     this->gridsize = gridsize;
     
-    this->texturerect.width = 48;
-    this->texturerect.height = 48;
+    this->texturerect.width = 17;
+    this->texturerect.height = 17;
     this->hidden = false;
     
     this->hide = new GUI::Button(x, y, 36, 35, "red_boxCross.png", "grey_box.png", "red_boxTick.png");
@@ -557,11 +557,11 @@ void GUI::TextureSelector::update(const sf::Vector2i& MousePosWindow, const floa
           {
               this->active = true;
               
-              this->MousePosGrid.x = (MousePosWindow.x - static_cast<int>(this->bounds.getPosition().x)) / static_cast<unsigned>(48);
-              this->MousePosGrid.y = (MousePosWindow.y - static_cast<int>(this->bounds.getPosition().y)) / static_cast<unsigned>(48);
+              this->MousePosGrid.x = (MousePosWindow.x - static_cast<int>(this->bounds.getPosition().x)) / static_cast<unsigned>(17);
+              this->MousePosGrid.y = (MousePosWindow.y - static_cast<int>(this->bounds.getPosition().y)) / static_cast<unsigned>(17);
               
-              this->selector.setPosition(this->bounds.getPosition().x + this->MousePosGrid.x * 48,
-                                         this->bounds.getPosition().y + this->MousePosGrid.y * 48);
+              this->selector.setPosition(this->bounds.getPosition().x + this->MousePosGrid.x * 17,
+                                         this->bounds.getPosition().y + this->MousePosGrid.y * 17);
               
               //Update the Texture Rectangle
               
@@ -641,8 +641,8 @@ const bool& GUI::TextureSelector::getMulitSelect() const
 GUI::CheckBox::CheckBox(float x, float y)
 {
     //HARD CODED CHECK BOX TEXTURES
-    this->idle_box.loadFromFile("grey_box.png");
-    this->active_box.loadFromFile("red_boxCheckmark.png");
+    this->idle_box.loadFromFile("Resources/GUI/TickBox/Grey/grey_box.png");
+    this->active_box.loadFromFile("Resources/GUI/TickBox/Orange/red_boxCheckmark.png");
     
     this->box.setSize(sf::Vector2f(static_cast<float>(this->idle_box.getSize().x), static_cast<float>(this->idle_box.getSize().y)));
     

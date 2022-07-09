@@ -106,7 +106,7 @@ void Entity::initvariables()
 
 void Entity::settexture(sf::Texture& texture)
 {
-    this->texture = &texture;
+    //this->texture = &texture;
     this->sprite.setTexture(texture);
     
 }

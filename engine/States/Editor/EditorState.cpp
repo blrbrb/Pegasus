@@ -72,7 +72,7 @@ void EditorState::initButtons()
 
 void EditorState::inittilemap()
 {
-    this->Tilemap = new TileMap(this->gridsize, 100, 100, "TileMap.png");
+    this->Tilemap = new TileMap(this->gridsize, 100, 100, "Resources/Assets/Tiles/sheet.png");
 
 }
 
@@ -95,8 +95,7 @@ void EditorState::initpausemenu()
     
     this->pMenu->addbutton("Editor_Pause_Quit_Button", GUI::calcCharSize(vm), "Quit", GUI::pixelpercentX(12.f, vm), GUI::pixelpercentY(6.f, vm), 150.f);
     this->pMenu->addbutton("Editor_Pause_Save_Button", GUI::calcCharSize(vm), "Save", GUI::pixelpercentX(12.f, vm), GUI::pixelpercentY(6.f, vm), 400.f);
-    this->pMenu->addbutton("Editor_Pause_Load_Button", GUI::calcCharSize(vm), "Load", GUI::pixelpercentX(12.f, vm),
-                           GUI::pixelpercentY(6.f, vm), 550.f);
+    this->pMenu->addbutton("Editor_Pause_Load_Button", GUI::calcCharSize(vm), "Load", GUI::pixelpercentX(12.f, vm), GUI::pixelpercentY(6.f, vm), 550.f);
     
 }
 
@@ -116,7 +115,7 @@ void EditorState::updatepausemenubuttons()
         //handle TileMap saving errors
         try
         {
-            this->Tilemap->savetofile("text.slmp");
+            this->Tilemap->savetofile("Data/text.slmp");
         }
         
         catch (std::runtime_error& e)
@@ -131,7 +130,7 @@ void EditorState::updatepausemenubuttons()
     {
         try
         {
-            this->Tilemap->loadfromfile("text.slmp");
+            this->Tilemap->loadfromfile("Data/text.slmp");
         }
         
         catch (std::runtime_error& e)
@@ -147,7 +146,7 @@ void EditorState::updatepausemenubuttons()
 void EditorState::initkeybinds()
 {
   
-    std::ifstream ifs("EditorState_Keys.ini", std::fstream::in);
+    std::ifstream ifs("Init/EditorState_Keys.ini", std::fstream::in);
 
          if (ifs.is_open())
          {
@@ -183,6 +182,27 @@ void EditorState::initmodes()
     this->activeMode = EDITOR_MODES::DEFAULT_MODE;
 }
 
+void EditorState::handlefonts()
+{
+
+    std::cout << "Searching for useable custom font files..." << std::endl;
+    std::string custom_font_path = "";
+
+    for (auto& p : std::filesystem::recursive_directory_iterator("Resources/Assets/Fonts"))
+    {
+        if (p.path().extension() == ".ttf") {
+            std::cout << p.path().stem().string() << std::endl;
+            std::cout << "custom font files found!" << std::endl;
+            custom_font_path = p.path().string();
+            break;
+        }
+    }
+    std::cout << custom_font_path << std::endl;
+    this->font.loadFromFile(custom_font_path);
+    std::cout << "Custom Font Files Loaded!" << std::endl;
+
+}
+
 void EditorState::initsidebar()
 {
     //config the sidebar
@@ -207,10 +227,10 @@ void EditorState::initGUI()
 
 void EditorState::initFonts() {
     
-    if (!this->font.loadFromFile("PressStart2P.ttf"))
+    if (!this->font.loadFromFile("Resources/Assets/Fonts/PressStart2P.ttf"))
     {
-        std::cout <<  "ERROR CODE EditorState:1 || EditorState::initFonts || COULD NOT LOAD FONT FROM FILE CHECK CONSTRUCTOR" << std::endl;
-        throw std::runtime_error("ERROR CODE EditorState:1 || EditorState::initFonts || COULD NOT LOAD FONT FROM FILE CHECK CONSTRUCTOR");
+        
+        throw std::exception("ERROR unable to load default font file EditorState lin 233"); 
         
     }
     
