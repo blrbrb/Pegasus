@@ -13,7 +13,7 @@ DefaultMode::DefaultMode(StateData *statedata, TileMap* tilemap, EditorStateData
 {
     this->initvariables();
     this->inittext();
-    this->initgrid();
+    //this->initgrid();
     this->initGUI();
 
 
@@ -247,7 +247,7 @@ void DefaultMode::renderGUI(sf::RenderTarget &target)
            
            for(size_t i2 =0; i2 < grid.size(); i2++)
              {
-                 target.draw(this->grid[i2]);
+                 //target.draw(this->grid[i2]);
              }
            
            
@@ -276,7 +276,7 @@ void DefaultMode::render(sf::RenderTarget& target)
 
 void DefaultMode::initvariables()
 {
-    this->TextureRect = sf::IntRect(0, 0, 17, 17);
+    this->TextureRect = sf::IntRect(0, 0, 48, 48);
     this->collision = false;
     this->type = TileTypes::DEFAULT;
     this->layer = 0;

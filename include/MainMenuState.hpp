@@ -28,6 +28,7 @@ class MainMenuState : public State
         void updateInput(const float& dt);
         void update(const float& dt);
         void updatebuttons();
+        void updateevents();
            
         //Render Functions
         void renderbuttons(sf::RenderTarget& target);

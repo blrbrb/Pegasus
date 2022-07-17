@@ -211,6 +211,19 @@ void SettingsState::renderGUI(sf::RenderTarget& target)
    
 }
 
+void SettingsState::updateevents()
+{
+
+
+
+
+
+
+}
+
+
+
+
 void SettingsState::updateGUI(const float& dt) {
     
     //GUI element functionality

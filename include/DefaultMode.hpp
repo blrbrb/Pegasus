@@ -56,7 +56,7 @@ public:
     virtual ~DefaultMode();
     
     //Functions
-    
+   
     void updateInput(const float& dt);
     void update(const float& dt);
     void updateGUI(const float& dt);

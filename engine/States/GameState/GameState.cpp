@@ -189,7 +189,7 @@ void GameState::inittextures()
 
 void GameState::initfonts()
 {
-    if (!this->font.loadFromFile("Resources/Assets/PressStart2P.ttf"))
+    if (!this->font.loadFromFile("Resources/Assets/Fonts/PressStart2P.ttf"))
        {
            std::cout << "ERROR Could not load font from font file" << std::endl;
            throw std::exception("ERROR Could not load font from font file GameState lin 185");                           
@@ -199,8 +199,9 @@ void GameState::initfonts()
 
 
 void GameState::initplayers()
-{
-    this->player = new Player(100,50, this->textures["PLAYER_SHEET"]);
+{ 
+    
+    this->player = new Player(0,50, this->textures["PLAYER_SHEET"]);
     
 }
 
@@ -227,10 +228,7 @@ void GameState::inittilemap()
 {
     this->Tilemap = new TileMap(this->state_data->gridsize, 100, 100, "Resources/Assets/Tiles/sheet.png");
    
-    
-  
    
- 
 }
 
 
@@ -354,6 +352,7 @@ void GameState::updatePlayerGUI(const float &dt)
 void GameState::updatePlayerInput(const float& dt)
 {
    //check for a quit
+
     
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_RIGHT"))))
     {
@@ -394,16 +393,24 @@ void GameState::updatePlayerInput(const float& dt)
 
 void GameState::render(sf::RenderTarget* target) {
   
-    if(!target)
+
+    //There is clearly a render layering issue here, the tilemap refuses to render at all. Possible causes: 
+    //There's something fucky with the defered render 
+    //there's something fucky with the actual renderSprite. 
+    //There's something fucky with the order that the renders are being called, and assigned to the rendersprite. 
+    //The rendertexture is broken. 
+
         target = this->window;
     
     this->rendertexture.clear();
+
+    this->Tilemap->render(this->rendertexture, this->ViewGridPosition, false, &this->core_shader, this->player->getCenter());
     
     this->rendertexture.setView(this->view);
     
-    this->Tilemap->renderlighttile(this->rendertexture, &this->core_shader);
+    //this->Tilemap->renderlighttile(this->rendertexture, &this->core_shader);
    
-    this->Tilemap->render(this->rendertexture,this->ViewGridPosition, false, &this->core_shader, this->player->getCenter());
+   
     
     this->player->render(this->rendertexture, &this->core_shader, this->player->getCenter(), false);
     
@@ -429,12 +436,22 @@ void GameState::render(sf::RenderTarget* target) {
     
    
     
-   // this->rendermodes(target);
-    
     this->rendertexture.display();
     //this->rendersprite.setTexture(this->rendertexture.getTexture());
     target->draw(this->rendersprite);
 }
+
+void GameState::updateevents()
+{
+
+
+
+
+}
+
+
+
+
 
 
 void GameState::checkforendstate() {
@@ -560,7 +577,7 @@ void GameState::handlekeybinds()
 void GameState::handlefonts() 
 {
 
-        std::cout << "Searching for useable custom font files..." << std::endl;
+        std::cout << "Searching for useable custom font files..." << std::endl;   
         std::string custom_font_path = "";
 
         for (auto & p : std::filesystem::recursive_directory_iterator("Resources/Assets/Fonts"))

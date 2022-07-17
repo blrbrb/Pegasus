@@ -291,8 +291,7 @@ void EditorState::update(const float& dt) {
 
 void EditorState::updateInput(const float& dt) {
     
-    std::cout << this->keybinds.at("CLOSE"); 
-    //Scroll the World Builder View 
+  
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_CAMERA_RIGHT"))))
     {
         this->mainview.move(this->cameraspeed * dt, 0.f);
@@ -414,6 +413,20 @@ void EditorState::updatebuttons()
     }
     
 }
+
+void EditorState::updateevents()
+{
+
+
+
+
+
+
+
+}
+
+
+
 
 
 void EditorState::updateEditorinput(const float& dt)

@@ -12,7 +12,7 @@
 
 void EnviornmentalMode::initvariables()
 {
-    this->TextureRect = sf::IntRect(0, 0, 17, 17);
+    this->TextureRect = sf::IntRect(0, 0, 48, 48);
     this->collision = false;
     this->type = TileTypes::OBJECT;
     this->layer = 0;

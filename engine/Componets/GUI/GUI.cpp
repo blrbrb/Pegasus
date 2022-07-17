@@ -194,7 +194,7 @@ GUI::Button::Button(float x, float y, float width, float height, const std::stri
 GUI::Button::~Button()
 {
     
-
+    
     
 }
 
@@ -285,7 +285,7 @@ void GUI::Button::render(sf::RenderTarget& target) {
 const bool GUI::Button::isPressed() const {
     
     if (this->ButtonState == PRESSED)
-        return true;
+        return true; 
     
     
     
@@ -512,8 +512,8 @@ GUI::TextureSelector::TextureSelector(float x, float y,float width, float height
     this->active = false;
     this->gridsize = gridsize;
     
-    this->texturerect.width = 17;
-    this->texturerect.height = 17;
+    this->texturerect.width = 48;
+    this->texturerect.height = 48;
     this->hidden = false;
     
     this->hide = new GUI::Button(x, y, 36, 35, "red_boxCross.png", "grey_box.png", "red_boxTick.png");
@@ -557,11 +557,11 @@ void GUI::TextureSelector::update(const sf::Vector2i& MousePosWindow, const floa
           {
               this->active = true;
               
-              this->MousePosGrid.x = (MousePosWindow.x - static_cast<int>(this->bounds.getPosition().x)) / static_cast<unsigned>(17);
-              this->MousePosGrid.y = (MousePosWindow.y - static_cast<int>(this->bounds.getPosition().y)) / static_cast<unsigned>(17);
+              this->MousePosGrid.x = (MousePosWindow.x - static_cast<int>(this->bounds.getPosition().x)) / static_cast<unsigned>(this->gridsize);
+              this->MousePosGrid.y = (MousePosWindow.y - static_cast<int>(this->bounds.getPosition().y)) / static_cast<unsigned>(this->gridsize);
               
-              this->selector.setPosition(this->bounds.getPosition().x + this->MousePosGrid.x * 17,
-                                         this->bounds.getPosition().y + this->MousePosGrid.y * 17);
+              this->selector.setPosition(this->bounds.getPosition().x + this->MousePosGrid.x * this->gridsize,
+                                         this->bounds.getPosition().y + this->MousePosGrid.y * this->gridsize);
               
               //Update the Texture Rectangle
               

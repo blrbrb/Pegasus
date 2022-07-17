@@ -8,6 +8,9 @@
 
 #include "stdafx.h"
 #include "MainMenuState.hpp"
+#include "MainMenuState.hpp"
+#include "MainMenuState.hpp"
+#include "MainMenuState.hpp"
 
 
 
@@ -217,6 +220,9 @@ void MainMenuState::render(sf::RenderTarget* target)
    this->renderbuttons(*target);
     
 }
+
+
+
 
 
 void MainMenuState::renderbuttons(sf::RenderTarget& target)

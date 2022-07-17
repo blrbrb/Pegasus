@@ -49,6 +49,7 @@ public:
     void updateGUI(const float& dt);
     void update(const float& dt);
     void renderGUI(sf::RenderTarget& target);
+    void updateevents();
     void render(sf::RenderTarget* target = nullptr);
     
 };

@@ -501,7 +501,7 @@ bool TileMap::loadfromfile(const std::string filename)
                 
                 
                 this->Map[x][y][z].push_back(new EnemySpawner(x, y, this->grid_sizeF, this->tileTextureSheet,
-                                 sf::IntRect(textureX, textureY, 17, 17), enemy_type,
+                                 sf::IntRect(textureX, textureY, 48, 48), enemy_type,
                                  enemyAmount, enemyTimer, enemyMaxDistance));
             }
             
@@ -509,7 +509,7 @@ bool TileMap::loadfromfile(const std::string filename)
             {
                 in >> textureX >> textureY >> collision;
                 
-                this->Map[x][y][z].push_back(new NormalTile(type, x, y, grid_sizeF, this->tileTextureSheet, sf::IntRect(textureX, textureY, 17, 17), collision));
+                this->Map[x][y][z].push_back(new NormalTile(type, x, y, grid_sizeF, this->tileTextureSheet, sf::IntRect(textureX, textureY, 48, 48), collision));
             }
         }
         

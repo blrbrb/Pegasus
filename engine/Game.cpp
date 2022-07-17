@@ -137,7 +137,6 @@ void Game::initstatedata()
     this->state_data.states = &this->states;
     this->state_data.gridsize = this->gridsize; 
 
-   
 
     if (this->state_data.window == NULL) 
     {
@@ -227,9 +226,11 @@ void Game::UpdateEvents() {
         if (this->event.type == sf::Event::Closed) {
             
             this->window->close();
-            
-        }
-    
+                   
+        }      
+        //if (!this->states.empty())
+           // this->states.top()->updateevents(&this->event);
+       
     }
 }
 
@@ -278,7 +279,9 @@ void Game::initVariables()
 {
     this->window = NULL;
     this-> dt = 0.f;
-    this->gridsize = 17.f;
+    this->gridsize = 48.f;
+ 
+
     
 }
 

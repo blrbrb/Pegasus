@@ -21,6 +21,7 @@ void Apple::initvariables()
     this->texture_rect.left = 17;
     this->texture_rect.height = 0;
     this->texture_rect.width = 17;
+
     
     this->sprite.setTextureRect(this->texture_rect);
 }

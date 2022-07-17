@@ -62,11 +62,11 @@ void Player::initvariables()
 void Player::initanimations()
 {
     
-    this->animtioncomponet->add_animation("IDLE_LEFT", 10.f, 0, 0, 0, 0, 18, 24); //first row, second* sprite across *iterator starts from unsigned 0
-    this->animtioncomponet->add_animation("WALK_RIGHT", 10.f, 0, 2, 7, 2, 18, 24);
-    this->animtioncomponet->add_animation("WALK_LEFT", 10.f, 0, 1, 7, 1, 18, 24);
-    this->animtioncomponet->add_animation("WALK_DOWN", 10.f, 0, 0, 7, 0, 18, 24);
-    this->animtioncomponet->add_animation("WALK_UP", 10.f, 0, 3, 7, 3, 18, 24); 
+    this->animtioncomponet->add_animation("IDLE_LEFT", 10.f, 0, 0, 0, 0, 48, 48); //first row, second* sprite across *iterator starts from unsigned 0
+    this->animtioncomponet->add_animation("WALK_RIGHT", 10.f, 0, 2, 2, 2, 48, 48);
+    this->animtioncomponet->add_animation("WALK_LEFT", 10.f, 0, 1, 2, 1, 48, 48);
+    this->animtioncomponet->add_animation("WALK_DOWN", 10.f, 0, 0, 2, 0, 48, 48);
+    this->animtioncomponet->add_animation("WALK_UP", 10.f, 0, 3, 2, 3, 48, 48); 
     
     //lol
     //this->animtioncomponet->add_animation("PISSING_PANTS", 10.f, 0, 0, 5, 0, 16, 16);

@@ -28,6 +28,7 @@ class TileMap;
 class EnemyEditorMode;
 class DefaultMode;
 class PauseMenu;
+class EditorStateData; 
 
 
 
@@ -49,6 +50,7 @@ class EditorState : public State
         void updateEditorinput(const float& dt);
         void update(const float& dt);
         void updatebuttons();
+        void updateevents();
         void updateGUI(const float& dt);
         void updateModes(const float& dt);
         void updatepausemenubuttons(); 

@@ -90,7 +90,7 @@ public:
     ///Render all of the Gamestate elements
     void render(sf::RenderTarget* target);
     
-    
+    void updateevents();
     
     
     void updateEnemies(const float& dt); 

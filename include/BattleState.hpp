@@ -32,6 +32,7 @@ public:
     
     //update functions
     void updateInput(const float& dt); 
+    void updateevents(sf::Event* event); 
     void update(const float& dt);
     void updateeventtime(const float& dt);
     void updatePlayerGUI(const float& dt);
@@ -40,7 +41,7 @@ public:
     void updatePauseMenu(); 
     void updateBattleGUI(const float& dt);
     void PlayerAttack();
-
+    void updateevents(); 
     
     //modifiers
     void GiveEnemyDamage(const float& dt);

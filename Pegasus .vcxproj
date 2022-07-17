@@ -379,6 +379,8 @@
     <Image Include="Resources\GUI\TickBox\Orange\red_boxTick.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Data\Shader\fragment_shader.frag" />
+    <None Include="Data\Shader\vertex_shader.vert" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

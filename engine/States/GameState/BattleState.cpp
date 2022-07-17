@@ -118,6 +118,14 @@ void BattleState::updateInput(const float& dt)
     
     
 }
+void BattleState::updateevents(sf::Event* event)
+{
+
+
+
+
+}
+
 void BattleState::updateButtons(const float& dt)
 {
     this->battleGUI->updatebuttons(this->MousePosScreen);
@@ -148,6 +156,13 @@ void BattleState::PlayerAttack()
     
     this->enemy->loseHP(this->player->attributes->strength * this->player->attributes->attributepts);
     
+}
+
+void BattleState::updateevents()
+{ 
+
+
+
 }
 
 

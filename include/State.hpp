@@ -39,8 +39,6 @@ public:
     ///User-defined graphics settings
     GraphicsSettings* gfxsettings; 
     
-    sf::Event* event; 
-
     
 };
 
@@ -86,7 +84,8 @@ class State {
     virtual void updateInput(const float& dt) = 0;
     virtual void update(const float& dt) = 0;
     virtual void render(sf::RenderTarget* target = NULL) = 0;
-    virtual void updatekeytime(const float& dt);
+    virtual void updatekeytime(const float& dt);  
+    virtual void updateevents() = 0; 
     
 
 protected:

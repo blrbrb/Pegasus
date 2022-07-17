@@ -438,5 +438,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Data\Shader\fragment_shader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Data\Shader\vertex_shader.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
