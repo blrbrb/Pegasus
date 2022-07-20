@@ -79,10 +79,12 @@ void GameState::initdialougesystem()
 }
 
 void GameState::initdeferedrender() {
-
+     
+    std::cout << "creating a new render texture with the size" << " " << this->state_data->gfxsettings->resolution.width << std::endl; 
     if(!this->rendertexture.create(this->state_data->gfxsettings->resolution.width,this->state_data->gfxsettings->resolution.height))
     {
-        throw std::exception("unable to create rendertextrue GameState Line 78");
+        throw std::exception("unable to create rendertextrue GameState Line 78"); 
+        
     }
 
     this->rendersprite.setTexture(this->rendertexture.getTexture());
@@ -113,6 +115,7 @@ void GameState::initshaders()
 {
     if(!this->core_shader.loadFromFile("Data/Shader/vertex_shader.vert", "Data/Shader/fragment_shader.frag"))
     { 
+        std::cout << "unable to load core shaders in gamestate. Line 116" << std::endl; 
         throw std::exception("ERROR Unable to load shaders Gamestate line 71");
         
     }
@@ -124,7 +127,7 @@ void GameState::initshaders()
 
 void GameState::initview()
 {
-
+    
     this->view.setSize(sf::Vector2f(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 4.F, static_cast<float>(this->state_data->gfxsettings->resolution.height) / 4.f));
 
     this->view.setCenter(sf::Vector2f(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 4.f,        static_cast<float>(this->state_data->gfxsettings->resolution.height) / 4.f));
@@ -147,7 +150,7 @@ void GameState::initkeybinds() {
         while (ifs >> key >> key2)
         {
             this->keybinds[key] = this->supportedkeys->at(key2);
-            std::cout << key << " " << key2;
+           //std::cout << key << " " << key2;
         }
     }
     else {
@@ -228,7 +231,7 @@ void GameState::inittilemap()
 {
     this->Tilemap = new TileMap(this->state_data->gridsize, 100, 100, "Resources/Assets/Tiles/sheet.png");
    
-   
+    this->Tilemap->loadfromfile("Data/TileMap/text.slmp"); 
 }
 
 
@@ -357,27 +360,27 @@ void GameState::updatePlayerInput(const float& dt)
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_RIGHT"))))
     {
         this->player->move(dt, 1.f, 0.f);
-        std::cout << "RIGHT" << std::endl;
+       // std::cout << "RIGHT" << std::endl;
     }
     
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT"))) )
     {
         
         this->player->move(dt, -1.f, 0.f);
-        std::cout << "LEFT" << std::endl;
+        //std::cout << "LEFT" << std::endl;
     }
     
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_UP"))))
     {
         this->player->move(dt, 0.f, -1.f);
-        std::cout << "UP" << std::endl;
+        //std::cout << "UP" << std::endl;
     }
     
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN"))))
     {
         
         this->player->move(dt, 0.f, 1.f);
-        std::cout << "DOWN" << std::endl;
+        //std::cout << "DOWN" << std::endl;
         this->dialougeSystem->addTextbox(DEFAULT_TAG); 
 
     }
@@ -399,15 +402,16 @@ void GameState::render(sf::RenderTarget* target) {
     //there's something fucky with the actual renderSprite. 
     //There's something fucky with the order that the renders are being called, and assigned to the rendersprite. 
     //The rendertexture is broken. 
-
+    if(!target)
         target = this->window;
     
     this->rendertexture.clear();
 
-    this->Tilemap->render(this->rendertexture, this->ViewGridPosition, false, &this->core_shader, this->player->getCenter());
     
-    this->rendertexture.setView(this->view);
     
+    this->rendertexture.setView(this->view); 
+
+    this->Tilemap->render(this->rendertexture, this->ViewGridPosition, false);
     //this->Tilemap->renderlighttile(this->rendertexture, &this->core_shader);
    
    
@@ -420,7 +424,7 @@ void GameState::render(sf::RenderTarget* target) {
            
        }
     
-    this->Tilemap->DefferedRender(this->rendertexture, &this->core_shader,this->player->getCenter());
+  //  this->Tilemap->DefferedRender(this->rendertexture, &this->core_shader,this->player->getCenter());
     
     //this->dialougeSystem->render(this->rendertexture);
     

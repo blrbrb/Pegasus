@@ -8,7 +8,7 @@
 
 #ifndef State_hpp
 #define State_hpp
-#include "Entity.hpp"
+#include "Player.hpp"
 #include "GraphicsSettings.hpp"  
 
 

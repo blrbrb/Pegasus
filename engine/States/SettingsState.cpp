@@ -114,7 +114,7 @@ void SettingsState::initFonts()
 {
     
     
-    if (!this->font.loadFromFile("Resources/Fonts/PressStart2P.ttf"))
+    if (!this->font.loadFromFile("Resources/Assets/Fonts/PressStart2P.ttf"))
     {
         std::cout << "ERROR CODE 05: SettingsState::initFonts COULD NOT LOAD FONT FROM FILE" << std::endl;
         throw std::runtime_error("ERROR CODE 05: SettingsState::initFonts COULD NOT LOAD FONT FROM FILE");
@@ -179,7 +179,7 @@ void SettingsState::render(sf::RenderTarget* target) {
    if (!target)
        target = this->window;
 
-   target->draw(this->background);
+  // target->draw(this->background);
 
     this->renderGUI(*target);
  

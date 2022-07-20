@@ -17,7 +17,8 @@ PlayerGUI::PlayerGUI(Player* player, sf::VideoMode& vm) : vm(vm)
     this->initHPbar();
     this->initEXPbar();
     this->initMONEY();
-    this->initinventory();
+    this->initinventory(); 
+    this->initTabs(vm, font, *player);
     this->hidden = true;
 }
 
@@ -26,6 +27,7 @@ PlayerGUI::~PlayerGUI()
 {
     delete this->HPbar;
     delete this->ExpBar;
+   // delete this->playerTabs; 
     
 }
 
@@ -42,8 +44,9 @@ void PlayerGUI::initMONEY()
 
 void PlayerGUI::initHPbar()
 {
-    this->HPbar = new GUI::ProgressBar(1.f, 8.3, 10.4, 2.8, this->player->getStatusComponet()->hpMax, this->vm, sf::Color::Red, 150, &this->font);
-    
+    //args are as follows, float x, float y, float width, float height
+    this->HPbar = new GUI::ProgressBar(1.f, 8.3, 20.4, 4.8, this->player->getStatusComponet()->hpMax, this->vm, sf::Color::Red, 150, &this->font);
+  
 }
 
 void PlayerGUI::initLevelTag()
@@ -65,13 +68,20 @@ void PlayerGUI::initLevelTag()
 }
 
 void PlayerGUI::initEXPbar()
-{
-    this->ExpBar = new GUI::ProgressBar(1.f, 16.6, 10.4, 2.8, this->player->attributes->expNextlvl, this->vm,sf::Color::Green, 150, &this->font);
+{   //args are as follows, float x float y float width float height 
+    this->ExpBar = new GUI::ProgressBar(1.f, 16.6, 20.4, 4.8, this->player->attributes->expNextlvl, this->vm, sf::Color::Green, 150, &this->font);
 }
 
 void PlayerGUI::initinventory()
 {
     this->player->getInventory()->clear();
+
+}
+
+void PlayerGUI::initTabs(sf::VideoMode& vm, sf::Font& font, Player& player)
+{
+
+    //this->playerTabs = new PlayerGUITabs(vm, font, player); 
 
 }
 
@@ -88,7 +98,8 @@ void PlayerGUI::update(const float &dt)
     this->updateMoney();
     this->updateHPbar();
     this->updateEXPbar();
-    this->updateInventory();
+    this->updateInventory(); 
+    this->updateCharacterTabs();
 }
 
 
@@ -153,19 +164,16 @@ void PlayerGUI::updateMoney()
 }
 
 
-void PlayerGUI::updateCharacterInfoTag() 
+
+void PlayerGUI::updateCharacterTabs()
 {
+
+
 
 
 
 }
 
-
-void PlayerGUI::updateCharacterText() 
-{
-   // this->character_info.setString("test"); 
-
-}
 
 void PlayerGUI::renderMoney(sf::RenderTarget& target)
 {
@@ -209,14 +217,6 @@ void PlayerGUI::renderEXPbar(sf::RenderTarget& target)
 }
 
 
-void PlayerGUI::renderCharacterInfo(sf::RenderTarget& target) 
-{
-   // target.draw(this->info_tag_interior); 
-   // target.draw(this->character_info);
-
-
-
-}
 
 void PlayerGUI::render(sf::RenderTarget &target)
 {
@@ -225,7 +225,7 @@ void PlayerGUI::render(sf::RenderTarget &target)
     this->renderEXPbar(target);
     this->renderHPbar(target);
     this->renderInventory(target); 
-    this->renderCharacterInfo(target); 
+     
     
 }
 

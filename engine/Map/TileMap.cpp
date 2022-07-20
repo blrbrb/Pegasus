@@ -669,22 +669,26 @@ void TileMap::updateWorldBoundsCollision(Entity *entity, const float &dt)
     if(entity->getPosition().x < 0.f )
     {
         entity->setposition(0.f, entity->getPosition().y);
-        entity->stopVelocityX();
+        entity->stopVelocityX(); 
+        std::cout << "Hitting Upper world bound" << std::endl; 
     }
     else if (entity->getPosition().x + entity->getGlobalBounds().width > this->MaxSizeWorld_F.x)
     {
         entity->setposition(this->MaxSizeWorld_F.x - entity->getGlobalBounds().width, entity->getPosition().y);
-        entity->stopVelocityX();
+        entity->stopVelocityX(); 
+        std::cout << "Hitting Upper left world bound" << std::endl; 
     }
     if (entity->getPosition().y < 0.f)
     {
         entity->setposition(entity->getPosition().x, 0.f);
-        entity->stopVelocityY();
+        entity->stopVelocityY(); 
+        std::cout << "hitting left world bound" << std::endl; 
     }
     else if (entity->getPosition().y + entity->getGlobalBounds().height > this->MaxSizeWorld_F.y)
     {
         entity->setposition(entity->getPosition().x, this->MaxSizeWorld_F.y - entity->getGlobalBounds().height);
-        entity->stopVelocityY();
+        entity->stopVelocityY(); 
+        std::cout << "hitting right world boundary" << std::endl;
     }
     
 }
@@ -824,7 +828,8 @@ void TileMap::updateTileCollision(Entity *entity, const float &dt)
                    )
                {
                    entity->stopVelocityY();
-                   entity->setposition(playerBounds.left, wallBounds.top - playerBounds.height);
+                   entity->setposition(playerBounds.left, wallBounds.top - playerBounds.height); 
+                   
                }
 
                //Top collision
@@ -836,6 +841,7 @@ void TileMap::updateTileCollision(Entity *entity, const float &dt)
                {
                    entity->stopVelocityY();
                    entity->setposition(playerBounds.left, wallBounds.top + wallBounds.height);
+                  
                }
 
                //Right collision
@@ -847,6 +853,7 @@ void TileMap::updateTileCollision(Entity *entity, const float &dt)
                {
                    entity->stopVelocityX();
                    entity->setposition(wallBounds.left - playerBounds.width, playerBounds.top);
+                   
                }
 
                //Left collision
@@ -857,7 +864,8 @@ void TileMap::updateTileCollision(Entity *entity, const float &dt)
                    )
                {
                    entity->stopVelocityX();
-                   entity->setposition(wallBounds.left + wallBounds.width, playerBounds.top);
+                   entity->setposition(wallBounds.left + wallBounds.width, playerBounds.top); 
+                   
                }
             
                 

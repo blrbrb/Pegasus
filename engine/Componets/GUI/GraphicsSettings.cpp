@@ -12,12 +12,12 @@
 
 GraphicsSettings::GraphicsSettings()
 {
-    this->title = "ERROR";
-    this->resolution = sf::VideoMode::getDesktopMode();
+    this->title = "Debug"; 
+    this->resolution = sf::VideoMode::getDesktopMode(); 
     this->fullscreen = false;
     this->vsync = false;
     this->windowSettings.antialiasingLevel = 0;
-    this->Videomodes = sf::VideoMode::getFullscreenModes();
+    this->Videomodes = sf::VideoMode::getFullscreenModes(); 
     
 
             

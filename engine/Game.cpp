@@ -65,7 +65,7 @@ void Game::initkeys() {
        while (ifs >> key >> key_value)
        {
            this->supportedkeys[key] = key_value;
-           std::cout << "Game.cpp supported Keys are As Follows:" << " " << this->supportedkeys.at(key) << std::endl;
+           //std::cout << "Game.cpp supported Keys are As Follows:" << " " << this->supportedkeys.at(key) << std::endl;
            
        }
       
@@ -75,10 +75,7 @@ void Game::initkeys() {
  
 
     
-    for (auto i : this->supportedkeys)
-    {
-        std::cout << i.first << " " << i.second << "\n";
-    }
+    
 }
 
 void Game::initstates() { 
@@ -92,30 +89,31 @@ void Game::initstates() {
 void Game::initGraphicsSettings() {
     
     this->gfxsettings.loadfromfile("Init/Window.ini");
-   
+    
   
 }
 
 void Game::initwindow() {
 
-/*!
- @brief  Initalizes the media layer the application runs on
+    /*!
+     @brief  Initalizes the media layer the application runs on
 
- @param   void
+     @param   void
 
- @return  void
+     @return  void
 
-*/
-    
-    
-    std::string title; 
-    title = "test"; 
-    
-     if(this->gfxsettings.fullscreen)
-        this->window = new sf::RenderWindow(this->gfxsettings.resolution, this->gfxsettings.title, sf::Style::Fullscreen, this->gfxsettings.windowSettings);
+    */
+
+
+   
+
+    if (this->gfxsettings.fullscreen) {
+        this->window = new sf::RenderWindow(this->gfxsettings.resolution, this->gfxsettings.title, sf::Style::Default, this->gfxsettings.windowSettings);
+    }
+
    
      else
-        this->window = new sf::RenderWindow(this->gfxsettings.resolution, this->gfxsettings.title, sf::Style::Titlebar | sf::Style::Close, this->gfxsettings.windowSettings);
+        this->window = new sf::RenderWindow(this->gfxsettings.resolution, this->gfxsettings.title, sf::Style::Default);
         
       
         
@@ -252,7 +250,7 @@ void Game::UpdateDT()
     
    // Updates the time variable with the time taken for each frame to render
     this-> dt = this -> dtClock.restart().asSeconds();
-    std::cout << this->dt  << std::endl;
+    //std::cout << this->dt  << std::endl;
 
     
 }

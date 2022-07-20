@@ -11,9 +11,8 @@
 
 #include "GameState.hpp"
 #include "EditorState.hpp"
-#include "GUI.hpp"
 #include "SettingsState.hpp"
-#include "GraphicsSettings.hpp"
+#include "GUI.hpp"
 
 
 class MainMenuState : public State

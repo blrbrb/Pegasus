@@ -6,17 +6,11 @@
 //  Copyright © 2020 Eli Reynolds. Apache License .
 //
 
-#ifndef PlayerGUI_hpp
-#define PlayerGUI_hpp
-#include "GUI.hpp"
-#include "Player.hpp"
-#include "Enemy.hpp"
-#include "Inventory.hpp"
 
 
-class Player;
-class Inventory;
 
+#pragma once
+#include "PlayerGUITabs.hpp"
 
 class PlayerGUI
 {
@@ -38,7 +32,8 @@ private:
     GUI::ProgressBar* HPbar;
 
     //Character Information tag 
-    
+    //PlayerGUITabs* playerTabs; 
+    //PlayerGUITabs playerGuiTabs; 
     
     //Inventory
     
@@ -63,7 +58,8 @@ private:
     void initMONEY();
     void initinventory();
     void initvariables(); 
-    void initcharacterinfo(); 
+    void initcharacterinfo();  
+    void initTabs(sf::VideoMode& vm, sf::Font& font, Player& player); 
   
     
 public:
@@ -86,8 +82,7 @@ public:
     void updateEXPbar();
     void updateMoney();
     void updateInventory();
-    void updateCharacterInfoTag();  
-    void updateCharacterText(); 
+    void updateCharacterTabs(); 
     /// update
     /// @brief Update all of the PlayerGUI elements
     /// @param dt Delta-Time
@@ -99,7 +94,7 @@ public:
     void renderMoney(sf::RenderTarget& target);
     void renderEXPbar(sf::RenderTarget& target);
     void renderInventory(sf::RenderTarget& target); 
-    void renderCharacterInfo(sf::RenderTarget& target); 
+ 
     
     /// render
     /// @brief Render all of the PlayerGUI elements to a sf::RenderTarget
@@ -113,4 +108,4 @@ public:
 //end namespace PlayerGUI
 
 
-#endif /* PlayerGUI_hpp */
+ /* PlayerGUI_hpp */

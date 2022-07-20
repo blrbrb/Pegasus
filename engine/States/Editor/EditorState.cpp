@@ -115,11 +115,12 @@ void EditorState::updatepausemenubuttons()
         //handle TileMap saving errors
         try
         {
-            this->Tilemap->savetofile("Data/text.slmp");
+            this->Tilemap->savetofile("Data/TileMap/text.slmp");
         }
         
         catch (std::runtime_error& e)
         {
+            
             std::cout << e.what();
         }
 
@@ -152,11 +153,11 @@ void EditorState::initkeybinds()
          {
              std::string key = "";
              std::string key2 = "";
-             std::cout << "editorstate keybinds exist" << std::endl; 
+             //std::cout << "editorstate keybinds exist" << std::endl; 
              while (ifs >> key >> key2)
              {
                  this->keybinds[key] = this->supportedkeys->at(key2);
-                 std::cout << key << key2 << std::endl; 
+                // std::cout << key << key2 << std::endl; 
                 
  
              }
@@ -295,9 +296,9 @@ void EditorState::updateInput(const float& dt) {
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_CAMERA_RIGHT"))))
     {
         this->mainview.move(this->cameraspeed * dt, 0.f);
-        this->Tilemap->savetofile("text.slmp");
-        std::cout << "camera right" << std::endl;
-        std::cout << "Map Saved" << std::endl;
+       // this->Tilemap->savetofile("text.slmp");
+        //std::cout << "camera right" << std::endl;
+      //  std::cout << "Map Saved" << std::endl;
     }
     
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_CAMERA_LEFT"))))

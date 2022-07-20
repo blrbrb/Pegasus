@@ -13,12 +13,10 @@ engineFramework
 #ifndef GameState_hpp
 #define GameState_hpp
 #include "State.hpp"
-#include "Player.hpp"
-#include "PlayerGUI.hpp"
-#include "GUI.hpp"
 #include "PauseMenu.hpp"
-#include "EnemySystem.hpp"
 #include "TileMap.hpp"
+#include "PlayerGUI.hpp"
+#include "EnemySystem.hpp"
 #include "DialougeSystem.hpp"
 #include "BattleState.hpp"
 

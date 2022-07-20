@@ -49,7 +49,7 @@ void EnemyEditorMode::updateInput(const float &dt)
                         
                                 this->tilemap->addTile(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, 0, this->TextureRect, this->Enemytype, this->Enemyamount, this->spawn_timer, this->maxDistance);
                                 
-                                std::cout << "Spawner Tile Added" << std::endl;
+                                //std::cout << "Spawner Tile Added" << std::endl;
                                
                             }
 

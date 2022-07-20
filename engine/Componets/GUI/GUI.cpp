@@ -467,7 +467,7 @@ void GUI::DropDownList::updateketime(const float& dt)
 
 /* BEGIN TEXTURE SELECTOR*/
 
-
+//this Is NOT the version of the texture Selector being called in EditorState
 GUI::TextureSelector::TextureSelector(float x, float y,float width, float height, float gridsize, const sf::Texture* texture_sheet, sf::Font& font, std::string text) : keytimeMax(2.f), keytime(0.f)
 {
     /*!
@@ -516,7 +516,7 @@ GUI::TextureSelector::TextureSelector(float x, float y,float width, float height
     this->texturerect.height = 48;
     this->hidden = false;
     
-    this->hide = new GUI::Button(x, y, 36, 35, "red_boxCross.png", "grey_box.png", "red_boxTick.png");
+    this->hide = new GUI::Button(x, y, 48, 48, "Resources/GUI/TickBox/Orange/red_boxCross.png", "Resources/GUI/TickBox/Orange/red_boxTick.png", "Resources/GUI/TickBox/Orange/red_boxTick.png");
    
     
 }

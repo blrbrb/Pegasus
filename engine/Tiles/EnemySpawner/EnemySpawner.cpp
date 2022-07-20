@@ -48,7 +48,7 @@ void EnemySpawner::render(sf::RenderTarget &target, sf::Shader* shader, sf::Vect
  if (shader)
  {
      shader->setUniform("hasTexture", true);
-     shader->setUniform("light", LightPosition);
+     shader->setUniform("lightPos", LightPosition);
      target.draw(this->rect, shader);
      
  }

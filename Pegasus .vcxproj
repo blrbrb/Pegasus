@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CharacterTab.cpp" />
     <ClCompile Include="engine\componets\animation\animationComponet.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
@@ -164,6 +165,7 @@
     <ClCompile Include="engine\componets\gui\PlayerGUITabs.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="engine\Componets\GUI\Tab.cpp" />
     <ClCompile Include="engine\componets\hitbox\HitBoxComponet.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
@@ -285,6 +287,7 @@
     <ClInclude Include="include\BattleState.hpp" />
     <ClInclude Include="include\Blerb.hpp" />
     <ClInclude Include="include\Blrb.hpp" />
+    <ClInclude Include="include\CharacterTab.hpp" />
     <ClInclude Include="include\Coin.hpp" />
     <ClInclude Include="include\CombatSystem.hpp" />
     <ClInclude Include="include\Consumable_Item.hpp" />
@@ -315,7 +318,7 @@
     <ClInclude Include="include\PauseMenu.hpp" />
     <ClInclude Include="include\Player.hpp" />
     <ClInclude Include="include\PlayerGUI.hpp" />
-    <ClInclude Include="include\PlayerGUITabs.h" />
+    <ClInclude Include="include\PlayerGUITabs.hpp" />
     <ClInclude Include="include\Potion.hpp" />
     <ClInclude Include="include\ResourcePath.hpp" />
     <ClInclude Include="include\SettingsState.hpp" />
@@ -323,6 +326,7 @@
     <ClInclude Include="include\State.hpp" />
     <ClInclude Include="include\StatusComponet.hpp" />
     <ClInclude Include="include\Sword.hpp" />
+    <ClInclude Include="include\Tab.hpp" />
     <ClInclude Include="include\Tile.hpp" />
     <ClInclude Include="include\TileMap.hpp" />
     <ClInclude Include="include\Tiles_Include.h" />

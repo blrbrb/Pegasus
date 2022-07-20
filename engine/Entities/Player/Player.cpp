@@ -17,10 +17,9 @@ Player::Player(float x, float y, sf::Texture& texturesheet)
     this->initcomponets();
     this->initinventory(); 
     this->setposition(x, y);
-
     this->create_animation_componet(texturesheet);
     this->initanimations();
-    //this->sprite.setScale(2, 2);
+    this->sprite.setScale(2, 2);
 
 }
 
@@ -147,7 +146,7 @@ void Player::render(sf::RenderTarget &target, sf::Shader* shader,const sf::Vecto
     if (shader)
     {
         shader->setUniform("hasTexture", true);
-        shader->setUniform("light", light);
+        shader->setUniform("lightPos", light);
         target.draw(this->sprite, shader);
         
        

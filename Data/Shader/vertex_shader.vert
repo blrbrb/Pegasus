@@ -1,5 +1,5 @@
 //why the fuck won't "out" work as a valid term here
-varying vec4 vert_pos;
+varying out vec4 vert_pos;
 
 void main()
 {

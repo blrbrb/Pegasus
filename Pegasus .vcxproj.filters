@@ -153,6 +153,12 @@
     <ClCompile Include="engine\tiles\normal tile\NormalTile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CharacterTab.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\Componets\GUI\Tab.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -164,7 +170,7 @@
     <ClInclude Include="include\items_include .h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\PlayerGUITabs.h">
+    <ClInclude Include="include\PlayerGUITabs.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Tiles_Include.h">
@@ -300,6 +306,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\EnemySystem.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CharacterTab.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tab.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

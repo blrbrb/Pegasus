@@ -37,7 +37,7 @@ MainMenuState::~MainMenuState() {
     
      {
          delete it->second; 
-         std::cout << " MainMenu State Buttons Deleted" << std::endl; 
+        // std::cout << " MainMenu State Buttons Deleted" << std::endl; 
          
      }
     
@@ -64,7 +64,7 @@ void MainMenuState::initkeybinds() {
     {
         std::string key = "";
         std::string key2 = ""; 
-        std::cout << "Attempting to Read MenuState Keybinds" << std::endl; 
+       // std::cout << "Attempting to Read MenuState Keybinds" << std::endl; 
 
         while (ifs >> key >> key2)
         {
@@ -106,7 +106,7 @@ void MainMenuState::initGUI() {
   }
    
     
-  std::cout << this->buttons.size() << std::endl; 
+  //std::cout << this->buttons.size() << std::endl; 
 }
 
 void MainMenuState::resetGUI()
@@ -121,7 +121,7 @@ void MainMenuState::resetGUI()
        
         {
             delete it->second; 
-            std::cout << "Buttons Deleted " << std::endl; 
+            //std::cout << "Buttons Deleted " << std::endl; 
             
         }
     this->buttons.clear();
@@ -236,12 +236,12 @@ void MainMenuState::renderbuttons(sf::RenderTarget& target)
 
 void MainMenuState::updatebuttons() {
     
-    std::cout << "updating buttons" << std::endl; 
+    //std::cout << "updating buttons" << std::endl; 
     for (auto &it : this->buttons)
    
     {
         it.second->update(this->MousePosWindow);
-        std::cout << it.second << std::endl; 
+       // std::cout << it.second << std::endl; 
         
     }
 
@@ -264,7 +264,7 @@ void MainMenuState::updatebuttons() {
     if (this->buttons["EDITOR"]->isPressed())
     {
         this->states->push(new EditorState(this->state_data)); 
-        std::cout << "Creating EditorState... from Mainmenustate.cpp" << std::endl; 
+        //std::cout << "Creating EditorState... from Mainmenustate.cpp" << std::endl; 
         
     }
     if (this->buttons["SETTINGS"]->isPressed())

@@ -11,7 +11,7 @@
 #include "Entity.hpp"
 #include "Inventory.hpp"
 #include "Item.hpp" 
-#include "PlayerGUI.hpp"
+
 
 class Entity; 
 
