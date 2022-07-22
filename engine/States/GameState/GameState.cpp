@@ -130,7 +130,7 @@ void GameState::initview()
     
     this->view.setSize(sf::Vector2f(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 4.F, static_cast<float>(this->state_data->gfxsettings->resolution.height) / 4.f));
 
-    this->view.setCenter(sf::Vector2f(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 4.f,        static_cast<float>(this->state_data->gfxsettings->resolution.height) / 4.f));
+    this->view.setCenter(sf::Vector2f(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 2.f,static_cast<float>(this->state_data->gfxsettings->resolution.height) / 2.f));
 
     
     
@@ -174,7 +174,7 @@ void GameState::initplayerGUI()
 void GameState::inittextures()
 {
     
-    if (!this->textures["PLAYER_SHEET"].loadFromFile("Resources/Assets/Entity/PlayerSheets/pony3.png"))
+    if (!this->textures["PLAYER_SHEET"].loadFromFile("Resources/Assets/Entity/PlayerSheets/character_sheet3.png"))
     {
         std::cout << "ERROR Could not load Player Sheet texture GameState lin 168" << std::endl;
        
@@ -229,7 +229,7 @@ void GameState::initpausemenu()
 
 void GameState::inittilemap()
 {
-    this->Tilemap = new TileMap(this->state_data->gridsize, 100, 100, "Resources/Assets/Tiles/sheet.png");
+    this->Tilemap = new TileMap(*this->state_data->gridsize, 100, 100, "Resources/Assets/Tiles/sheet.png");
    
     this->Tilemap->loadfromfile("Data/TileMap/text.slmp"); 
 }
@@ -342,14 +342,19 @@ void GameState::updateView(const float &dt)
     
 
     //Update the GridPosition view
-    this->ViewGridPosition.x = static_cast<int>(this->view.getCenter().x) / static_cast<int>(this->state_data->gridsize);
+    this->ViewGridPosition.x = static_cast<int>(this->view.getCenter().x) / static_cast<int>(this->state_data->gridsize->x);
     
-    this->ViewGridPosition.y = static_cast<int>(this->view.getCenter().y) / static_cast<int>(this->state_data->gridsize);
+    this->ViewGridPosition.y = static_cast<int>(this->view.getCenter().y) / static_cast<int>(this->state_data->gridsize->y);
 }
 
 void GameState::updatePlayerGUI(const float &dt)
 {
-    this->playerGUI->update(dt);
+    this->playerGUI->update(dt);   
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F) && this->getkeytime()) 
+    {
+       this->playerGUI->toggleCharacterTab(); 
+    }
 }
 
 void GameState::updatePlayerInput(const float& dt)
@@ -411,11 +416,12 @@ void GameState::render(sf::RenderTarget* target) {
     
     this->rendertexture.setView(this->view); 
 
-    this->Tilemap->render(this->rendertexture, this->ViewGridPosition, false);
+    //target->mapPixelToCoords(this->Tilemap->getMaxSizeGrid()); 
+    this->Tilemap->render(this->rendertexture,this->view, this->ViewGridPosition, false);
     //this->Tilemap->renderlighttile(this->rendertexture, &this->core_shader);
    
    
-    
+    //target->mapPixelToCoords(static_cast<sf::Vector2i>(this->player->getCenter())); 
     this->player->render(this->rendertexture, &this->core_shader, this->player->getCenter(), false);
     
     for (auto *i : this->activEnemies)

@@ -48,7 +48,7 @@ void EnviornmentalMode::initGUI()
     this->sidebar.setOutlineThickness(1.f);
     
      //config the selection rectangle. Twice the size of the regular selection rectangle. Enviornmental objects like trees, rocks mountains etc.
-    this->select_Rect.setSize(sf::Vector2f(statedata->gridsize, statedata->gridsize));
+    this->select_Rect.setSize(sf::Vector2f(statedata->gridsize->x, statedata->gridsize->y));
     this->select_Rect.setTexture(tilemap->getTileSheet());
      
      
@@ -57,7 +57,7 @@ void EnviornmentalMode::initGUI()
      //this->select_Rect.setOutlineThickness(2);
      
      //Config the TextureSelector from GUI.hpp
-     this->texture_selector = new GUI::TextureSelector(20.f, 20.f, 543.f, 560.f, this->statedata->gridsize, this->tilemap->getTileSheet(), *this->editorstatedata->font, "X");
+     this->texture_selector = new GUI::TextureSelector(20.f, 20.f, 543.f, 560.f, *this->statedata->gridsize, this->tilemap->getTileSheet(), *this->editorstatedata->font, "X");
      
     
      
@@ -242,7 +242,7 @@ void EnviornmentalMode::updateGUI(const float &dt)
     {
           //set the selection rectangle position
         this->select_Rect.setTextureRect(this->TextureRect);
-        this->select_Rect.setPosition(this->editorstatedata->mouseposGrid->x * this->statedata->gridsize, this->editorstatedata->mouseposGrid->y * this->statedata->gridsize);
+        this->select_Rect.setPosition(this->editorstatedata->mouseposGrid->x * this->statedata->gridsize->x, this->editorstatedata->mouseposGrid->y * this->statedata->gridsize->y);
         
     }
     

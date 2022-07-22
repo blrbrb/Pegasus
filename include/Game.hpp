@@ -48,7 +48,8 @@ private:
 
     sf::RenderWindow* window;
     sf::Event event;
-    float gridsize; 
+    //float gridsize; 
+    sf::Vector2f gridsize; 
     bool fullscreen;
     
     sf::Clock dtClock;

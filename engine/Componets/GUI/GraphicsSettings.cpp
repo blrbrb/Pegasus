@@ -17,10 +17,10 @@ GraphicsSettings::GraphicsSettings()
     this->fullscreen = false;
     this->vsync = false;
     this->windowSettings.antialiasingLevel = 0;
-    this->Videomodes = sf::VideoMode::getFullscreenModes(); 
-    
-
-            
+    this->Videomodes = sf::VideoMode::getFullscreenModes();  
+    std::cout << "video resolution depth is " << this->Videomodes.at(2).bitsPerPixel << " bits per pixel" << std::endl;
+    //this->Videomodes = sf::VideoMode::
+           
 }
 
 //Functions

@@ -28,8 +28,10 @@ public:
     
     StateData() {};
     
-   ///The size of each individual tile in a grid.
-    float gridsize;
+   ///The size of each individual tile in a grid. If The Tiles are square and have a uniform size 
+    //float gridsize;  
+    // 
+    sf::Vector2f* gridsize; 
     ///Pointer to the RenderWindow
     sf::RenderWindow* window;
     ///Acessable keys
@@ -92,7 +94,8 @@ protected:
    
     
     sf::RenderWindow* window;
-    float gridsize;
+    //float gridsize;
+    sf::Vector2f gridsize; 
     StateData* state_data; 
    
     ///The cursor's position relative to the screen
@@ -103,7 +106,8 @@ protected:
     sf::Vector2f MousePosView;
     /// The cursor's position relative to the tile grid
     sf::Vector2i MousePosGrid;
-    
+    //testing
+    sf::IntRect MousePosSquared; 
      /// All useable keyboard keys
     std::map<std::string, int>* supportedkeys;
     /// Keys with a user-supplied map

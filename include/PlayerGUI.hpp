@@ -32,7 +32,7 @@ private:
     GUI::ProgressBar* HPbar;
 
     //Character Information tag 
-    //PlayerGUITabs* playerTabs; 
+    PlayerGUITabs* playerTabs; 
     //PlayerGUITabs playerGuiTabs; 
     
     //Inventory
@@ -70,6 +70,9 @@ public:
     //Accessors
     ///get wether or not the user has opted to hide the Inventory
     const bool getInventoryHidden();
+    const bool getTabsOpen() const; 
+    void toggleCharacterTab(); 
+
     
     //Modifiers
     ///Hide the Inventory upon request from the user
@@ -94,6 +97,7 @@ public:
     void renderMoney(sf::RenderTarget& target);
     void renderEXPbar(sf::RenderTarget& target);
     void renderInventory(sf::RenderTarget& target); 
+    void renderPlayerTabs(sf::RenderTarget& target); 
  
     
     /// render

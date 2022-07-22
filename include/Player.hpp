@@ -44,7 +44,7 @@ public:
     StatusComponet* getStatusComponet();
     ///Retrieve a pointer to the Player's Inventory
     Inventory* getInventory();
-    
+    const std::string  InfoString() const; 
 
    
     

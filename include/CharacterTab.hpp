@@ -9,7 +9,7 @@ public:
 	virtual ~CharacterTab(); 
 
 	void update(); 
-	void render(sf::RenderTarget* target); 
+	void render(sf::RenderTarget& target); 
 private: 
 	sf::RectangleShape characterTabBack; 
 	sf::Text CharacterInfo; 

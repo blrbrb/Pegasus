@@ -199,7 +199,7 @@ private:
     bool active;
     bool hidden;
     bool multi_select; 
-    float gridsize;
+    sf::Vector2f gridsize; 
     float keytime;
     float height;
     float width;
@@ -229,7 +229,7 @@ public:
     /// @param texture_sheet the texture sheet for the Texture Selector element to source tile textures from
     /// @param font the font for the Texture Selector to use
     /// @param text a string of text for the Texture Selector
-    TextureSelector(float x, float y, float width, float height, float gridsize, const sf::Texture* texture_sheet, sf::Font& font, std::string text);
+    TextureSelector(float x, float y, float width, float height, sf::Vector2f gridsize, const sf::Texture* texture_sheet, sf::Font& font, std::string text);
     
     ~TextureSelector();
     

@@ -16,7 +16,7 @@ class LightTile : public Tile
     
 public:
     
-    LightTile(short type, int x, int y, float gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect);
+    LightTile(short type, int x, int y, sf::Vector2f gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect);
     virtual ~LightTile();
     
     //Acessors

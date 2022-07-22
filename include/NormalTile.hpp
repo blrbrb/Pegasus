@@ -15,7 +15,7 @@ class NormalTile : public Tile
 {
    
 public:
-    NormalTile(short type, int x, int y, float gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, bool collision_enabled = false);
+    NormalTile(short type, int x, int y, sf::Vector2f gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, bool collision_enabled = false);
     virtual ~NormalTile();
     
     //Accessors 

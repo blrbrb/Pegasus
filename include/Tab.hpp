@@ -10,7 +10,14 @@ public:
 	virtual ~Tab(); 
 
 	virtual void update() = 0; 
-	virtual void render(sf::RenderTarget* target) = 0; 
+	virtual void render(sf::RenderTarget& target) = 0; 
+
+
+//Accessors 
+	const bool& getHidden() const; 
+	const bool& getOpen() const; 
+	void toggle();
+
 
 //functions
 	void hide(); 

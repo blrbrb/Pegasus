@@ -30,7 +30,7 @@ private:
     
 public:
     //construtor and destructor
-    EnemySpawner(float x, float y, float gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, int type, int amount, sf::Int32 time_to_spawn, float max_distance);
+    EnemySpawner(float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, int type, int amount, sf::Int32 time_to_spawn, float max_distance);
     virtual ~EnemySpawner();
   
     //modifiers

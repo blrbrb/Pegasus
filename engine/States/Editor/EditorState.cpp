@@ -78,7 +78,7 @@ void EditorState::inittilemap()
 
 void EditorState::initview()
 {
-    this->mainview.setSize(sf::Vector2f(static_cast<float>(this->state_data->gfxsettings->resolution.width), static_cast<float>(this->state_data->gfxsettings->resolution.height)));
+    this->mainview.setSize(sf::Vector2f(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 4.f, static_cast<float>(this->state_data->gfxsettings->resolution.height) / 4.f ));
     
     
     this->mainview.setCenter(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 2.f,
@@ -462,7 +462,7 @@ void EditorState::render(sf::RenderTarget* target)
     
     //Tilemap Camera (same as game camera)
     this->window->setView(this->mainview);
-    this->Tilemap->render(*target, this->MousePosGrid);
+    this->Tilemap->render(*target, this->mainview, this->MousePosGrid);
         
     //Buttons Camera
     this->window->setView(this->window->getDefaultView());

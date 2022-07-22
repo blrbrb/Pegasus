@@ -9,6 +9,27 @@ Tab::Tab(sf::VideoMode& vm, sf::Font& font, Player& player, bool hidden) : vm(vm
 
 Tab::~Tab()
 {
+
+}
+
+const bool& Tab::getHidden() const
+{
+	return this->hidden; 
+}
+
+const bool& Tab::getOpen() const
+{
+	return (this->hidden == false); 
+}
+
+void Tab::toggle()
+{
+
+	if (this->hidden)
+		this->hidden = false;
+	else
+		this->hidden = true; 
+
 }
 
 void Tab::hide()

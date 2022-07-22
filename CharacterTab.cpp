@@ -8,9 +8,10 @@ CharacterTab::CharacterTab(sf::VideoMode& vm, sf::Font& font, Player& player) :T
     //Background 
     this->characterTabBack.setFillColor(sf::Color(50, 50, 50, 180));
     this->characterTabBack.setSize(sf::Vector2f(GUI::pixelpercentX(30.f, this->vm), static_cast<float>(this->vm.height)));
-    //Text 
+    //Text  
+    this->CharacterInfo.setString("FUCK FUCK FUCK FUCK FUCK FUCK FUCK FUCK FUCK FUCK FUCK"); 
     this->CharacterInfo.setFont(this->font);
-    this->CharacterInfo.setCharacterSize(GUI::calcCharSize(this->vm, 20.f));
+    this->CharacterInfo.setCharacterSize(GUI::calcCharSize(this->vm, 200.f));
     this->CharacterInfo.setFillColor(sf::Color::White);
     this->CharacterInfo.setPosition(this->characterTabBack.getPosition().x + GUI::pixelpercentX(1, this->vm), this->characterTabBack.getPosition().y + 20.f);
    
@@ -19,6 +20,10 @@ CharacterTab::CharacterTab(sf::VideoMode& vm, sf::Font& font, Player& player) :T
 
 CharacterTab::~CharacterTab()
 {
+
+
+
+
 }
 
 void CharacterTab::update()
@@ -26,17 +31,17 @@ void CharacterTab::update()
     if (!this->hidden)
     {
 
-        //update shit 
+        this->CharacterInfo.setString(this->player.InfoString()); 
     
     }
 }
 
-void CharacterTab::render(sf::RenderTarget* target)
+void CharacterTab::render(sf::RenderTarget& target)
 { 
     if (!this->hidden)
     {
-        target->draw(this->characterTabBack);
-        target->draw(this->CharacterInfo);
+        target.draw(this->characterTabBack);
+        target.draw(this->CharacterInfo);
 
     }
    

@@ -468,7 +468,7 @@ void GUI::DropDownList::updateketime(const float& dt)
 /* BEGIN TEXTURE SELECTOR*/
 
 //this Is NOT the version of the texture Selector being called in EditorState
-GUI::TextureSelector::TextureSelector(float x, float y,float width, float height, float gridsize, const sf::Texture* texture_sheet, sf::Font& font, std::string text) : keytimeMax(2.f), keytime(0.f)
+GUI::TextureSelector::TextureSelector(float x, float y,float width, float height, sf::Vector2f gridsize, const sf::Texture* texture_sheet, sf::Font& font, std::string text) : keytimeMax(2.f), keytime(0.f)
 {
     /*!
                 @brief Construct's the Texture Selector Element
@@ -483,15 +483,15 @@ GUI::TextureSelector::TextureSelector(float x, float y,float width, float height
                 @return void 
                         
      */
-    float offset = gridsize;
+    sf::Vector2f offset = gridsize;
     this->bounds.setSize(sf::Vector2f(width, height));
-    this->bounds.setPosition(x + offset, y);
+    this->bounds.setPosition(x + offset.x, y + offset.y);
     this->bounds.setFillColor(sf::Color(50, 50, 50, 100));
     this->bounds.setOutlineThickness(1.f);
     this->bounds.setOutlineColor(sf::Color(255, 255, 255, 200));
     
     this->sheet.setTexture(*texture_sheet);
-    this->sheet.setPosition(x + offset, y);
+    this->sheet.setPosition(x + offset.x, y + offset.y);
     
     if (this->sheet.getGlobalBounds().width > this->bounds.getGlobalBounds().width)
     {
@@ -503,8 +503,8 @@ GUI::TextureSelector::TextureSelector(float x, float y,float width, float height
     }
     
     //Configure the texture selector element
-    this->selector.setPosition(x + offset, y);
-    this->selector.setSize(sf::Vector2f(48.f, 48.f));
+    this->selector.setPosition(x + offset.x, y + offset.y);
+    this->selector.setSize(gridsize);
     this->selector.setFillColor(sf::Color::Transparent);
     this->selector.setOutlineColor(sf::Color::Green);
     this->selector.setOutlineThickness(1.f);
@@ -512,11 +512,11 @@ GUI::TextureSelector::TextureSelector(float x, float y,float width, float height
     this->active = false;
     this->gridsize = gridsize;
     
-    this->texturerect.width = 48;
-    this->texturerect.height = 48;
+    this->texturerect.width = gridsize.x;
+    this->texturerect.height = gridsize.y;
     this->hidden = false;
     
-    this->hide = new GUI::Button(x, y, 48, 48, "Resources/GUI/TickBox/Orange/red_boxCross.png", "Resources/GUI/TickBox/Orange/red_boxTick.png", "Resources/GUI/TickBox/Orange/red_boxTick.png");
+    this->hide = new GUI::Button(x, y, gridsize.x, gridsize.y, "Resources/GUI/TickBox/Orange/red_boxCross.png", "Resources/GUI/TickBox/Orange/red_boxTick.png", "Resources/GUI/TickBox/Orange/red_boxTick.png");
    
     
 }
@@ -557,11 +557,11 @@ void GUI::TextureSelector::update(const sf::Vector2i& MousePosWindow, const floa
           {
               this->active = true;
               
-              this->MousePosGrid.x = (MousePosWindow.x - static_cast<int>(this->bounds.getPosition().x)) / static_cast<unsigned>(this->gridsize);
-              this->MousePosGrid.y = (MousePosWindow.y - static_cast<int>(this->bounds.getPosition().y)) / static_cast<unsigned>(this->gridsize);
+              this->MousePosGrid.x = (MousePosWindow.x - static_cast<int>(this->bounds.getPosition().x)) / static_cast<unsigned>(this->gridsize.x);
+              this->MousePosGrid.y = (MousePosWindow.y - static_cast<int>(this->bounds.getPosition().y)) / static_cast<unsigned>(this->gridsize.y);
               
-              this->selector.setPosition(this->bounds.getPosition().x + this->MousePosGrid.x * this->gridsize,
-                                         this->bounds.getPosition().y + this->MousePosGrid.y * this->gridsize);
+              this->selector.setPosition(this->bounds.getPosition().x + this->MousePosGrid.x * this->gridsize.x,
+                                         this->bounds.getPosition().y + this->MousePosGrid.y * this->gridsize.y);
               
               //Update the Texture Rectangle
               
@@ -739,7 +739,7 @@ const unsigned GUI::calcCharSize(const sf::VideoMode& vm, const unsigned modifie
 
 const float GUI::pixelpercentX(const float percent, const sf::VideoMode& vm)
 {
- 
+   
     return std::floor(static_cast<float>(vm.width) * (percent / 100.f));
 }
 

@@ -178,7 +178,7 @@ void EnemyEditorMode::updateGUI(const float &dt)
 
            //set the selection rectangle position
      
-            this->select_Rect.setPosition(this->editorstatedata->mouseposGrid->x * this->statedata->gridsize, this->editorstatedata->mouseposGrid->y * this->statedata->gridsize);
+            this->select_Rect.setPosition(this->editorstatedata->mouseposGrid->x * this->statedata->gridsize->x, this->editorstatedata->mouseposGrid->y * this->statedata->gridsize->y);
          
     
      
@@ -240,7 +240,7 @@ void EnemyEditorMode::initGUI()
        this->sidebar.setOutlineThickness(1.f);
        
         //config the selection rectangle
-        this->select_Rect.setSize(sf::Vector2f(statedata->gridsize, statedata->gridsize));
+        this->select_Rect.setSize(sf::Vector2f(statedata->gridsize->x, statedata->gridsize->y));
         this->select_Rect.setFillColor(sf::Color::White);
     
         //init the box to display controls information to the user

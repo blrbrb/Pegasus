@@ -79,7 +79,9 @@ void DefaultMode::updateInput(const float &dt)
                         
            }
         }
-       
+
+
+      
            
         
      }
@@ -165,10 +167,23 @@ void DefaultMode::updateInput(const float &dt)
            --this->type;
            std::cout << "Type down" << std::endl;
        }
+       else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q) && this->getkeytime())
+       {
+          // this->select_Rect.rotate(90);  
+
+           //this Is how you rotate things to the left, dear god, thank christ
+           this->TextureRect.width = -this->TextureRect.top * this->TextureRect.left; 
+            
+          std::cout << this->select_Rect.getTextureRect().top << " After Transformation" << std::endl;
+          
+          // this->TextureRect.height = reverse.height; 
+          
+       }
+       else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R) && this->getkeytime()) 
+       {
+           this->TextureRect.height = -this->TextureRect.height; 
        
-       
-       
-       
+       }
         
     
 }
@@ -184,16 +199,17 @@ void DefaultMode::update(const float &dt)
 void DefaultMode::updateGUI(const float &dt)
 {
    
-    
+    this->select_Rect.setTextureRect(this->texture_selector->getTextureRect()); 
+   
     this->texture_selector->update(*this->editorstatedata->mousePosWindow, dt);
     
     if(!this->texture_selector->getActive())
     {
           //set the selection rectangle position
        
-        this->select_Rect.setTextureRect(this->texture_selector->getTextureRect());
-        
-        this->select_Rect.setPosition(this->editorstatedata->mouseposGrid->x * this->statedata->gridsize, this->editorstatedata->mouseposGrid->y * this->statedata->gridsize);
+        this->select_Rect.setTextureRect(this->TextureRect);
+        //std::cout << this->select_Rect.getTextureRect().top << " Before Transform" << std::endl; 
+        this->select_Rect.setPosition(this->editorstatedata->mouseposGrid->x * this->statedata->gridsize->x, this->editorstatedata->mouseposGrid->y * this->statedata->gridsize->y);
         
     }
 
@@ -201,7 +217,7 @@ void DefaultMode::updateGUI(const float &dt)
     this->texturesample.setTextureRect(this->select_Rect.getTextureRect());
      
     
-
+    this->select_Rect.setOrigin(sf::Vector2f(this->select_Rect.getLocalBounds().width, this->select_Rect.getLocalBounds().height) / 2.f);
     //set the tile info text
     std::stringstream cursor_text;
     cursor_text << "MouseX: " << this->editorstatedata->mousePosView->x << "\n"
@@ -293,14 +309,14 @@ void DefaultMode::inittext()
            this->cursortext.setFillColor(sf::Color::White);
            this->cursortext.setCharacterSize(GUI::calcCharSize(vm, 140));
            this->cursortext.setOutlineThickness(1.f);
-           this->cursortext.setPosition(GUI::pixelpercentX(78.4, vm), GUI::pixelpercentX(3, vm));
+           this->cursortext.setPosition(GUI::pixelpercentX(100, vm), GUI::pixelpercentX(3, vm));
 
           
             //init the controls text
             this->controls.setCharacterSize(GUI::calcCharSize(vm, 140));
             this->controls.setFillColor(sf::Color::White);
             this->controls.setFont(*this->editorstatedata->font);
-            this->controls.setPosition(GUI::pixelpercentX(78.4, vm), GUI::pixelpercentY(33, vm));
+            this->controls.setPosition(GUI::pixelpercentX(100, vm), GUI::pixelpercentY(33, vm));
             this->controls.setOutlineColor(sf::Color::Black);
             this->controls.setOutlineThickness(1.f);
             this->controls.setString("Change Mode: 2 \n Zoom in: O \n Zoom Out: P \n");
@@ -308,8 +324,6 @@ void DefaultMode::inittext()
 }
     
     
-
-
 
     
 void DefaultMode::initGUI()
@@ -324,40 +338,40 @@ void DefaultMode::initGUI()
     this->sidebar.setOutlineThickness(1.f);
     
     //init the cursor text container
-    this->text_container.setSize(sf::Vector2f(GUI::pixelpercentX(22.57, vm), (GUI::pixelpercentY(30, vm))));
+    this->text_container.setSize(sf::Vector2f(GUI::pixelpercentX(25, vm), (GUI::pixelpercentY(30, vm))));
     this->text_container.setFillColor(sf::Color(50,50,50,100));
-    this->text_container.setPosition(GUI::pixelpercentX(77.4, vm), GUI::pixelpercentY(0, vm));
+    this->text_container.setPosition(GUI::pixelpercentX(100, vm), GUI::pixelpercentY(0, vm));
     this->text_container.setOutlineThickness(1.f);
     this->text_container.setOutlineColor(sf::Color(200, 200, 200, 150));
     
     //init the controls container
-    this->controlsContainer.setSize(sf::Vector2f(GUI::pixelpercentX(22.57, vm), GUI::pixelpercentY(30, vm)));
+    this->controlsContainer.setSize(sf::Vector2f(GUI::pixelpercentX(25, vm), GUI::pixelpercentY(30, vm)));
     this->controlsContainer.setFillColor(sf::Color(50,50,50,100));
-    this->controlsContainer.setPosition(GUI::pixelpercentX(77.4, vm), GUI::pixelpercentY(30, vm));
+    this->controlsContainer.setPosition(GUI::pixelpercentX(100, vm), GUI::pixelpercentY(30, vm));
     this->controlsContainer.setOutlineThickness(1.f);
     this->controlsContainer.setOutlineColor(sf::Color(200, 200, 200, 150));
     
     //config the selection rectangle
-    this->select_Rect.setSize(sf::Vector2f(statedata->gridsize , statedata->gridsize ));
-    this->select_Rect.setTexture(tilemap->getTileSheet());
+    this->select_Rect.setSize(sf::Vector2f(statedata->gridsize->x , statedata->gridsize->y));
+    this->select_Rect.setTexture(tilemap->getTileSheet()); 
+   // this->select_Rect.setOrigin(sf::Vector2f(this->select_Rect.getGlobalBounds().width / 2.f / this->statedata->gridsize - static_cast<float>(this->editorstatedata->mouseposGrid->x), this->select_Rect.getGlobalBounds().height / 2.f / this->statedata->gridsize - static_cast<float>(this->editorstatedata->mouseposGrid->y)));
     
-    
-    
+  //this->select_Rect.setOrigin(sf::Vector2f(this->select_Rect.getLocalBounds().width, this->select_Rect.getLocalBounds().height) / 2.f);
       //configure the texture sample box element
       this->texturesample.setSize(sf::Vector2f(64, 64));
       this->texturesample.setTexture(this->select_Rect.getTexture());
       this->texturesample.setTextureRect(this->select_Rect.getTextureRect());
-      this->texturesample.setPosition(GUI::pixelpercentX(85.4, vm), GUI::pixelpercentY(20, vm));
+      this->texturesample.setPosition(GUI::pixelpercentX(100, vm), GUI::pixelpercentY(20, vm));
       
       this->texturesample_container.setFillColor(sf::Color(50,50,50,100));
       this->texturesample_container.setSize(sf::Vector2f(this->sidebar.getSize().x , 68));
       this->texturesample_container.setOutlineColor(sf::Color(200,200,200,250));
       this->texturesample_container.setOutlineThickness(1.f);
-      this->texturesample_container.setPosition(GUI::pixelpercentX(85.4, vm), GUI::pixelpercentY(20, vm));
+      this->texturesample_container.setPosition(GUI::pixelpercentX(100, vm), GUI::pixelpercentY(20, vm));
      
     
      //Config the TextureSelector element
-     this->texture_selector = new GUI::TextureSelector(100.f, 20.f, 798.f, 798.f, this->statedata->gridsize, this->tilemap->getTileSheet(), *this->editorstatedata->font, "X");
+     this->texture_selector = new GUI::TextureSelector(100.f, 20.f, 798.f, 798.f, *this->statedata->gridsize, this->tilemap->getTileSheet(), *this->editorstatedata->font, "X");
     
     
      

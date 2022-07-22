@@ -43,7 +43,7 @@ void TileMap::clear()
 
 
 
-TileMap::TileMap(float gridSize, int width, int height, std::string texture_file) {
+TileMap::TileMap(sf::Vector2f gridsize, int width, int height, std::string texture_file) {
     
     
    /*!
@@ -59,16 +59,16 @@ TileMap::TileMap(float gridSize, int width, int height, std::string texture_file
     
             */
    
-    this->grid_sizeF = gridSize;
-    this->grid_sizeU = static_cast<unsigned>(gridSize);
-    this->gridsizeI = static_cast<int>(gridSize);
+    this->grid_sizeF = gridsize;
+    this->grid_sizeU = static_cast<sf::Vector2u>(gridsize);
+    this->gridsizeI = static_cast<sf::Vector2i>(gridsize);
     this->lock_layer = false;
     this->MaxSizeWorldGrid.x = width;
     this->MaxSizeWorldGrid.y = height;
     this->layers = 1;
     this->texture_file = texture_file;
-    this->MaxSizeWorld_F.x = static_cast<float>(width) * gridSize;
-    this->MaxSizeWorld_F.y = static_cast<float>(height) * gridSize;
+    this->MaxSizeWorld_F.x = static_cast<float>(width) * gridsize.x;
+    this->MaxSizeWorld_F.y = static_cast<float>(height) * gridsize.y;
 
     //Tile Culling Vars
     
@@ -100,7 +100,7 @@ TileMap::TileMap(float gridSize, int width, int height, std::string texture_file
     
     this->tileTextureSheet.loadFromFile(texture_file);
     
-         this->physicsrect.setSize(sf::Vector2f(grid_sizeF,grid_sizeF));
+         this->physicsrect.setSize(sf::Vector2f(grid_sizeF.x,grid_sizeF.y));
          this->physicsrect.setFillColor(sf::Color::Transparent);
          this->physicsrect.setOutlineColor(sf::Color::Red);
          this->physicsrect.setOutlineThickness(1.f);
@@ -124,6 +124,15 @@ TileMap::TileMap(const std::string map_file)
       
      
       
+} 
+
+
+
+//Default Overload, if no other args are provided to the constructor use a randomly generated sequence of map tiles.
+TileMap::TileMap()
+{ 
+   
+
 }
 
 
@@ -134,9 +143,8 @@ TileMap::~TileMap()
 }
 
         
-
 //Functions
-void TileMap::render(sf::RenderTarget& target, const sf::Vector2i& gridposition, const bool render_collision, sf::Shader* shader, const sf::Vector2f PlayerPosition)
+void TileMap::render(sf::RenderTarget& target, const sf::View& view, const sf::Vector2i& gridposition, const bool render_collision, sf::Shader* shader, const sf::Vector2f PlayerPosition)
 {
     
    /*!
@@ -205,13 +213,15 @@ void TileMap::render(sf::RenderTarget& target, const sf::Vector2i& gridposition,
                    
                 //render w/ shader applied
                    if (shader)
-                   {
-                       
+                   { 
+
+                       target.mapCoordsToPixel(this->Map[x][y][this->layer][k]->getposition(), view);
                        this->Map[x][y][this->layer][k]->render(target, shader, PlayerPosition);
                        
                    }
                    else
                    {
+                       target.mapCoordsToPixel(this->Map[x][y][this->layer][k]->getposition(), view);
                        this->Map[x][y][this->layer][k]->render(target);
                        
                    }
@@ -369,7 +379,7 @@ bool TileMap::savetofile(const std::string filename)
     if (out.is_open())
     {
         out << this->MaxSizeWorldGrid.x << " " << this->MaxSizeWorldGrid.y << "\n"
-        << this->gridsizeI << "\n"
+        << this->gridsizeI.x << " " << this->gridsizeI.y << "\n"
         << this->layers << "\n"
         << this->texture_file << "\n";
         
@@ -435,7 +445,9 @@ bool TileMap::loadfromfile(const std::string filename)
    
     {
         sf::Vector2i size;
-        int gridsize = 0;
+        //int gridsize = 0;
+        sf::Vector2i gridsize;
+        gridsize = sf::Vector2i(0, 0);
         int layers = 0;
         std::string texture_file = "";
         int x = 0;
@@ -447,16 +459,17 @@ bool TileMap::loadfromfile(const std::string filename)
         short type = 0;
         
         //Basic Variables
-        in >> size.x >> size.y >> gridsize>> layers >> texture_file;
+        in >> size.x >> size.y >> gridsize.x >> gridsize.y >> layers >> texture_file;
         
         //Tiles 
         
-          this->grid_sizeF = static_cast<float>(gridsize);
-          this->gridsizeI = gridsize;
+        this->grid_sizeF.x = 0; 
+        this->grid_sizeF.y = 0; 
+          this->gridsizeI = sf::Vector2i(0, 0);
           this->MaxSizeWorldGrid.x = size.x;
           this->MaxSizeWorldGrid.y =  size.y;
-          this->MaxSizeWorld_F.x = static_cast<float>(size.x) * gridsize;
-          this->MaxSizeWorld_F.y = static_cast<float>(size.y) * gridsize;
+          this->MaxSizeWorld_F.x = static_cast<float>(size.x) * gridsize.x;
+          this->MaxSizeWorld_F.y = static_cast<float>(size.y) * gridsize.y;
           this->layers = layers;
           this->texture_file = texture_file;
         
@@ -697,28 +710,28 @@ void TileMap::updateTiles(Entity *entity, const float &dt, EnemySystem& enemysys
 {
     this->layer = 0;
     
-    this->FromX = entity->getGridPosition(this->gridsizeI).x -27;
+    this->FromX = entity->getGridPosition(this->gridsizeI.x).x -27;
     
         if(this->FromX < 0)
             this->FromX = 0;
         else if (this->FromX > this->MaxSizeWorldGrid.x)
             this->FromX = this->MaxSizeWorldGrid.x;
     
-    this->ToX = entity->getGridPosition(this->gridsizeI).x + 27;
+    this->ToX = entity->getGridPosition(this->gridsizeI.x).x + 27;
     
         if(this->ToX < 0)
                    this->ToX = 0;
                else if (this->ToX > this->MaxSizeWorldGrid.x)
                    this->ToX = this->MaxSizeWorldGrid.x;
        
-    this->FromY = entity->getGridPosition(this->gridsizeI).y -27;
+    this->FromY = entity->getGridPosition(this->gridsizeI.y).y -27;
     
         if(this->FromY < 0)
                    this->FromY = 0;
                else if (this->FromY > this->MaxSizeWorldGrid.x)
                    this->FromY = this->MaxSizeWorldGrid.x;
        
-    this->ToY = entity->getGridPosition(this->gridsizeI).y + 27;
+    this->ToY = entity->getGridPosition(this->gridsizeI.y).y + 27;
     
         if(this->ToY < 0)
                    this->ToY = 0;
@@ -744,7 +757,7 @@ void TileMap::updateTiles(Entity *entity, const float &dt, EnemySystem& enemysys
                         {
                             try
                             {
-                            enemysystem.SpawnEnemy(BLRB, x*this->grid_sizeF, y*this->grid_sizeF, *es);
+                            enemysystem.SpawnEnemy(BLRB, x*this->grid_sizeF.x, y*this->grid_sizeF.y, *es);
                             es->SetSpawned(true);
                             }
                             
@@ -772,31 +785,35 @@ void TileMap::updateTileCollision(Entity *entity, const float &dt)
 {
     
     //Tile Culling
+    //Check for Texturerect angular wall collisons, 
+    ///reduce and rediret sprite vel on impact? 
+    //if(this->fromX.tan(90) this->GridPosition(this->gridsizeI).x -27; 
+          
     
     this->layer = 0;
     
-    this->FromX = entity->getGridPosition(this->gridsizeI).x -27;
+    this->FromX = entity->getGridPosition(this->gridsizeI.x).x -27;
     
         if(this->FromX < 0)
             this->FromX = 0;
         else if (this->FromX > this->MaxSizeWorldGrid.x)
             this->FromX = this->MaxSizeWorldGrid.x;
     
-    this->ToX = entity->getGridPosition(this->gridsizeI).x + 27;
+    this->ToX = entity->getGridPosition(this->gridsizeI.x).x + 27;
     
         if(this->ToX < 0)
                    this->ToX = 0;
                else if (this->ToX > this->MaxSizeWorldGrid.x)
                    this->ToX = this->MaxSizeWorldGrid.x;
        
-    this->FromY = entity->getGridPosition(this->gridsizeI).y -27;
+    this->FromY=entity->getGridPosition(this->gridsizeI.y).y -27;
     
         if(this->FromY < 0)
                    this->FromY = 0;
                else if (this->FromY > this->MaxSizeWorldGrid.x)
                    this->FromY = this->MaxSizeWorldGrid.x;
        
-    this->ToY = entity->getGridPosition(this->gridsizeI).y + 27;
+    this->ToY = entity->getGridPosition(this->gridsizeI.y).y + 27;
     
         if(this->ToY < 0)
                    this->ToY = 0;

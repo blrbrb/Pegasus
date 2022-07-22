@@ -88,7 +88,7 @@ void Game::initstates() {
 
 void Game::initGraphicsSettings() {
     
-    this->gfxsettings.loadfromfile("Init/Window.ini");
+    this->gfxsettings.loadfromfile("Init/Window.ini"); 
     
   
 }
@@ -108,12 +108,12 @@ void Game::initwindow() {
    
 
     if (this->gfxsettings.fullscreen) {
-        this->window = new sf::RenderWindow(this->gfxsettings.resolution, this->gfxsettings.title, sf::Style::Default, this->gfxsettings.windowSettings);
+        this->window = new sf::RenderWindow(this->gfxsettings.resolution, this->gfxsettings.title, sf::Style::Fullscreen, this->gfxsettings.windowSettings);
     }
 
    
      else
-        this->window = new sf::RenderWindow(this->gfxsettings.resolution, this->gfxsettings.title, sf::Style::Default);
+        this->window = new sf::RenderWindow(this->gfxsettings.resolution, this->gfxsettings.title, sf::Style::Resize | sf::Style::Close);
         
       
         
@@ -133,7 +133,8 @@ void Game::initstatedata()
     this->state_data.gfxsettings = &this->gfxsettings; 
     this->state_data.supportedkeys = &this->supportedkeys;
     this->state_data.states = &this->states;
-    this->state_data.gridsize = this->gridsize; 
+    this->state_data.gridsize = &this->gridsize; 
+   
 
 
     if (this->state_data.window == NULL) 
@@ -277,8 +278,11 @@ void Game::initVariables()
 {
     this->window = NULL;
     this-> dt = 0.f;
-    this->gridsize = 48.f;
- 
+
+    this->gridsize = sf::Vector2f(32.f, 24.f);
+    //This is the size of the stolen ponytown assets 
+    //I am a shameless pirate.
+    //this->GridSizeIrr = 
 
     
 }

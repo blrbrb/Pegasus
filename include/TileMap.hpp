@@ -16,6 +16,8 @@
 #include "Tile.hpp"
 #include "NormalTile.hpp" 
 
+//TO DO 
+//create an object that dynamically and randomly creates a new tilemap using some kind of noise, then save it as a slmp, load it.
 
 
 class EnemySpawner; 
@@ -28,10 +30,14 @@ class TileMap
 {
 private:
     
-    unsigned grid_sizeU;
-    float grid_sizeF;
-    int gridsizeI; 
-    int layers;
+    //unsigned grid_sizeU;
+    //float grid_sizeF;
+    //int gridsizeI; 
+    int layers; 
+
+    sf::Vector2i gridsizeI; 
+    sf::Vector2f grid_sizeF; 
+    sf::Vector2u grid_sizeU;
     
 
     std::string texture_file;
@@ -65,8 +71,9 @@ private:
     
 public:
     
-    TileMap(float gridSize, int width, int height, std::string texture_file);
+    TileMap(sf::Vector2f gridSize, int width, int height, std::string texture_file);
     TileMap(const std::string map_file);
+    TileMap(); 
     virtual ~TileMap();
     
     
@@ -118,7 +125,7 @@ public:
    
     
     //render functions
-    void render(sf::RenderTarget& target, const sf::Vector2i& gridposition, const bool render_collision = false, sf::Shader* shader = NULL,const sf::Vector2f PlayerPosition = sf::Vector2f());
+    void render(sf::RenderTarget& target,const sf::View& view, const sf::Vector2i& gridposition, const bool render_collision = false, sf::Shader* shader = NULL,const sf::Vector2f PlayerPosition = sf::Vector2f());
     void DefferedRender(sf::RenderTarget& target, sf::Shader* shader = NULL, const sf::Vector2f PlayerPosition = sf::Vector2f());
     void renderlighttile(sf::RenderTarget& target, sf::Shader* shader = NULL);
    

@@ -33,6 +33,7 @@ public:
     sf::Vector2i* mousePosWindow;
     sf::Vector2f* mousePosView;
     sf::Vector2i* mouseposGrid;
+    sf::IntRect* MousePosSquared; 
     sf::Font* font;
     
 };

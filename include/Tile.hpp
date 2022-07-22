@@ -32,7 +32,7 @@ protected:
 public:
     
     Tile();
-    Tile( short type, int x, int y, float gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, bool collision_enabled = false);
+    Tile(short type, int x, int y, sf::Vector2f gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, bool collision_enabled = false);
     virtual ~Tile();
     
     //Accessors

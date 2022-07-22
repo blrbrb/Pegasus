@@ -28,7 +28,8 @@ State::State(StateData* state_data)  {
     this->paused = false;
     this->keytime = 0.f; 
     this->keytime_MAX = 2.3f;
-    this->gridsize = state_data->gridsize; 
+    this->gridsize = *state_data->gridsize;  
+  
    
      
 }
@@ -89,9 +90,15 @@ void State::updateMousePosition(sf::View* view)
       this->window->setView(*view);
     
     
-    this->MousePosView = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window));
-    this->MousePosGrid = sf::Vector2i(static_cast<int>(this->MousePosView.x) / static_cast<int>(this->gridsize),
-                                      static_cast<int>(this->MousePosView.y) / static_cast<int>(this->gridsize));
+    this->MousePosView = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window)); 
+    if(this->state_data->gridsize->y) 
+        this->MousePosGrid = sf::Vector2i(static_cast<int>(this->MousePosView.x) / static_cast<int>(this->gridsize.x),
+            static_cast<int>(this->MousePosView.y) / static_cast<int>(this->gridsize.y));
+    
+    /*else 
+    this->MousePosGrid = sf::Vector2i(static_cast<int>(this->MousePosView.x) / static_cast<int>(this->gridsize.x),
+                                      static_cast<int>(this->MousePosView.y) / static_cast<int>(this->gridsize.y)); */
+   
    
     this->window->setView(this->window->getDefaultView());
 }

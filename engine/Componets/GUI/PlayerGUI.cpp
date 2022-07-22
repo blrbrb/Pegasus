@@ -27,7 +27,7 @@ PlayerGUI::~PlayerGUI()
 {
     delete this->HPbar;
     delete this->ExpBar;
-   // delete this->playerTabs; 
+    delete this->playerTabs; 
     
 }
 
@@ -81,7 +81,7 @@ void PlayerGUI::initinventory()
 void PlayerGUI::initTabs(sf::VideoMode& vm, sf::Font& font, Player& player)
 {
 
-    //this->playerTabs = new PlayerGUITabs(vm, font, player); 
+    this->playerTabs = new PlayerGUITabs(vm, font, player); 
 
 }
 
@@ -167,11 +167,7 @@ void PlayerGUI::updateMoney()
 
 void PlayerGUI::updateCharacterTabs()
 {
-
-
-
-
-
+    this->playerTabs->update(); 
 }
 
 
@@ -225,7 +221,7 @@ void PlayerGUI::render(sf::RenderTarget &target)
     this->renderEXPbar(target);
     this->renderHPbar(target);
     this->renderInventory(target); 
-     
+    this->renderPlayerTabs(target); 
     
 }
 
@@ -235,6 +231,19 @@ void PlayerGUI::render(sf::RenderTarget &target)
 const bool PlayerGUI::getInventoryHidden()
 {
     return this->hidden;
+}
+
+void PlayerGUI::toggleCharacterTab()
+{ 
+  
+    this->playerTabs->toggletabs(TABS::CHARACTER_TAB); 
+}
+
+
+
+void PlayerGUI::renderPlayerTabs(sf::RenderTarget& target) 
+{
+    this->playerTabs->render(target);  
 }
 
 
