@@ -1,6 +1,6 @@
 //
 //  DialougeSystem.cpp
-//  engineFramework
+//  Project Pegasus
 //
 //  Created by Eli Reynolds on 6/25/20.
 //  Copyright © 2020 Eli Reynolds. All rights reserved.
@@ -41,7 +41,7 @@ DialougeSystem::~DialougeSystem()
 
 void DialougeSystem::addTextbox(unsigned type)
 {
-    this->boxes.push_back(new Textbox(*this->templates[DEFAULT_TAG]));
+    //this->boxes.push_back(new Textbox(*this->templates[DEFAULT_TAG]));
 }
 
 void DialougeSystem::removeTextbox()

@@ -1,6 +1,6 @@
 //
 //  GameState.cpp
-//  engineFramework
+//  Project Pegasus
 //
 //  Created by Eli Reynolds on 1/22/20.
 //  Copyright © 2020 Eli Reynolds. Apache License .
@@ -54,7 +54,7 @@ GameState::~GameState()
     delete this->playerGUI;
     delete this->Tilemap;
     delete this->enemysystem;
-    delete this->dialougeSystem;
+   // delete this->dialougeSystem;
     
     for (size_t i = 0; i < this->activEnemies.size(); i++ )
     {
@@ -69,6 +69,7 @@ GameState::~GameState()
 void GameState::initvariables()
 { 
     
+  
     
 }
 
@@ -186,8 +187,9 @@ void GameState::inittextures()
         std::cout << "ERROR Could Not load Enemy Sheet textures GameState lin 171" << std::endl;
         
         throw std::exception("ERROR Could Not load Enemy Sheet textures GameState lin 175");
-    }
-    
+    } 
+
+
 }
 
 void GameState::initfonts()
@@ -204,7 +206,7 @@ void GameState::initfonts()
 void GameState::initplayers()
 { 
     
-    this->player = new Player(0,50, this->textures["PLAYER_SHEET"]);
+    this->player = new Player(0,0, this->textures["PLAYER_SHEET"]);
     
 }
 
@@ -232,6 +234,8 @@ void GameState::inittilemap()
     this->Tilemap = new TileMap(*this->state_data->gridsize, 100, 100, "Resources/Assets/Tiles/sheet.png");
    
     this->Tilemap->loadfromfile("Data/TileMap/text.slmp"); 
+
+   
 }
 
 
@@ -252,7 +256,8 @@ void GameState::update(const float& dt)
             this->updateView(dt);
             this->updatePlayerInput(dt);
             this->updatetilemap(dt);
-            this->updatePlayer(dt);
+            this->updatePlayer(dt); 
+           
             this->updatePlayerGUI(dt);
             this->updateEnemies(dt);
             this->dialougeSystem->update(dt);
@@ -280,6 +285,7 @@ void GameState::updateInput(const float& dt)
 
 void GameState::updatetilemap(const float& dt)
 {
+    this->Tilemap->update(this->player, dt); 
     this->Tilemap->updateWorldBoundsCollision(this->player, dt);
     this->Tilemap->updateTileCollision(this->player, dt);
     this->Tilemap->updateTiles(this->player, dt, *this->enemysystem);
@@ -415,22 +421,24 @@ void GameState::render(sf::RenderTarget* target) {
     
     
     this->rendertexture.setView(this->view); 
-
-    //target->mapPixelToCoords(this->Tilemap->getMaxSizeGrid()); 
-    this->Tilemap->render(this->rendertexture,this->view, this->ViewGridPosition, false);
+   
+   // target->mapPixelToCoords(this->Tilemap->getMaxSizeGrid()); 
+    this->Tilemap->render(this->rendertexture,this->view, this->ViewGridPosition, false, &this->core_shader);
+    //this->Tilemap->render()
     //this->Tilemap->renderlighttile(this->rendertexture, &this->core_shader);
    
-   
+  
     //target->mapPixelToCoords(static_cast<sf::Vector2i>(this->player->getCenter())); 
     this->player->render(this->rendertexture, &this->core_shader, this->player->getCenter(), false);
-    
+  
+
     for (auto *i : this->activEnemies)
        {
            i->render(this->rendertexture, &this->core_shader, i->getCenter(), false);
            
        }
     
-  //  this->Tilemap->DefferedRender(this->rendertexture, &this->core_shader,this->player->getCenter());
+   this->Tilemap->DefferedRender(this->rendertexture, &this->core_shader,this->player->getCenter());
     
     //this->dialougeSystem->render(this->rendertexture);
     
@@ -538,6 +546,7 @@ void GameState::updateEncounter(Enemy* enemy, const int index, const float & dt)
 void GameState::initenemysystem()
 {
     this->enemysystem = new EnemySystem(this->activEnemies, this->textures);
+   // this->objecthandler = new ObjectHandler(this->Objects, this->textures); 
 
 }
 

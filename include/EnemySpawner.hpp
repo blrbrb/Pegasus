@@ -34,7 +34,8 @@ public:
     virtual ~EnemySpawner();
   
     //modifiers
-    void SetSpawned(const bool spawned);
+    void SetSpawned(const bool spawned);  
+    void add_object(short type, sf::Vector2f& object_position); 
     
     //Accessors
     const std::string asString() const;

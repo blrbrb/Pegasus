@@ -274,7 +274,12 @@
     <ClCompile Include="engine\tiles\Tile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Lantern.cpp" />
+    <ClCompile Include="Magic.cpp" />
     <ClCompile Include="NPC.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="ObjectHandler.cpp" />
+    <ClCompile Include="ObjectTile.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -311,6 +316,7 @@
     <ClInclude Include="include\Inventory.hpp" />
     <ClInclude Include="include\Item.hpp" />
     <ClInclude Include="include\items_include .h" />
+    <ClInclude Include="include\Lantern.hpp" />
     <ClInclude Include="include\LightTile.hpp" />
     <ClInclude Include="include\MainMenuState.hpp" />
     <ClInclude Include="include\MovementComponets.hpp" />
@@ -332,7 +338,11 @@
     <ClInclude Include="include\TileMap.hpp" />
     <ClInclude Include="include\Tiles_Include.h" />
     <ClInclude Include="include\Weapon.hpp" />
+    <ClInclude Include="Magic.h" />
     <ClInclude Include="NPC.hpp" />
+    <ClInclude Include="include\Object.hpp" />
+    <ClInclude Include="include\ObjectHandler.hpp" />
+    <ClInclude Include="include\ObjectTile.hpp" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -388,6 +398,9 @@
     <None Include="Data\Shader\fragment_shader.frag" />
     <None Include="Data\Shader\vertex_shader.vert" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Text.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,6 @@
 //
 //  HitBoxComponet.cpp
-//  engineFramework
+//  Project Pegasus
 //
 //  Created by Eli Reynolds on 2/1/20.
 //  Copyright © 2020 Eli Reynolds. Apache License .

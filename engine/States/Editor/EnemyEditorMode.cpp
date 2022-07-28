@@ -24,7 +24,7 @@ EnemyEditorMode::~EnemyEditorMode()
 
 void EnemyEditorMode::updateInput(const float &dt)
 {
-    if((sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->getkeytime()) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->editorstatedata->keybinds->at("PLACE"))) && this->getkeytime()))
+    if((sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->getkeytime()))
         {
                  if(this->tilemap->getLayerSize(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer) != -1)
                      {
@@ -49,7 +49,7 @@ void EnemyEditorMode::updateInput(const float &dt)
                         
                                 this->tilemap->addTile(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, 0, this->TextureRect, this->Enemytype, this->Enemyamount, this->spawn_timer, this->maxDistance);
                                 
-                                //std::cout << "Spawner Tile Added" << std::endl;
+                               std::cout << "Spawner Tile Added" << std::endl;
                                
                             }
 
@@ -200,7 +200,7 @@ void EnemyEditorMode::updateGUI(const float &dt)
      }
      
      //if the cursor is not on a valid tile, the text color is red
-     else if (this->tilemap->getLayerSize(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer) == -1 )
+     else if (this->tilemap->getLayerSize(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer) < 0)
      {
          this->cursortext.setFillColor(sf::Color::Red);
      }

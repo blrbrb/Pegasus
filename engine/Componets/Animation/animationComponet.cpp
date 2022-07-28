@@ -1,6 +1,6 @@
 //
 //  AnimationComponet.cpp
-//  engineFramework
+//  Project Pegasus
 //
 //  Created by Eli Reynolds on 1/30/20.
 //  Copyright © 2020 Eli Reynolds. Apache License .

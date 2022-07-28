@@ -1,6 +1,6 @@
 //
 //  LightTile.cpp
-//  engineFramework
+//  Project Pegasus
 //
 //  Created by Eli Reynolds on 3/14/20.
 //  Copyright © 2020 Eli Reynolds. Apache License .
@@ -59,5 +59,9 @@ void LightTile::render(sf::RenderTarget &target, sf::Shader *shader, sf::Vector2
        
    }
    
+}
+
+void LightTile::add_object(short type, sf::Vector2f& object_position)
+{
 }
 

@@ -1,6 +1,6 @@
 //
 //  BattleGUI.cpp
-//  engineFramework
+//  Project Pegasus
 //
 //  Created by Eli Reynolds on 5/17/20.
 //  Copyright © 2020 Eli Reynolds. Apache License .
@@ -50,7 +50,7 @@ void BattleGUI::initfont()
 
 void BattleGUI::initenemyHPbar()
 {
-    this->enemyHP = new GUI::ProgressBar(23.f, 5.f, 10.4, 2.8, 10, this->vm, sf::Color::Red, 150, &this->font);
+    this->enemyHP = new GUI::ProgressBar(23.f, 5.f, 10.4, 2.8,this->vm, sf::Color::Red, 150, &this->font);
     
 }
 
@@ -95,7 +95,7 @@ void BattleGUI::update(const float &dt)
 
 void BattleGUI::updateenemyHPbar()
 {
-    this->enemyHP->update(this->enemy->attributes->hp);
+    this->enemyHP->update(this->enemy->attributes->hpMax, this->enemy->attributes->hp);
     
 }
 

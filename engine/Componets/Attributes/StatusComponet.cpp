@@ -1,6 +1,6 @@
 //
 //  AttributeComponet.cppe
-//  engineFramework
+//  Project Pegasus
 //
 //  Created by Eli Reynolds on 2/21/20.
 //  Copyright © 2020 Eli Reynolds. Apache License .
@@ -23,13 +23,28 @@ StatusComponet::StatusComponet(int level)
     this->expNextlvl =static_cast<int>((50 / 3) * (pow(this->level + 1, 3) - 6 * pow(this->level + 1, 2) + ((this->level + 1) * 17) -12));
     
     this->attributepts = 2;
-     
+    this->MagicMax = 100; 
     //init stats
-    this->vit = 1;
-    this->inteligence = 1;
-    this->dex = 1;
-    this->strength = 1;
-    this->agility = 1;
+  
+    //Init Positive Multipliers
+    this->friendship = 1; 
+    this->honesty = 1; 
+    this->Heart = 1; 
+    this->generosity = 1;
+    this->laughter = 1; 
+    this->kindness = 1; 
+    this->strength = 1; 
+
+    //Init Negative Multipliers 
+    this->animosity = 0; 
+    this->deceit = 0; 
+    this->indifference = 0; 
+    this->greed = 0; 
+    this->despair = 0; 
+    this->malice = 0; 
+    this->treachery = 0; 
+   
+   
     this->initsounds();
     this->UpdateStats(true);
     
@@ -66,13 +81,17 @@ void StatusComponet::UpdateStats(const bool reset)
     ///Form: x = y2 + y/2 + xn / 5;
     
     //Calc to determine the Player's defense
+    
     ///x = y2 + y/4 + xn/5;
     
-    this->hpMax = this->vit * 9 + this->vit + this->strength / 2 + this->inteligence / 5;
-    this->damageMin = this->strength * 2 + this->strength / 4 + this->inteligence / 5;
-    this->damMax = this->strength * 2 + this->strength / 2 + this->inteligence / 5;
-    this->defense = this->agility * 2 + this->agility / 4 + this->inteligence / 5;
-    this->luck = this->inteligence * 2 + this->inteligence / 5;
+    this->hpMax = this->Heart * 9 + this->friendship + (this->strength / 5 + this->treachery);
+    this->damageMin = this->strength * 2 + this->animosity + this->strength / 4 - this->Heart / 10;
+    this->damMax = this->strength * 2 + (this->indifference * 10 + this->animosity) + this->strength / 2 + (this->friendship / 5 - this->Heart / 10); 
+    this->MagicMax = this->Magic * 10 + this->friendship / 2 + this->honesty / 2 - (this->despair * 2 + this->malice + this->treachery / 2);
+    this->defense = this->loyalty * 2 + this->Heart / 4 + this->friendship / 10 - (this->animosity * 2 + this->despair / 4);
+    this->Magic_Charge = this->friendship * 2 + this->Heart / 4 + this->honesty + this->kindness / 10 - (this->animosity * 5);
+    //this->MagicMax = this->friendship * 10 + this->Heart * 10 + this->kindness * 10 + this->honesty - (this->animosity * 6 + this->indifference + this->malice);
+    this->luck = this->generosity * 2 + this->honesty / 5 + this->laughter - (this->deceit + this->despair * 2); 
     
     if(reset)
     {
@@ -86,6 +105,15 @@ void StatusComponet::UpdateStats(const bool reset)
 void StatusComponet::update()
 {
     this->UpdateLevel();
+}
+
+void StatusComponet::updateMagic(const float& dt)
+{
+    if (static_cast<int>(this->Magic_Charge) > this->MagicMax) 
+    {
+        this->Magic_Charge += this->Magic_Charge + dt / dt * 3.14; 
+    }
+
 }
 
 

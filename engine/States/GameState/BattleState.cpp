@@ -1,6 +1,6 @@
 //
 //  BattleState.cpp
-//  engineFramework
+//  Project Pegasus
 //
 //  Created by Eli Reynolds on 4/11/20.
 //  Copyright © 2020 Eli Reynolds. Apache License .
@@ -135,7 +135,7 @@ void BattleState::updateButtons(const float& dt)
     {
         
         this->PlayerAttack();
-        this->enemy->animtioncomponet->play("ATTACKED", dt);
+        this->enemy->animationcomponet->play("ATTACKED", dt);
         
             if(this->PlayerTurn)
                 this->PlayerTurn = false;
@@ -286,7 +286,7 @@ void BattleState::initkeybinds()
 void BattleState::GiveEnemyDamage(const float& dt)
 {
     
-    this->enemy->animtioncomponet->play("ATTACKED", dt);
+    this->enemy->animationcomponet->play("ATTACKED", dt);
     this->enemy->loseHP(2);
     
 }

@@ -131,7 +131,7 @@ void EditorState::updatepausemenubuttons()
     {
         try
         {
-            this->Tilemap->loadfromfile("Data/text.slmp");
+            this->Tilemap->loadfromfile("Data/TileMap/text.slmp");
         }
         
         catch (std::runtime_error& e)

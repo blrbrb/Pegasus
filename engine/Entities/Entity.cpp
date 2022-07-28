@@ -89,7 +89,7 @@ Entity::~Entity() {
     
     delete this->hitbox;
     delete this->movementcomponets;
-    delete this->animtioncomponet;
+    delete this->animationcomponet;
     delete this->attributes;
     delete this->skillcomponent;
    
@@ -121,7 +121,7 @@ void Entity::createmovementcomponet(const float maxVelocity, const float Acceler
 void Entity::create_animation_componet(sf::Texture& texturesheet)
 {
     
-    this->animtioncomponet = new AnimationComponet(this->sprite, texturesheet);
+    this->animationcomponet = new AnimationComponet(this->sprite, texturesheet);
     
     
 }

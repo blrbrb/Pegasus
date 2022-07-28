@@ -12,6 +12,7 @@
 
 #include "GUI.hpp"
 
+
 enum TileTypes {DEFAULT=0, UNPASSABLE, OBJECT, SPAWNER, LIGHT};
 static const char * EnumStrings[] = { "Default", "Unpassable", "Object", "Spawner", "Light", "Stop", "YOU FOOL", "NO" };
 
@@ -20,14 +21,15 @@ class Tile
 {
 private:
     
-    
+   
 protected:
     
     sf::Sprite rect;
     short type;
     bool collison_enabled;
-    
-    
+    bool is_object;
+     
+   
     
 public:
     
@@ -43,12 +45,15 @@ public:
     virtual const bool intersects(const sf::FloatRect bounds) const;
     virtual const sf::FloatRect getGlobalBounds() const;
     virtual const sf::Vector2f getCenter() const;
-    
+
     
     //Functions
     virtual void update() =0;
     virtual void render(sf::RenderTarget & target, sf::Shader* shader = NULL,sf::Vector2f LightPosition = sf::Vector2f())=0;
-    
+   
+
+    //Modifiers 
+   
 };
 
 

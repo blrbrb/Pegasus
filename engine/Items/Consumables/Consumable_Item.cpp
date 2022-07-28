@@ -1,6 +1,6 @@
 //
 //  Consumable_Item.cpp
-//  engineFramework
+//  Project Pegasus
 //
 //  Created by Eli Reynolds on 7/15/20.
 //  Copyright © 2020 Eli Reynolds. All rights reserved.

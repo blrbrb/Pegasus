@@ -27,6 +27,8 @@ public:
     void update();
     void render(sf::RenderTarget & target, sf::Shader* shader = NULL,sf::Vector2f LightPosition = sf::Vector2f());
     
+    //Modifiers 
+    void add_object(short type, sf::Vector2f& object_position);
 private: 
     
     

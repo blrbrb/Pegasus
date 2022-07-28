@@ -9,7 +9,7 @@
 #ifndef SkillComponent_hpp
 #define SkillComponent_hpp
 
-enum SKILLS {HP = 0, ATK, POW, DEF, SPEED, SP };
+enum SKILLS {HP = 0, ATK, POW, DEF, SPEED, MAGIC, HEART };
 
 class SkillComponent
 {

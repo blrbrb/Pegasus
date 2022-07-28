@@ -28,7 +28,7 @@ public:
     ///The Movement Component
     MovementComponets* movementcomponets;
     ///The Animation Component
-    AnimationComponet* animtioncomponet;
+    AnimationComponet* animationcomponet;
     /// The Hitbox Component
     HitBoxComponet* hitbox;
     ///The Status Component
@@ -79,7 +79,7 @@ public:
     /// Stop the Y Velocity of the Entity
     virtual void stopVelocityY();
     
-    
+  
     //Component init functions
     ///  @brief Generate the movement component for the Entity,
     ///   This component will be used to determine all physics interactions between objects and the entity / other entites

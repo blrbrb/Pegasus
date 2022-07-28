@@ -1,6 +1,6 @@
 //
 //  SkillComponent.cpp
-//  engineFramework
+//  Project Pegasus
 //
 //  Created by Eli Reynolds on 3/2/20.
 //  Copyright © 2020 Eli Reynolds. Apache License .
@@ -11,7 +11,7 @@
 SkillComponent::SkillComponent()
 {
     this->skills.push_back(Skill(SKILLS::HP));
-    this->skills.push_back(Skill(SKILLS::SP));
+    this->skills.push_back(Skill(SKILLS::MAGIC));
     this->skills.push_back(Skill(SKILLS::DEF));
     this->skills.push_back(Skill(SKILLS::ATK));
     this->skills.push_back(Skill(SKILLS::POW));

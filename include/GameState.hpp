@@ -19,6 +19,7 @@ engineFramework
 #include "EnemySystem.hpp"
 #include "DialougeSystem.hpp"
 #include "BattleState.hpp"
+#include "ObjectHandler.hpp"
 
 
 
@@ -110,6 +111,7 @@ private:
     
     
     EnemySystem* enemysystem;
+    ObjectHandler* objecthandler; 
     DialougeSystem* dialougeSystem;
   
     
@@ -130,6 +132,7 @@ private:
     
     //Enemies
     std::vector<Enemy*> activEnemies;
+    std::vector<Object*> Objects; 
    
     GameStateData gamestatedata; 
     

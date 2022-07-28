@@ -1,6 +1,6 @@
 //
 //  EnemySpawner.cpp
-//  engineFramework
+//  Project Pegasus
 //
 //  Created by Eli Reynolds on 3/3/20.
 //  Copyright © 2020 Eli Reynolds. Apache License .
@@ -65,7 +65,7 @@ const std::string EnemySpawner::asString() const
 {
     std::stringstream ss;
     
-    ss << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->Enemy_type
+    ss << this->type << " " << this->is_object << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->Enemy_type
     << " " << this->Enemy_amount << " " << this->timer << " " << this->maxDistance;
     
     //std::cout << ss.str() << std::endl;
@@ -78,6 +78,10 @@ void EnemySpawner::SetSpawned(const bool spawned)
 {
     this->Spawned = spawned;
     this->SpawnTimer.restart();
+}
+
+void EnemySpawner::add_object(short type, sf::Vector2f& object_position)
+{
 }
 
 const bool &EnemySpawner::getSpawned() const

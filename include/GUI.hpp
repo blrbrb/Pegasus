@@ -271,7 +271,7 @@ public:
     CheckBox(float x, float y);
     ~CheckBox();
     
-    
+        
       void update(const sf::Vector2i Mousepos);
       const bool isPressed() const;
       void render(sf::RenderTarget& target);
@@ -288,6 +288,8 @@ private:
     float Max_width;
     sf::RectangleShape Interior;
     sf::RectangleShape Exterior;
+    sf::Texture texture; 
+    sf::Sprite bar; 
     int MaxVal; 
     
 public:
@@ -301,12 +303,12 @@ public:
     /// @param vm the sf::VideoMode
     /// @param inner_color sf::Color, the inner color of the ProgressBar
     /// @param charsize the character size for text above the ProgressBar
-    ProgressBar(float x, float y, float width, float height, int MaxValue, sf::VideoMode& vm, sf::Color inner_color, unsigned charsize, sf::Font* font = nullptr);
+    ProgressBar(float x, float y, float width, float height,sf::VideoMode& vm, sf::Color inner_color, unsigned charsize, sf::Font* font = nullptr);
     
     
     ~ProgressBar();
     
-    void update(const int current_value);
+    void update(const int current_value, const int max_value);
     void render(sf::RenderTarget& target);
   
     //Accessors
@@ -332,7 +334,8 @@ public:
 private:
     
     sf::RectangleShape Box;
-    sf::Texture icontexture;
+    sf::Texture icontexture; 
+    sf::Sprite IconBar; 
     
     
 };

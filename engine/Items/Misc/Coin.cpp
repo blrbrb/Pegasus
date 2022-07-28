@@ -1,6 +1,6 @@
 //
 //  Coin.cpp
-//  engineFramework
+//  Project Pegasus
 //
 //  Created by Eli Reynolds on 3/19/20.
 //  Copyright © 2020 Eli Reynolds. Apache License .

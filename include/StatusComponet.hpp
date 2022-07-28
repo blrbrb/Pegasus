@@ -27,12 +27,36 @@ public:
       int expNextlvl;
       int attributepts;
       
-      //Multipliers
+
+      //Time Variables 
+      int Magic_Charge; 
+      int stamina; 
+
+      //Positive Multipliers
+      //Magical friendship laser rainbows and shit like that, good things 
       int strength;
-      int vit;
-      int dex;
-      int agility;
-      int inteligence;
+      int generosity;
+      int kindness; 
+      int laughter; 
+      int honesty; 
+      int loyalty; 
+      int Magic; 
+      int Heart;
+      int friendship; 
+  
+      //Negative Multipliers 
+      //Are you a dishonest, disloyal, mean spirited person? Do your choices reflect an evil personailty. 
+      //These will work as a heavy disadvantage ultimatley, but some come with a trade.
+      int animosity; 
+      int greed; 
+      int malice;
+      int despair;
+      int indifference;
+      int treachery; 
+      int deceit; 
+
+      
+
       
       //Status
       int hp;
@@ -41,7 +65,8 @@ public:
       int damageMin;
       int accuracy;
       int defense;
-      int luck;
+      int luck; 
+      int MagicMax; 
     
     //COINS
     int coins; 
@@ -65,7 +90,8 @@ public:
     /// @brief Keep track of dynamic changes to the entity's Stats, and update values accordingly
     /// @param reset the hp value to the Maximum HP value. (e.g, starting off with full health)
     void UpdateStats(const bool reset);
-    void update();
+    void update(); 
+    void updateMagic(const float& dt); 
     /// Updatelevel
     ///@brief Check for changes in the entity's level, update values accordingly
     void UpdateLevel();
@@ -95,7 +121,7 @@ public:
     /// isdead
     ///@brief Get wether or not an entity is out of health points
     ///@returns bool wether or not the entity has run out of health points
-    const bool isdead() const; 
+    const bool isdead() const;  
 };
 
 

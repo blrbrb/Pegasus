@@ -25,7 +25,10 @@ private:
     sf::RectangleShape LevelTagExterior;
         
     //Exp bar
-    GUI::ProgressBar* ExpBar;
+    GUI::ProgressBar* ExpBar; 
+
+    //Magic bar 
+    GUI::ProgressBar* MagicBar; 
     
     //Health bar
     sf::Font font;
@@ -54,7 +57,8 @@ private:
     void initfont();
     void initLevelTag();
     void initHPbar();
-    void initEXPbar();
+    void initEXPbar(); 
+    void initMagicbar(); 
     void initMONEY();
     void initinventory();
     void initvariables(); 
@@ -83,9 +87,11 @@ public:
     void updateLevelTag();
     void updateHPbar();
     void updateEXPbar();
+    void updateMagicbar(); 
     void updateMoney();
     void updateInventory();
     void updateCharacterTabs(); 
+
     /// update
     /// @brief Update all of the PlayerGUI elements
     /// @param dt Delta-Time
@@ -96,8 +102,9 @@ public:
     void renderHPbar(sf::RenderTarget& target);
     void renderMoney(sf::RenderTarget& target);
     void renderEXPbar(sf::RenderTarget& target);
+    void renderMagicbar(sf::RenderTarget& target);
     void renderInventory(sf::RenderTarget& target); 
-    void renderPlayerTabs(sf::RenderTarget& target); 
+    void renderPlayerTabs(sf::RenderTarget& target);  
  
     
     /// render

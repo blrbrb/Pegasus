@@ -41,7 +41,7 @@ protected:
 
     //child class variables
        std::string name;
-    
+       EnemySpawner& EnemySpawnerTile;
      
     
 private:
@@ -50,7 +50,7 @@ private:
    virtual void initanimations() = 0;
    unsigned gainExp;
     
-    EnemySpawner& EnemySpawnerTile;
+  
    
 };
 

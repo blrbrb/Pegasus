@@ -1,6 +1,6 @@
 //
 //  PlayerGUI.cpp
-//  engineFramework
+//  Project Pegasus
 //
 //  Created by Eli Reynolds on 2/24/20.
 //  Copyright © 2020 Eli Reynolds. Apache License .
@@ -16,6 +16,7 @@ PlayerGUI::PlayerGUI(Player* player, sf::VideoMode& vm) : vm(vm)
     this->initLevelTag(); 
     this->initHPbar();
     this->initEXPbar();
+    this->initMagicbar(); 
     this->initMONEY();
     this->initinventory(); 
     this->initTabs(vm, font, *player);
@@ -45,7 +46,7 @@ void PlayerGUI::initMONEY()
 void PlayerGUI::initHPbar()
 {
     //args are as follows, float x, float y, float width, float height
-    this->HPbar = new GUI::ProgressBar(1.f, 8.3, 20.4, 4.8, this->player->getStatusComponet()->hpMax, this->vm, sf::Color::Red, 150, &this->font);
+    this->HPbar = new GUI::ProgressBar(1.f, 8.3, 20.4, 4.8,this->vm, sf::Color(255, 0, 0, 200), 150, &this->font);
   
 }
 
@@ -69,7 +70,13 @@ void PlayerGUI::initLevelTag()
 
 void PlayerGUI::initEXPbar()
 {   //args are as follows, float x float y float width float height 
-    this->ExpBar = new GUI::ProgressBar(1.f, 16.6, 20.4, 4.8, this->player->attributes->expNextlvl, this->vm, sf::Color::Green, 150, &this->font);
+    this->ExpBar = new GUI::ProgressBar(1.f, 16.6, 20.4, 4.8,this->vm, sf::Color::Green, 150, &this->font);
+}
+
+void PlayerGUI::initMagicbar()
+{ 
+    this->MagicBar = new GUI::ProgressBar(1.f, 24.1, 20.4, 4.8, this->vm, sf::Color::Blue, 150, &this->font); 
+    
 }
 
 void PlayerGUI::initinventory()
@@ -140,12 +147,18 @@ void PlayerGUI::updateInventory()
 
 void PlayerGUI::updateHPbar()
 {
-    this->HPbar->update(this->player->attributes->hp);
+    this->HPbar->update(this->player->attributes->hpMax, this->player->attributes->hp);
 }
 
 void PlayerGUI::updateEXPbar()
 {
-    this->ExpBar->update(this->player->attributes->exp);
+    this->ExpBar->update(this->player->attributes->expNextlvl, this->player->attributes->exp);
+}
+
+void PlayerGUI::updateMagicbar()
+{ 
+    this->MagicBar->update(this->player->attributes->Magic_Charge, this->player->attributes->MagicMax); 
+   // this->MagicBar->update()
 }
 
 void PlayerGUI::updateLevelTag()
@@ -212,6 +225,11 @@ void PlayerGUI::renderEXPbar(sf::RenderTarget& target)
     this->ExpBar->render(target);
 }
 
+void PlayerGUI::renderMagicbar(sf::RenderTarget& target)
+{ 
+    this->MagicBar->render(target); 
+}
+
 
 
 void PlayerGUI::render(sf::RenderTarget &target)
@@ -220,6 +238,7 @@ void PlayerGUI::render(sf::RenderTarget &target)
     this->renderLevelTag(target);
     this->renderEXPbar(target);
     this->renderHPbar(target);
+    this->renderMagicbar(target); 
     this->renderInventory(target); 
     this->renderPlayerTabs(target); 
     

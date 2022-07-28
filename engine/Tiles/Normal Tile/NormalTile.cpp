@@ -1,6 +1,6 @@
 //
 //  NormalTile.cpp
-//  engineFramework
+//  Project Pegasus
 //
 //  Created by Eli Reynolds on 3/6/20.
 //  Copyright © 2020 Eli Reynolds. Apache License .
@@ -30,7 +30,7 @@ const std::string NormalTile::asString() const
 {
     std::stringstream out;
        
-    out << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->collison_enabled;
+    out << this->type << " " << this->is_object << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->collison_enabled;
        
        
        return out.str();
@@ -56,4 +56,9 @@ void NormalTile::render(sf::RenderTarget &target, sf::Shader *shader, sf::Vector
         
     }
     
+}
+
+void NormalTile::add_object(short type, sf::Vector2f& object_position)
+{ 
+  
 }

@@ -1,6 +1,6 @@
 //
 //  GUI.cpp
-//  engineFramework
+//  Project Pegasus
 //
 //  Created by Eli Reynolds on 2/5/20.
 //  Copyright © 2020 Eli Reynolds. Apache License .
@@ -751,7 +751,7 @@ const float GUI::pixelpercentY(const float percent, const sf::VideoMode& vm)
 }
 
 
-GUI::ProgressBar::ProgressBar(float x, float y, float width, float height, int MaxValue, sf::VideoMode& vm, sf::Color inner_color, unsigned charSize, sf::Font* font)
+GUI::ProgressBar::ProgressBar(float x, float y, float width, float height,sf::VideoMode& vm, sf::Color inner_color, unsigned charSize, sf::Font* font)
 {
     float widthh = GUI::pixelpercentX(width, vm);
     float heightt = GUI::pixelpercentY(height, vm);
@@ -759,11 +759,12 @@ GUI::ProgressBar::ProgressBar(float x, float y, float width, float height, int M
     float yy = GUI::pixelpercentY(y, vm);
     
     
-    this->MaxVal = MaxValue;
+   
     this->Max_width = width;
     
     this->Exterior.setSize(sf::Vector2f(widthh, heightt));
-    this->Exterior.setFillColor(sf::Color(50,50,50,200));
+    this->Exterior.setFillColor(sf::Color(50,50,50,200)); 
+   
     this->Exterior.setPosition(xx,yy);
     
     this->Interior.setSize(sf::Vector2f(widthh, heightt));
@@ -790,15 +791,15 @@ GUI::ProgressBar::~ProgressBar()
 
 
 
-void GUI::ProgressBar::update(const int current_value)
+void GUI::ProgressBar::update(const int current_value, const int max_value)
 {
-    float percent = static_cast<float>(current_value) / static_cast<float>(this->MaxVal);
+    float percent = static_cast<float>(current_value) / static_cast<float>(max_value);
     
     
     this->Interior.setSize(sf::Vector2f(static_cast<float>(std::floor(this->Max_width * percent)), this->Interior.getSize().y));
     
     this->hpbarText = std::to_string(current_value) + "/" +
-                     std::to_string(this->MaxVal);
+                     std::to_string(max_value);
     
     this->text.setString(hpbarText);
 }
@@ -806,6 +807,7 @@ void GUI::ProgressBar::update(const int current_value)
 
 void GUI::ProgressBar::render(sf::RenderTarget& target)
 {
+
     target.draw(this->Exterior);
     target.draw(this->Interior);
     target.draw(this->text);
