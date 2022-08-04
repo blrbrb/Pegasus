@@ -368,7 +368,7 @@ void GameState::updateShaders(const float& dt)
     {
         this->initvariables(); 
     }
-    std::cout << shadertime << std::endl; 
+   // std::cout << shadertime << std::endl; 
     this->core_shader.setUniform("time", shadertime);
    
 }

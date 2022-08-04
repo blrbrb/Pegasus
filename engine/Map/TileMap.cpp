@@ -139,7 +139,7 @@ TileMap::TileMap(const std::string map_file)
       this->FromY = 0;
       this->layer = 0;
 
-    
+      this->init_object_textures(); 
      this->loadfromfile(map_file);
      
       
@@ -229,7 +229,7 @@ void TileMap::render(sf::RenderTarget& target, const sf::View& view, const sf::V
                     this->renderdefered.push(this->Map[x][y][this->layer][k]); 
                     
                  
-                
+      
                 }
 
                     //render w/ shader applied
@@ -406,7 +406,7 @@ bool TileMap::savetofile(const std::string filename)
     std::ofstream out;
     
        
-    out.open(filename, std::ios_base::out | std::ios_base::binary);
+    out.open(filename, std::ios::out | std::ios::binary);
     
     if (out.is_open())
     { 
@@ -433,7 +433,7 @@ bool TileMap::savetofile(const std::string filename)
                         {
                             
                            out << x << " " << y << " " << z << " " << this->Map[x][y][z][k]->asString() << " ";
-                            
+                           std::cout << this->Map[x][y][z][k]->asString() << " " << std::endl;
                           
                            
                            // dont save this last space
@@ -478,10 +478,10 @@ bool TileMap::loadfromfile(const std::string filename)
 
 
 
-
+    
     std::ifstream in;
 
-    in.open(filename, std::ios_base::in | std::ios_base::binary);
+    in.open(filename, std::ios::in);
 
     if (in.is_open())
 
@@ -502,7 +502,7 @@ bool TileMap::loadfromfile(const std::string filename)
         float x1 = 0.f;
         float y1 = 0.f;
         bool collision = false;
-        short type = 0;
+        int  type = 0;
     
        
 
@@ -563,11 +563,30 @@ bool TileMap::loadfromfile(const std::string filename)
 
         while (in >> x >> y >> z >> type)
         {
-          
-            std::cout << type << "\n";
+            std::cout << "reading the x position... it's " << x << std::endl; 
+            std::cout << "reading the y position it's  " << y << std::endl; 
+            std::cout << "reading the layer... it's " << z << std::endl;
+            std::cout << "\n";
          
-          
-            if (type == TileTypes::SPAWNER)
+            if (type == 2)
+            {
+                
+                float obX = 0.f;
+                float obY = 0.f;
+                short ObjectType = 0;
+                
+
+
+                in >> textureX >> textureY >> ObjectType >> obX >> obY;
+
+                std::cout << "reading the object tile position X: it's  " << obX << "position Y:  " << obY << " " << std::endl;
+                std::cout << "reading the object tile object type it's " << ObjectType << std::endl;
+                std::cout << "reading the Object texutre rect X it's  " << textureX << "& " << textureY << "\n";
+                this->Map[x][y][z].push_back(new ObjectTile(obX,obY, this->grid_sizeF, this->object_textures["LANTERN"], sf::IntRect(textureX, textureY, this->gridsizeI.x, this->gridsizeI.y), ObjectType));
+
+            }
+          //very important for all of these to be ELSE IF statements, otherwise garbage happens.
+            else if (type == TileTypes::SPAWNER)
             {
 
                 int enemy_type = 0;
@@ -576,34 +595,26 @@ bool TileMap::loadfromfile(const std::string filename)
                 int enemyMaxDistance = 0;
 
                 in >> textureX >> textureY >> enemy_type >> enemyAmount >> enemyTimer >> enemyMaxDistance;
-
+                std::cout << "reading the spawner tile position X: it's  " << x << "position Y:  " << y << " " << std::endl;
+                std::cout << "reading the spawner tile layer, it's  " << z << std::endl;
+                std::cout << "reading the spawner tile ememy amount, it's  " << enemyAmount << std::endl; 
+                std::cout << "reading the spawner tile enemy_type, it's  " << enemy_type << std::endl;
+                std::cout << "reading the spawner tile enemyTimer, it's  " << enemyTimer << std::endl;
+                std::cout << "reading the spawner texutre rect it's  " << textureX << "& " << textureY << "\n";
 
                 this->Map[x][y][z].push_back(new EnemySpawner(x, y, this->grid_sizeF, this->tileTextureSheet,
                     sf::IntRect(textureX, textureY, this->gridsizeI.x, this->gridsizeI.y), enemy_type,
                     enemyAmount, enemyTimer, enemyMaxDistance));
             }  
-            else if (type == TileTypes::OBJECT)
-        {
-            std::cout << "object tile" << std::endl;
-            int obX = 0;
-            int obY = 0;
-            short ObjectType = 0;
-
-
-
-            in >> textureX >> textureY >> ObjectType >> obX >> obY; 
-            
-            std::cout << "object tile position X: " << obX << "position Y:  " << obY << " " << std::endl; 
-            std::cout << "object tile object type: " << ObjectType << std::endl; 
-            this->Map[x][y][z].push_back(new ObjectTile(x1, y1, this->grid_sizeF, this->object_textures["LANTERN"], sf::IntRect(textureX, textureY, this->gridsizeI.x, this->gridsizeI.y), ObjectType));
-            
-        }
+           
              
             else
             {
                 
                 in >> textureX >> textureY >> collision;
-               
+                //std::cout << "the grid size in normal tiles  " << grid_sizeF.x << " " << grid_sizeF.y << std::endl;
+                //std::cout << "the position for norm tile " << x << " " << y << std::endl; 
+                
                this->Map[x][y][z].push_back(new NormalTile(TileTypes::NORMAL, x, y, grid_sizeF, this->tileTextureSheet, sf::IntRect(static_cast<int>(textureX), static_cast<int>(textureY), this->gridsizeI.x, this->gridsizeI.y), collision));
 
             }
@@ -764,13 +775,13 @@ void TileMap::addTile(const int x, const int y, const int z, const sf::IntRect t
 
 void TileMap::addTile(const int x, const int y, const int z, float obX, float obY, const short type)
 {
-
+    std::cout << "Object Tile Function called " << std::endl; 
     if (x < this->MaxSizeWorldGrid.x && x >= 0
         && y < this->MaxSizeWorldGrid.y && y >= 0
         && z < this->layers && z >= 0)
     {
         
-        this->Map[x][y][z].push_back(new ObjectTile(obX, obY, this->grid_sizeF, this->object_textures["LANTERN"], sf::IntRect(), ObjectTypes::LANTERN));
+        this->Map[x][y][z].push_back(new ObjectTile(obX, obY, this->grid_sizeF, this->object_textures["LANTERN"], sf::IntRect(0, 0, 9, 16), ObjectTypes::LANTERN));
       
     }
 }
@@ -847,7 +858,7 @@ void TileMap::updateTiles(Entity *entity, const float &dt, EnemySystem& enemysys
             for (size_t k=0; k < this->Map[x][y][this->layer].size(); k++)
             { 
                
-                this->Map[x][y][this->layer][k]->update(dt);
+               this->Map[x][y][this->layer][k]->update(dt);
             
                 if (this->Map[x][y][this->layer][k]->gettype() == TileTypes::SPAWNER)
                 {

@@ -233,7 +233,7 @@ void DefaultMode::updateInput(const float& dt)
        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::H) && this->getkeytime())
        {
            std::cout << "object added" << std::endl;
-           this->tilemap->addTile(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer, this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, 2);
+           this->tilemap->addTile(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer, this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, this->type);
            //this->tilemap->addObject(this->editorstatedata->mousePosWindow->x, this->editorstatedata->mousePosWindow->y);
        }
 

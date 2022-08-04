@@ -34,7 +34,7 @@ const sf::FloatRect NormalTile::getGlobalBounds() const
 const std::string NormalTile::asString() const
 {
     std::stringstream out;
-    std::cout << "pooping" << std::endl; 
+    //std::cout << "pooping" << std::endl; 
     out << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->collison_enabled;
        
        
