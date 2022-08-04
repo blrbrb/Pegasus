@@ -159,6 +159,27 @@
     <ClCompile Include="engine\componets\gui\GUI.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="engine\Componets\GUI\imgui.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="engine\Componets\GUI\imgui_demo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="engine\Componets\GUI\imgui_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="engine\Componets\GUI\imgui_impl_opengl2.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="engine\Componets\GUI\imgui_impl_win32.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="engine\Componets\GUI\imgui_tables.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="engine\Componets\GUI\imgui_widgets.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="engine\componets\gui\PlayerGUI.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
@@ -278,7 +299,6 @@
     <ClCompile Include="Magic.cpp" />
     <ClCompile Include="NPC.cpp" />
     <ClCompile Include="Object.cpp" />
-    <ClCompile Include="ObjectHandler.cpp" />
     <ClCompile Include="ObjectTile.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -341,7 +361,6 @@
     <ClInclude Include="Magic.h" />
     <ClInclude Include="NPC.hpp" />
     <ClInclude Include="include\Object.hpp" />
-    <ClInclude Include="include\ObjectHandler.hpp" />
     <ClInclude Include="include\ObjectTile.hpp" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>

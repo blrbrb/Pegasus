@@ -48,8 +48,8 @@ public:
     void decreaseEnemyCounter();
     
     void clear();
-    void update();
-    void render(sf::RenderTarget & target, sf::Shader* shader = NULL, sf::Vector2f LightPosition = sf::Vector2f());
+    void update(const float& dt);
+    void render(sf::RenderTarget& target, sf::Shader* shader = NULL, sf::Vector2f LightPosition = sf::Vector2f());
     
 };
 

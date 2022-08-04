@@ -24,8 +24,8 @@ void TileMap::clear()
                      {
                          for (size_t k=0; k < this->Map[x][y][z].size(); k++)
                          {
-                               delete this->Map[x][y][z][k].tile;
-                               this->Map[x][y][z][k].tile = NULL;
+                               delete this->Map[x][y][z][k];
+                               this->Map[x][y][z][k] = NULL;
                          }
                          this->Map[x][y][z].clear();
                      }
@@ -44,6 +44,16 @@ void TileMap::initobjecthandler()
     //this->objecthandler = new ObjectHandler(this->Objects, this->textures);
 }
 
+void TileMap::init_object_textures()
+{
+    std::cout << "the stupid fucking texture is being initalized " << std::endl;
+    if (!this->object_textures["LANTERN"].loadFromFile("Resources/Assets/Entity/Objects/lantern.png"))
+    {
+        std::cout << "ERROR Could not load lantern object texture ObjectTile.cpp lin 40" << std::endl;
+
+    }
+
+}
 
 
 
@@ -65,8 +75,8 @@ TileMap::TileMap(sf::Vector2f gridsize, int width, int height, std::string textu
     
             */
   
-   
-    this->initobjecthandler(); 
+    this->init_object_textures();
+    //this->initobjecthandler(); 
    /// this->tileTextureSheet
     this->grid_sizeF = gridsize;
     this->grid_sizeU = static_cast<sf::Vector2u>(gridsize);
@@ -87,19 +97,19 @@ TileMap::TileMap(sf::Vector2f gridsize, int width, int height, std::string textu
     this->FromY = 0;
     this->layer = 0;
 
-    this->Map.resize(this->MaxSizeWorldGrid.x, std::vector< std::vector< std::vector <tile_gridS> > > ());
+    this->Map.resize(this->MaxSizeWorldGrid.x, std::vector< std::vector< std::vector <Tile*> > > ());
     
     for (int x = 0; x < this->MaxSizeWorldGrid.x; x++ )
     {
         
         for (int y = 0; y < this->MaxSizeWorldGrid.y; y++ )
         {
-            this->Map[x].resize(this->MaxSizeWorldGrid.y,std::vector< std::vector <tile_gridS> >());
+            this->Map[x].resize(this->MaxSizeWorldGrid.y,std::vector< std::vector <Tile*> >());
   
             for (int z = 0; z < this->layers; z++ )
             {
                 
-                this->Map[x][y].resize(this->layers, std::vector<tile_gridS>());
+                this->Map[x][y].resize(this->layers, std::vector<Tile*>());
                 
             }
             
@@ -214,22 +224,23 @@ void TileMap::render(sf::RenderTarget& target, const sf::View& view, const sf::V
         {
             for (size_t k = 0; k < this->Map[x][y][this->layer].size(); k++)
             {
-
-                // this->renderlighttile(target);
-                if (this->Map[x][y][this->layer][k].object)
+                if (this->Map[x][y][this->layer][k]->gettype() == TileTypes::OBJECT) 
                 {
-                    this->renderdefered.push(this->Map[x][y][this->layer][k].object);
+                    this->renderdefered.push(this->Map[x][y][this->layer][k]); 
+                    
+                 
+                
                 }
-
-                else {
 
                     //render w/ shader applied
                     if (shader)
                     {
 
-                        target.mapCoordsToPixel(this->Map[x][y][this->layer][k].tile->getposition(), view);
-                        this->Map[x][y][this->layer][k].tile->render(target, shader, PlayerPosition);
-                        this->renderObjects(target);
+                        target.mapCoordsToPixel(this->Map[x][y][this->layer][k]->getposition(), view);
+                        this->Map[x][y][this->layer][k]->render(target, shader, PlayerPosition);
+                        //std::string tile_info = this->Map[x][y][this->layer][k].tile->asString(); 
+                       // std::cout << tile_info << std::endl;
+                        //this->renderObjects(target);
 
                     }
                     else
@@ -237,8 +248,8 @@ void TileMap::render(sf::RenderTarget& target, const sf::View& view, const sf::V
 
 
 
-                        target.mapCoordsToPixel(this->Map[x][y][this->layer][k].tile->getposition(), view);
-                        this->Map[x][y][this->layer][k].tile->render(target);
+                        target.mapCoordsToPixel(this->Map[x][y][this->layer][k]->getposition(), view);
+                        this->Map[x][y][this->layer][k]->render(target);
 
                         //this->renderObjects(target);
 
@@ -248,9 +259,9 @@ void TileMap::render(sf::RenderTarget& target, const sf::View& view, const sf::V
                     //render the collision box
                     if (render_collision)
                     {
-                        if (this->Map[x][y][this->layer][k].tile->getCollision())
+                        if (this->Map[x][y][this->layer][k]->getCollision())
                         {
-                            this->physicsrect.setPosition(this->Map[x][y][this->layer][k].tile->getposition());
+                            this->physicsrect.setPosition(this->Map[x][y][this->layer][k]->getposition());
                             target.draw(this->physicsrect);
                         }
 
@@ -258,9 +269,9 @@ void TileMap::render(sf::RenderTarget& target, const sf::View& view, const sf::V
 
 
 
-                    if (this->Map[x][y][this->layer][k].tile->gettype() == TileTypes::SPAWNER)
+                    if (this->Map[x][y][this->layer][k]->gettype() == TileTypes::SPAWNER)
                     {
-                        this->physicsrect.setPosition(this->Map[x][y][this->layer][k].tile->getposition());
+                        this->physicsrect.setPosition(this->Map[x][y][this->layer][k]->getposition());
                         this->physicsrect.setFillColor(sf::Color(50, 20, 10, 100));
                         this->physicsrect.setFillColor(sf::Color::Red);
                         this->physicsrect.setOutlineThickness(1.f);
@@ -271,9 +282,9 @@ void TileMap::render(sf::RenderTarget& target, const sf::View& view, const sf::V
 
 
 
+                
 
-
-                }
+                
 
 
             }
@@ -286,8 +297,9 @@ void TileMap::render(sf::RenderTarget& target, const sf::View& view, const sf::V
 }
 
 
-void TileMap::addTile(const int x, const int y, const int z, const sf::IntRect texture_rect, const bool& collision, const short& type )
+void TileMap::addTile(const int x, const int y, const int z, const sf::IntRect texture_rect, const bool& collision, const short& type)
 {
+    std::cout << "regular function called" << std::endl; 
 /*!
  @brief  Add a tile to the TileMap
 
@@ -315,18 +327,11 @@ void TileMap::addTile(const int x, const int y, const int z, const sf::IntRect t
              /*if okay to add tile*/
             //and if the type of tile is NORMAL add normal til
        
-        this->Map[x][y][z].push_back(tile_gridS(new NormalTile(type, x, y, this->grid_sizeF, this->tileTextureSheet, texture_rect, collision), nullptr));
-        if (type == TileTypes::OBJECT) 
-        {
-            this->Map[x][y][z].push_back(tile_gridS(nullptr, new Lantern(static_cast<float>(x), static_cast<float>(y))));
-        }
+      
+            this->Map[x][y][z].push_back(new NormalTile(type, x, y, this->grid_sizeF, this->tileTextureSheet, texture_rect, collision));
+        
     }        //this->Map[x][y][z](new NormalTile(type, x, y, this->grid_sizeF, this->tileTextureSheet, texture_rect, collision));
     
-    else if (!x || !y || !z)
-    {
-        throw std::invalid_argument("Invalid Argument : Tile Does Not Exist");
-        
-    }
     
 }
     
@@ -348,10 +353,10 @@ void TileMap::RemoveTile(const int x, const int y, const int z, const int type)
            if (!this->Map[x][y][z].empty())
            {
                
-               if (this->Map[x][y][z].back().tile->gettype() == type)
+               if (this->Map[x][y][z].back()->gettype() == type)
                {
     
-                   delete this->Map[x][y][z][this->Map[x][y][z].size() - 1].tile;
+                   delete this->Map[x][y][z][this->Map[x][y][z].size() - 1];
                    this->Map[x][y][z].pop_back();
                    std::cout << "Spawner Removed" << std::endl;
                    
@@ -359,7 +364,7 @@ void TileMap::RemoveTile(const int x, const int y, const int z, const int type)
                else
                {
                    
-                   delete this->Map[x][y][z][this->Map[x][y][z].size() - 1].tile;
+                   delete this->Map[x][y][z][this->Map[x][y][z].size() - 1];
                     this->Map[x][y][z].pop_back();
                    std::cout << "TIle Removed" << std::endl;
                    
@@ -375,8 +380,9 @@ void TileMap::RemoveTile(const int x, const int y, const int z, const int type)
 
 const sf::Texture* TileMap::getTileSheet() const
 {
-    return &this->tileTextureSheet;
-}
+    return &this->tileTextureSheet;      
+}          
+
 
 bool TileMap::savetofile(const std::string filename)
 {
@@ -425,12 +431,11 @@ bool TileMap::savetofile(const std::string filename)
                     {
                         for(size_t k=0; k < this->Map[x][y][z].size(); k++)
                         {
-                            if (this->Map[x][y][z][k].tile) {
-                                out << x << " " << y << " " << z << " " << this->Map[x][y][z][k].tile->asString() << " ";
-                            }
-                           if (this->Map[x][y][z][k].object) {
-                               out << x << " " << y << " " << z << " " << this->Map[x][y][z][k].object->asString() << " ";
-                           } 
+                            
+                           out << x << " " << y << " " << z << " " << this->Map[x][y][z][k]->asString() << " ";
+                            
+                          
+                           
                            // dont save this last space
                             
                         }
@@ -493,17 +498,18 @@ bool TileMap::loadfromfile(const std::string filename)
         int z = 0;
         int textureX = 0;
         int textureY = 0;
-        int objects_iterator;
-        float x1 = 0;
-        float y1 = 0;
+        int objects_iterator = 0; 
+        float x1 = 0.f;
+        float y1 = 0.f;
         bool collision = false;
         short type = 0;
-        short ObjectType = 0;
+    
+       
 
         //Basic Variables
-        std::cout << gridsize.x << " " << gridsize.y << std::endl;
+        //std::cout << gridsize.x << " " << gridsize.y << std::endl;
         in >> size.x >> size.y >> gridsize.x >> gridsize.y >> layers >> texture_file;
-        std::cout << gridsize.x << " " << gridsize.y << std::endl;
+        //std::cout << gridsize.x << " " << gridsize.y << std::endl;
         
 
         //Tiles 
@@ -524,7 +530,7 @@ bool TileMap::loadfromfile(const std::string filename)
 
         this->clear();
 
-        this->Map.resize(this->MaxSizeWorldGrid.x, std::vector< std::vector< std::vector<tile_gridS> > >());
+        this->Map.resize(this->MaxSizeWorldGrid.x, std::vector< std::vector< std::vector<Tile*> > >());
 
 
 
@@ -536,11 +542,11 @@ bool TileMap::loadfromfile(const std::string filename)
 
             for (int y = 0; y < this->MaxSizeWorldGrid.y; y++)
             {
-                this->Map[x].resize(this->MaxSizeWorldGrid.y, std::vector< std::vector<tile_gridS> >());
+                this->Map[x].resize(this->MaxSizeWorldGrid.y, std::vector< std::vector<Tile*> >());
 
                 for (int z = 0; z < this->layers; z++)
                 {
-                    this->Map[x][y].resize(this->layers, std::vector<tile_gridS>());
+                    this->Map[x][y].resize(this->layers, std::vector<Tile*>());
 
                 }   //sf::Vector2f(); 
 
@@ -555,17 +561,12 @@ bool TileMap::loadfromfile(const std::string filename)
             throw std::runtime_error("ERROR CODE TILEMAP:458 || LOADFROMFILE || Reason: UNABLE_TO_OPEN_FILE");
         }
 
-
-
-
-
-
-
         while (in >> x >> y >> z >> type)
         {
-
-
-
+          
+            std::cout << type << "\n";
+         
+          
             if (type == TileTypes::SPAWNER)
             {
 
@@ -577,31 +578,33 @@ bool TileMap::loadfromfile(const std::string filename)
                 in >> textureX >> textureY >> enemy_type >> enemyAmount >> enemyTimer >> enemyMaxDistance;
 
 
-                this->Map[x][y][z].push_back(tile_gridS(new EnemySpawner(x, y, this->grid_sizeF, this->tileTextureSheet,
+                this->Map[x][y][z].push_back(new EnemySpawner(x, y, this->grid_sizeF, this->tileTextureSheet,
                     sf::IntRect(textureX, textureY, this->gridsizeI.x, this->gridsizeI.y), enemy_type,
-                    enemyAmount, enemyTimer, enemyMaxDistance), nullptr));
-            }
+                    enemyAmount, enemyTimer, enemyMaxDistance));
+            }  
             else if (type == TileTypes::OBJECT)
-                {
-               
-                float obX = 0.f; 
-                float obY = 0.f;
-                 
-                in >> obX >> obY;
-                                                                                        
-                this->Map[x][y][z].push_back(tile_gridS(nullptr, new Lantern(obX, obY)));
-               
+        {
+            std::cout << "object tile" << std::endl;
+            int obX = 0;
+            int obY = 0;
+            short ObjectType = 0;
 
 
 
-
-                 }
+            in >> textureX >> textureY >> ObjectType >> obX >> obY; 
+            
+            std::cout << "object tile position X: " << obX << "position Y:  " << obY << " " << std::endl; 
+            std::cout << "object tile object type: " << ObjectType << std::endl; 
+            this->Map[x][y][z].push_back(new ObjectTile(x1, y1, this->grid_sizeF, this->object_textures["LANTERN"], sf::IntRect(textureX, textureY, this->gridsizeI.x, this->gridsizeI.y), ObjectType));
+            
+        }
+             
             else
             {
-                // std::cout << textureX << " " << textureY << " " << collision << std::endl; 
+                
                 in >> textureX >> textureY >> collision;
-
-                this->Map[x][y][z].push_back(tile_gridS(new NormalTile(type, x, y, grid_sizeF, this->tileTextureSheet, sf::IntRect(textureX, textureY, this->gridsizeI.x, this->gridsizeI.y), collision), nullptr));
+               
+               this->Map[x][y][z].push_back(new NormalTile(TileTypes::NORMAL, x, y, grid_sizeF, this->tileTextureSheet, sf::IntRect(static_cast<int>(textureX), static_cast<int>(textureY), this->gridsizeI.x, this->gridsizeI.y), collision));
 
             }
 
@@ -742,21 +745,34 @@ const bool TileMap::TileEmpty(const int x, const int y, const int z) const
 const bool TileMap::checktype(const int x, const int y, const int z, const int type) const
 {
         
-    return this->Map[x][y][this->layer].back().tile->gettype() == type;
+    return this->Map[x][y][this->layer].back()->gettype() == type;
 }
 
 void TileMap::addTile(const int x, const int y, const int z, const sf::IntRect texture_rect, const int enemytype, const int enemyamount, const int timeToSpawn, const int MaxDistance)
 {
-
+     
     if ( x < this->MaxSizeWorldGrid.x && x >= 0
         && y < this->MaxSizeWorldGrid.y && y >= 0
         && z < this->layers && z >= 0 )
     {
             /*if okay to add ENEMY SPAWNER tile*/
 
-            this->Map[x][y][z].push_back(tile_gridS(new EnemySpawner(x, y, this->grid_sizeF, this->tileTextureSheet, texture_rect, enemytype, enemyamount, timeToSpawn, MaxDistance), nullptr));
+            this->Map[x][y][z].push_back(new EnemySpawner(x, y, this->grid_sizeF, this->tileTextureSheet, texture_rect, enemytype, enemyamount, timeToSpawn, MaxDistance));
     }
         
+}
+
+void TileMap::addTile(const int x, const int y, const int z, float obX, float obY, const short type)
+{
+
+    if (x < this->MaxSizeWorldGrid.x && x >= 0
+        && y < this->MaxSizeWorldGrid.y && y >= 0
+        && z < this->layers && z >= 0)
+    {
+        
+        this->Map[x][y][z].push_back(new ObjectTile(obX, obY, this->grid_sizeF, this->object_textures["LANTERN"], sf::IntRect(), ObjectTypes::LANTERN));
+      
+    }
 }
 
 
@@ -830,16 +846,12 @@ void TileMap::updateTiles(Entity *entity, const float &dt, EnemySystem& enemysys
         {
             for (size_t k=0; k < this->Map[x][y][this->layer].size(); k++)
             { 
-                
-                this->Map[x][y][this->layer][k].tile->update(); 
-                if(this->Map[x][y][this->layer][k].object) 
+               
+                this->Map[x][y][this->layer][k]->update(dt);
+            
+                if (this->Map[x][y][this->layer][k]->gettype() == TileTypes::SPAWNER)
                 {
-                    this->Map[x][y][this->layer][k].object->updateAnimation(dt); 
-                }
-                 
-                if (this->Map[x][y][this->layer][k].tile->gettype() == TileTypes::SPAWNER)
-                {
-                    EnemySpawner* es = dynamic_cast<EnemySpawner*>(this->Map[x][y][this->layer][k].tile);
+                    EnemySpawner* es = dynamic_cast<EnemySpawner*>(this->Map[x][y][this->layer][k]);
                     if (es)
                     {
                         if(!es->getSpawned() && es->getEnemyCounter() < es->getEnemyAmount())
@@ -861,6 +873,7 @@ void TileMap::updateTiles(Entity *entity, const float &dt, EnemySystem& enemysys
                         }
                     }
                 }
+               
                 
             }
         }
@@ -909,7 +922,8 @@ void TileMap::updateTileCollision(Entity *entity, const float &dt)
                else if (this->ToY > this->MaxSizeWorldGrid.x)
                    this->ToY = this->MaxSizeWorldGrid.x;
        
-    
+    //Fix Collision with Objects 
+    //Get Objects to Fucking render finally 
     
     for (int x= this->FromX; x < this->ToX; x++ )
     {
@@ -918,12 +932,21 @@ void TileMap::updateTileCollision(Entity *entity, const float &dt)
             for (size_t k=0; k < this->Map[x][y][this->layer].size(); k++)
             {
               
-           sf::FloatRect playerBounds = entity->getGlobalBounds();
-           sf::FloatRect wallBounds = this->Map[x][y][this->layer][k].tile->getGlobalBounds();
+           sf::FloatRect playerBounds = entity->getGlobalBounds();  
+           sf::FloatRect wallBounds = sf::FloatRect(); 
+           if (this->Map[x][y][this->layer][k])
+           {
+            wallBounds = this->Map[x][y][this->layer][k]->getGlobalBounds();
+           }
+           else 
+           {
+               wallBounds = this->Map[x][y][this->layer][k]->getGlobalBounds();
+           }
+           
            sf::FloatRect nextPositionBounds = entity->getNextPositionBounds(dt);
 
-           if (this->Map[x][y][this->layer][k].tile->getCollision() &&
-               this->Map[x][y][this->layer][k].tile->intersects(nextPositionBounds)
+           if (this->Map[x][y][this->layer][k]->getCollision() &&
+               this->Map[x][y][this->layer][k]->intersects(nextPositionBounds)
                )
            {
                //Bottom collision
@@ -995,13 +1018,13 @@ void TileMap::renderlighttile(sf::RenderTarget& target, sf::Shader* shader)
                  {
                      for (size_t k=0; k < this->Map[x][y][this->layer].size(); k++)
                      {
-                         if(this->Map[x][y][this->layer][k].tile->gettype() == TileTypes::LIGHT)
+                         if(this->Map[x][y][this->layer][k]->gettype() == TileTypes::LIGHT)
                          {
                              
                         
-                                 this->Map[x][y][this->layer][k].tile->render(target, shader, this->Map[x][y][this->layer][k].tile->getCenter());
+                                 this->Map[x][y][this->layer][k]->render(target, shader, this->Map[x][y][this->layer][k]->getCenter());
                              
-                             
+                            
                          }
                      }
                  }
@@ -1010,15 +1033,115 @@ void TileMap::renderlighttile(sf::RenderTarget& target, sf::Shader* shader)
     
 }
 
-void TileMap::renderObjects(sf::RenderTarget& target, sf::Shader* shader)
+void TileMap::renderObjects(sf::RenderTarget& target, const sf::View& view, const sf::Vector2i& gridposition, const bool render_collision, sf::Shader* shader, const sf::Vector2f PlayerPosition)
 {
+    this->layer = 0;
 
-    for (auto* i : this->Objects)
+    this->FromX = gridposition.x - 10;
+
+    if (this->FromX < 0)
+        this->FromX = 0;
+    else if (this->FromX > this->MaxSizeWorldGrid.x)
+        this->FromX = this->MaxSizeWorldGrid.x;
+
+    this->ToX = gridposition.x + 10;
+
+    if (this->ToX < 0)
+        this->ToX = 0;
+    else if (this->ToX > this->MaxSizeWorldGrid.x)
+        this->ToX = this->MaxSizeWorldGrid.x;
+
+    this->FromY = gridposition.y - 10;
+
+    if (this->FromY < 0)
+        this->FromY = 0;
+    else if (this->FromY > this->MaxSizeWorldGrid.x)
+        this->FromY = this->MaxSizeWorldGrid.x;
+
+    this->ToY = gridposition.y + 10;
+
+    if (this->ToY < 0)
+        this->ToY = 0;
+    else if (this->ToY > this->MaxSizeWorldGrid.y)
+
+        this->ToY = this->MaxSizeWorldGrid.y;
+
+
+
+
+    for (int x = this->FromX; x < this->ToX; x++)
     {
-        i->render(target, shader, i->getCenter());
-       
+        for (int y = this->FromY; y < this->ToY; y++)
+        {
+            for (size_t k = 0; k < this->Map[x][y][this->layer].size(); k++)
+            {
+               
+                
+                //render w/ shader applied
+                if (shader)
+                {
+
+                    target.mapCoordsToPixel(this->Map[x][y][this->layer][k]->getposition(), view);   
+                    this->Map[x][y][this->layer][k]->render(target, shader, PlayerPosition); 
+                    
+
+                }
+                else
+                {
+
+
+
+                    target.mapCoordsToPixel(this->Map[x][y][this->layer][k]->getposition(), view);
+                    this->Map[x][y][this->layer][k]->render(target);
+
+                    //this->renderObjects(target);
+
+                }
+
+
+                //render the collision box
+                if (render_collision)
+                {
+                    if (this->Map[x][y][this->layer][k]->getCollision())
+                    {
+                        this->physicsrect.setPosition(this->Map[x][y][this->layer][k]->getposition());
+                        target.draw(this->physicsrect);
+                    }
+
+                }
+
+
+
+                if (this->Map[x][y][this->layer][k]->gettype() == TileTypes::SPAWNER)
+                {
+                    this->physicsrect.setPosition(this->Map[x][y][this->layer][k]->getposition());
+                    this->physicsrect.setFillColor(sf::Color(50, 20, 10, 100));
+                    this->physicsrect.setFillColor(sf::Color::Red);
+                    this->physicsrect.setOutlineThickness(1.f);
+                    target.draw(this->physicsrect);
+
+                }
+
+
+
+
+
+
+
+
+
+            }
+
+        }
+
     }
+
+
+
+
 }
+
+
 
 
 

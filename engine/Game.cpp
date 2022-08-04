@@ -122,8 +122,13 @@ void Game::initwindow() {
 
 
     std::cout << "window created" << std::endl; 
-    
+    //ImGui::CreateContext();
+    //ImGui::ShowDemoWindow();
   
+
+    ///ImGui::StyleColorsDark();
+   // ImGui::SetCurrentContext()
+    //ImGui_ImplGlfw_InitForOpenGL(this->window, true);
     
 }
 
@@ -236,8 +241,10 @@ void Game::UpdateEvents() {
 void Game::render() {
     
     this->window->clear(sf::Color::Black); 
-
+    //ImGui::NewFrame();
     if (!this->states.empty()) 
+        //OnImGui();
+   
          this->states.top()->render();
     
   

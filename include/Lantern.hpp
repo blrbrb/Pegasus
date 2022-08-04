@@ -19,7 +19,8 @@ public:
     void updateAnimation(const float& dt);  
 
     //Acessors 
-    const std::string asString() const;
+    const std::string asString() const; 
+   
 private: 
     void initanimations(); 
     void initvariables(); 

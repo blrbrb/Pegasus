@@ -10,7 +10,7 @@
 #define EditorModes_hpp
 #include "State.hpp"
 #include "TileMap.hpp"
-#include "ObjectHandler.hpp"
+
 
 class State;
 class StateData;

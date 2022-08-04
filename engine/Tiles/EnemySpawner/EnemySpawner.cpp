@@ -36,37 +36,37 @@ void EnemySpawner::clear()
     
 }
 
-void EnemySpawner::update()
+void EnemySpawner::update(const float& dt)
 {
     if (this->canSpawn())
     this->Spawned = false;
 }
 
-void EnemySpawner::render(sf::RenderTarget &target, sf::Shader* shader, sf::Vector2f LightPosition)
+void EnemySpawner::render(sf::RenderTarget& target, sf::Shader* shader,sf::Vector2f LightPosition)
 {
-    
- if (shader)
- {
-     shader->setUniform("hasTexture", true);
-     shader->setUniform("lightPos", LightPosition);
-     target.draw(this->rect, shader);
-     
- }
+
+    if (shader)
+    {
+        shader->setUniform("hasTexture", true);
+        shader->setUniform("lightPos", LightPosition);
  
- else
- {
-     target.draw(this->rect);
-     
- }
- 
+        target.draw(this->rect, shader);
+
+    }
+
+    else
+    {
+        target.draw(this->rect);
+    }
 }
+
 
 const std::string EnemySpawner::asString() const 
 {
     std::stringstream ss;
-    
-    ss << this->type << " " << this->is_object << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->Enemy_type
-    << " " << this->Enemy_amount << " " << this->timer << " " << this->maxDistance;
+    std::cout << "writing an Enemy Spawaner Tile... " << std::endl; 
+    ss << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->Enemy_type
+        << " " << this->Enemy_amount << " " << this->timer << " " << this->maxDistance;
     
     //std::cout << ss.str() << std::endl;
     

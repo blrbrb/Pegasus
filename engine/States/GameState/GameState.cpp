@@ -69,7 +69,7 @@ GameState::~GameState()
 void GameState::initvariables()
 { 
     
-  
+    this->shadertime = 0.f; 
     
 }
 
@@ -121,7 +121,7 @@ void GameState::initshaders()
         
     }
     
-    
+ 
     
 }
 
@@ -232,7 +232,7 @@ void GameState::initpausemenu()
 void GameState::inittilemap()
 {
     this->Tilemap = new TileMap(*this->state_data->gridsize, 100, 100, "Resources/Assets/Tiles/sheet.png");
-   
+  
     this->Tilemap->loadfromfile("Data/TileMap/text.slmp"); 
 
    
@@ -243,6 +243,7 @@ void GameState::inittilemap()
 
 void GameState::update(const float& dt)
 {
+    this->updateShaders(dt); 
    
     srand(static_cast<unsigned>(time(NULL)));
     
@@ -257,7 +258,7 @@ void GameState::update(const float& dt)
             this->updatePlayerInput(dt);
             this->updatetilemap(dt);
             this->updatePlayer(dt); 
-           
+            
             this->updatePlayerGUI(dt);
             this->updateEnemies(dt);
             this->dialougeSystem->update(dt);
@@ -265,7 +266,13 @@ void GameState::update(const float& dt)
     else // Update while Paused
      {
          this->pMenu->update(this->MousePosWindow);
-         this->updatebuttons();
+         this->updatebuttons();  
+         
+         //ImGui::Text("Hello, world %d", 123);
+         
+          
+         //ImGui::InputText("string", buf, IM_ARRAYSIZE(buf));
+        // ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
      }
          
      
@@ -353,6 +360,19 @@ void GameState::updateView(const float &dt)
     this->ViewGridPosition.y = static_cast<int>(this->view.getCenter().y) / static_cast<int>(this->state_data->gridsize->y);
 }
 
+void GameState::updateShaders(const float& dt)
+{
+  
+    this->shadertime += dt /100;
+    if (this->shadertime > 1) 
+    {
+        this->initvariables(); 
+    }
+    std::cout << shadertime << std::endl; 
+    this->core_shader.setUniform("time", shadertime);
+   
+}
+
 void GameState::updatePlayerGUI(const float &dt)
 {
     this->playerGUI->update(dt);   
@@ -430,7 +450,7 @@ void GameState::render(sf::RenderTarget* target) {
   
     //target->mapPixelToCoords(static_cast<sf::Vector2i>(this->player->getCenter())); 
     this->player->render(this->rendertexture, &this->core_shader, this->player->getCenter(), false);
-  
+    //this->Tilemap->renderObjects(this->rendertexture, this->view, this->ViewGridPosition, false, &this->core_shader);
 
     for (auto *i : this->activEnemies)
        {

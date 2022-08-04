@@ -46,7 +46,7 @@ void PlayerGUI::initMONEY()
 void PlayerGUI::initHPbar()
 {
     //args are as follows, float x, float y, float width, float height
-    this->HPbar = new GUI::ProgressBar(1.f, 8.3, 20.4, 4.8,this->vm, sf::Color(255, 0, 0, 200), 150, &this->font);
+    this->HPbar = new GUI::ProgressBar(1.f, 6.3, 50, 3.5,this->vm, sf::Color(255, 0, 0, 200), 150, &this->font);
   
 }
 
@@ -70,12 +70,12 @@ void PlayerGUI::initLevelTag()
 
 void PlayerGUI::initEXPbar()
 {   //args are as follows, float x float y float width float height 
-    this->ExpBar = new GUI::ProgressBar(1.f, 16.6, 20.4, 4.8,this->vm, sf::Color::Green, 150, &this->font);
+    this->ExpBar = new GUI::ProgressBar(1.f, 10.6, 20.4, 1.8,this->vm, sf::Color::Green, 150, &this->font);
 }
 
 void PlayerGUI::initMagicbar()
 { 
-    this->MagicBar = new GUI::ProgressBar(1.f, 24.1, 20.4, 4.8, this->vm, sf::Color::Blue, 150, &this->font); 
+    this->MagicBar = new GUI::ProgressBar(1.f, 14.6, 20.4, 1.8, this->vm, sf::Color::Blue, 150, &this->font); 
     
 }
 

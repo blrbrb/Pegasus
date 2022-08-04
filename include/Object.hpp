@@ -4,7 +4,7 @@
 #include "Entity.hpp"
 #include "ObjectTile.hpp"
 
-enum ObjectTypes { EMPTY = 0, LANTERN };
+
 class Entity;
 
 class Object : public Entity
@@ -25,8 +25,8 @@ public:
     //Acessors
     //virtual const short& gettype() const; 
     virtual const std::string asString() const = 0;
-
-protected:
+   
+protected: 
 
     //child class variables
     std::string name;
@@ -35,7 +35,7 @@ protected:
     std::map<std::string, sf::Texture> textures; 
 
     short type;
-    bool is_object;
+    
     //ObjectTile& tile;
 
 private:

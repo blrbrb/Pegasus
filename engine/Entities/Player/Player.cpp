@@ -46,7 +46,7 @@ Player::~Player()
 void Player::initcomponets()
 {
     this->createmovementcomponet(100.f ,20000.f, 200.f);    
-    this->create_hitbox_componet(this->sprite, 0, 0, 62.f, 74.f);    //Note: is lower because cropped for more accurate collision
+    this->create_hitbox_componet(this->sprite, 0, 0, 52.f, 42.f);    //Note: is lower because cropped for more accurate collision
     this->create_attribute_componet(1);
     this->create_skill_component();
 }

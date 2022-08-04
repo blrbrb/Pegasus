@@ -19,7 +19,7 @@ engineFramework
 #include "EnemySystem.hpp"
 #include "DialougeSystem.hpp"
 #include "BattleState.hpp"
-#include "ObjectHandler.hpp"
+
 
 
 
@@ -57,7 +57,11 @@ public:
     /// Control the area the Player is able to see on screen.
     /// @param dt Delta-Time
     ///@discussion This function works by setting the center of the sf::View to the center of the Player's sprite, and then constantly checking to see if the view's bounding rectangle around the player has exceeded the maximum size of the tilemap and correcting by reseting the center of the view.
-    void updateView(const float& dt);
+    void updateView(const float& dt); 
+
+
+    void updateShaders(const float& dt); 
+ 
     
     /// Update the basic controls for the Player
     /// @param dt Detla-Time
@@ -111,7 +115,7 @@ private:
     
     
     EnemySystem* enemysystem;
-    ObjectHandler* objecthandler; 
+    
     DialougeSystem* dialougeSystem;
   
     
@@ -121,7 +125,7 @@ private:
     
     //Shaders
     sf::Shader core_shader;
-    
+    float shadertime; 
     
     
     //Sounds

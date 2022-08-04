@@ -14,33 +14,53 @@
 Tile::Tile()
 {
     this->collison_enabled = false;
-    this->is_object = false;
     this->type = 0;
     
     
 }
 
                                                                                         
-Tile::Tile(short type, int x, int y, sf::Vector2f gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, bool collision_enabled)
+Tile::Tile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, bool collision_enabled)
 {
-    //this->rect.setSize(sf::Vector2f(gridsize_f, gridsize_f));
-    
+   //Tile constructor that needs to be called if there is a tile object/object tile on the map.
+    this->type = type;
     this->rect.setTexture(texture);
-    this->is_object = false; 
-    //this->rect.setScale(2, 2);
-    this->rect.setPosition(static_cast<float>(x) * gridsize_f.x, static_cast<float>(y) * gridsize_f.y);
-
    
     this->rect.setTextureRect(texturerect);
+     // this->rect.setPosition(obX, obY);
+     this->rect.setPosition(x * gridsize_f.x, y * gridsize_f.y);
+    
+         
+   
     this->collison_enabled = collision_enabled;
-    short fart;
-    fart = type;
-    this->type = fart; 
+    
+    
+    
+  
    // this->object_type = object; 
 
     //this->hasobject = has_object;
     //this->type = type;
 }
+
+Tile::Tile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture, bool collision_enabled)
+{
+    this->rect.setTexture(texture);
+   
+
+    //  
+    sf::Vector2f gridPosition = sf::Vector2f(gridsize_f.x * x, gridsize_f.y * y); 
+    this->rect.setPosition(gridPosition.x - x, gridPosition.y - this->rect.getPosition().y);
+
+
+   // this->rect.setTextureRect(texturerect);
+    this->collison_enabled = collision_enabled;
+    short fart;
+    fart = type;
+    this->type = fart;
+}
+
+
 
 
 Tile::~Tile()

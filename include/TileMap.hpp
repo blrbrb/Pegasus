@@ -15,7 +15,8 @@
 #include "EnemySystem.hpp"
 #include "Tile.hpp"
 #include "NormalTile.hpp"
-#include "Object.hpp"
+
+#include "ObjectTile.hpp"
 #include "Lantern.hpp"
 
 //TO DO 
@@ -29,12 +30,7 @@ class NormalTile;
 class Entity;
 
 
-struct tile_gridS
-{
-    Tile* tile;
-    Object* object;
 
-};
 
 
 
@@ -65,14 +61,14 @@ private:
     sf::Vector2f MaxSizeWorld_F;
     
     //Defered Render stack thingy
-    std::stack<Object*> renderdefered;
+    std::stack<Tile*> renderdefered;
     
-    std::map<std::string, sf::Texture> object_textures;
+    
     
     sf::RectangleShape physicsrect; 
    
     //TileMap vector
-    std::vector< std::vector< std::vector< std::vector<tile_gridS> > > > Map;
+    std::vector< std::vector< std::vector< std::vector<Tile*> > > > Map;
     //if the union doesn't work 
    // std::vector< std::vector< std::vector< std::vector<std::pair<Tile*, Object*> > > > Map;
     //std::vector< std::vector< std::vector< std::vector<Tile*> > > > Map;
@@ -81,9 +77,12 @@ private:
     sf::Font font; 
     
     sf::Texture tileTextureSheet;
+    std::map<std::string, sf::Texture> object_textures;
     //Private Functions
     void clear();
-    void initobjecthandler(); 
+    void initobjecthandler();
+    void init_object_textures();
+
     
     //tile culling
     int FromX;
@@ -153,10 +152,11 @@ public:
     void render(sf::RenderTarget& target,const sf::View& view, const sf::Vector2i& gridposition, const bool render_collision = false, sf::Shader* shader = NULL,const sf::Vector2f PlayerPosition = sf::Vector2f());
     void DefferedRender(sf::RenderTarget& target, sf::Shader* shader = NULL, const sf::Vector2f PlayerPosition = sf::Vector2f());
     void renderlighttile(sf::RenderTarget& target, sf::Shader* shader = NULL);
-    void renderObjects(sf::RenderTarget& target, sf::Shader* shader = NULL);
+    void renderObjects(sf::RenderTarget& target, const sf::View& view, const sf::Vector2i& gridposition, const bool render_collision = false, sf::Shader* shader = NULL, const sf::Vector2f PlayerPosition = sf::Vector2f());
     //Modifiers
     void addTile(const int x, const int y, const int z, const sf::IntRect texture_rect, const bool& collision, const short& type);
     void addTile(const int x, const int y, const int z, const sf::IntRect texture_rect, const int enemytype, const int enemyamount, const int timeToSpawn, const int MaxDistance);
+    void addTile(const int x, const int y, const int z, float obX, float obY, const short type); 
     void addObject(const short type, const int x, const int y); 
     
     //update functions
@@ -167,7 +167,7 @@ public:
     
     
     
-};
+};// this->Map[x][y][z].push_back(tile_gridS(new ObjectTile(x, y, ), nullptr);
 
 
 

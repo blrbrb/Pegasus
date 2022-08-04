@@ -16,7 +16,8 @@ class NormalTile : public Tile
 {
    
 public:
-    NormalTile(short type, int x, int y, sf::Vector2f gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, bool collision_enabled = false);
+    NormalTile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, bool collision_enabled = false);
+    NormalTile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture,bool collision_enabled = false);
     virtual ~NormalTile();
     
     //Accessors 
@@ -24,7 +25,7 @@ public:
     const std::string asString() const;
     
     //Functions
-    void update();
+    void update(const float& dt);
     void render(sf::RenderTarget & target, sf::Shader* shader = NULL, sf::Vector2f LightPosition = sf::Vector2f());
     
     //Modifiers 

@@ -26,12 +26,11 @@ void EnemyEditorMode::updateInput(const float &dt)
 {
     if((sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->getkeytime()))
         {
-                 if(this->tilemap->getLayerSize(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer) != -1)
-                     {
+                       
                          //if adding tiles is locked to one layer
                            if (this->tilemap->lock_layer)
                            {
-                                if (this->tilemap->TileEmpty(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer))
+                                if (!this->tilemap->TileEmpty(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer))
                                  {
                                      this->tilemap->addTile(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer, this->TextureRect, this->Enemytype, this->Enemyamount, this->spawn_timer, this->maxDistance);
                                      
@@ -53,7 +52,7 @@ void EnemyEditorMode::updateInput(const float &dt)
                                
                             }
 
-                     }
+                     
                  
          
            

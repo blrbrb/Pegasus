@@ -3,8 +3,9 @@
 
 Object::Object()
 {
-	this->type = ObjectTypes::EMPTY; 
-	this->is_object = true; 
+	this->type = ObjectTypes::LANTERN; 
+	
+
 	this->inittextures(); 
 
 }
@@ -12,6 +13,8 @@ Object::Object()
 Object::Object(float x, float y)
 {
 	this->type = type; 
+	
+	this->inittextures(); 
 }
 
 Object::~Object()
@@ -24,13 +27,9 @@ void Object::updateAnimation(const float& dt)
 {
 }
 
-void Object::render(sf::RenderTarget& target, sf::Shader* shader, const sf::Vector2f light, const bool render_hitbox)
-{
-}
-
-
 void Object::inittextures()
 {
+	std::cout << "the stupid fucking texture is being initalized " << std::endl; 
 	if (!this->textures["LANTERN"].loadFromFile("Resources/Assets/Entity/Objects/lantern.png"))
 	{
 		std::cout << "ERROR Could not load lantern object texture GameState lin 171" << std::endl;

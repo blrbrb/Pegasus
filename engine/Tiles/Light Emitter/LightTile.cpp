@@ -34,32 +34,34 @@ const std::string LightTile::asString() const
 
 
 
-void LightTile::update()
+void LightTile::update(const float& dt)
 {
     
 }
 
-void LightTile::render(sf::RenderTarget &target, sf::Shader *shader, sf::Vector2f LightPosition)
+void LightTile::render(sf::RenderTarget& target, sf::Shader* shader, const float& dt, sf::Vector2f LightPosition)
 {
-    
-   if (shader)
-   {
-       shader->setUniform("LightSource", true);
-       shader->setUniform("hasTexture", true);
-       shader->setUniform("light2", LightPosition);
-       target.draw(this->rect, shader);
-      
-   }
-   
-   else
-   {
-       
-       target.draw(this->rect);
-       
-       
-   }
-   
+    if (shader)
+    {
+        shader->setUniform("LightSource", true);
+        shader->setUniform("hasTexture", true);
+        shader->setUniform("light2", LightPosition);
+        shader->setUniform("time", dt); 
+        target.draw(this->rect, shader);
+
+    }
+
+    else
+    {
+
+        target.draw(this->rect);
+
+
+    }
+
 }
+
+
 
 void LightTile::add_object(short type, sf::Vector2f& object_position)
 {
