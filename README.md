@@ -3,7 +3,7 @@ Engine
 
 
 
-![working demonstration](https://imgur.com/o1K7gce)
+![working demonstration](demo.PNG)
 
 Pegasus is an upcoming two dimensional top/down pony rpg engine. This is a pet project of mine, inspired by the likes of PonyTown. This project is not a finished video game. Although I have very tenative plans to take it as far as I possibly can. All of the source will be and is free to take, and incorporate into your own projects. The engine will be desinged with as much modularity as possilble. Project Pegasus will be desinged to act as a sort of fandom "RPG Maker" instead of an actual standalone game. 
 
