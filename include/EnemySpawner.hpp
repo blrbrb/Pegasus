@@ -26,7 +26,9 @@ private:
     sf::Clock SpawnTimer;
     sf::Int32 timer;
     float maxDistance;
-    bool Spawned;
+    bool Spawned;  
+
+    TileData tiledata; 
     
 public:
     //construtor and destructor
@@ -39,6 +41,9 @@ public:
     
     //Accessors
     const std::string asString() const;
+    const TileData asData();
+    void savetoFile(std::ofstream& out);
+  
     const bool& getSpawned() const;
     const int& getEnemyAmount() const;
     const int& getEnemyCounter() const; 

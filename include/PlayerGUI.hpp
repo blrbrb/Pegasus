@@ -96,7 +96,7 @@ public:
     /// @brief Update all of the PlayerGUI elements
     /// @param dt Delta-Time
     void update(const float& dt);
-    
+        
     //Render functions
     void renderLevelTag(sf::RenderTarget& target);
     void renderHPbar(sf::RenderTarget& target);
@@ -105,7 +105,7 @@ public:
     void renderMagicbar(sf::RenderTarget& target);
     void renderInventory(sf::RenderTarget& target); 
     void renderPlayerTabs(sf::RenderTarget& target);  
- 
+
     
     /// render
     /// @brief Render all of the PlayerGUI elements to a sf::RenderTarget

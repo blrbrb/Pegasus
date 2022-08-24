@@ -14,12 +14,16 @@ public:
 
     //Accessors 
     const std::string asString() const; 
+    const TileData asData();
     virtual const sf::Texture* getTexture() const; 
     virtual const sf::Vector2f& getObjectposition() const;
 
     //Functions 
     virtual void render(sf::RenderTarget& target, sf::Shader* shader = NULL, sf::Vector2f LightPosition = sf::Vector2f()); 
-    void update(const float& dt); 
+    void update(const float& dt);
+    void savetoFile(std::ofstream& out);
+    
+
   
    // virtual void set_texture
    // virtual void init_textures(); 
@@ -34,9 +38,12 @@ protected:
     
 private:  
    
-    void create_animation_componet();
+    void create_animation_componet(); 
     virtual void initAnimations(); 
     sf::Texture texture; 
+    TileData tiledata; 
+  
+    
   
 }; 
 #endif 

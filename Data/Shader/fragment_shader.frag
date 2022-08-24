@@ -1,49 +1,43 @@
 
-varying vec4 vert_pos;
-
 uniform sampler2D texture;
-uniform bool hasTexture;
-uniform vec2 lightPos; 
-uniform float time; 
-uniform float position_vector[10]; 
+uniform vec2 resolution;
+uniform vec2 lightPos;
+uniform vec2 time;
+
+// The RGB values are the ambient light color
+// and the alpha is the ambient intensity
+uniform vec4 ambientData;
+// The RGB values are the light color
+// and the alpha is the light intensity
+uniform vec4 lightData;
+// Maximum radius of the light
+uniform vec2 lightSize;
+
+void main() {
+  // Light's position
+  lightPos = (gl_ModelViewProjectionMatrix * vec4(lightPos, 0, 1)).xy;
+  vec2 position = lightPos / resolution.xx; 
+
+  // Makes the light change its size slightly to make a fire effect
+  float maxDistance = lightSize + 0.015*sin(time.x);
+  // Gets the distance from the light's position and the fragment coord
+  float distance = distance(gl_FragCoord.xy/resolution.xx, position);
+  // Calculates the amount of light for the fragment
+  float value = 1.0 - smoothstep(-0.2, maxDistance, distance);
+
+  // Gets the original color from the texture
+  vec4 pixel = texture2D(texture, gl_TexCoord[0].xy);
+
+  // Applies the ambient light to the original pixel color
+  vec3 ambient = pixel.rgb * ambientData.rgb * ambientData.a;
+
+  // Calculates the light color for the pixel
+  vec3 light = lightData.rgb * lightData.a * clamp(value, 0.0, 1.0); 
 
 
-void main()
-{
-vec4 ambient;
-	//Ambient light
-	if(time > 0.0)
-	{
-		 ambient = vec4(0.02, 0.02, 0.5 + time, 1.0 );
-    }
-	else if (time < 0.0)
-	{
-		ambient = vec4(0.02, 0.02, 0.5 - time, 1.0 );
-	}
-		
-	//Convert light to view coords
-	lightPos = (gl_ModelViewProjectionMatrix * vec4(lightPos, 0, 1)).xy;
-	
-	//Calculate the vector from light to pixel (Make circular) 
-	//is there any way to make the light vector wrap around mobile entities? 
+  // Applies the light to the pixel
+  vec3 intensity = ambient + light;
+  vec3 final = pixel.rgb * intensity;
 
-	vec2 lightToFrag = lightPos - vert_pos.xy;
-	lightToFrag.y = lightToFrag.y / 1.7;
-
-	//Length of the vector (distance) 
-	//cont the ambient occulsion of the shadow, and light leaving the position of whichever entity's center is set /center var
-	float vecLength = clamp(length(lightToFrag) * time * 2, 0, 1);
-
-    // lookup the pixel in the texture
-    vec4 pixel = texture2D(texture, gl_TexCoord[0].xy);
-
-    // multiply it by the color and lighting
-	if(hasTexture == true)
-	{
-		gl_FragColor = gl_Color * pixel * (clamp(ambient + vec4(1-vecLength, 1-vecLength, 1-vecLength, 1), 0, 1));
-	}
-	else
-	{
-		gl_FragColor = gl_Color;
-	}
+ gl_FragColor = gl_Color * vec4(final, pixel.a);
 }

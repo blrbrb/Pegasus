@@ -13,6 +13,7 @@
 #include "AnimationComponet.hpp"
 #include "StatusComponet.hpp"
 #include "SkillComponent.hpp"
+#include "SoundComponent.h"
 #include "Item.hpp"
 
 
@@ -35,8 +36,11 @@ public:
     StatusComponet* attributes;
     /// The Skill Component 
     SkillComponent* skillcomponent;
+    // The Sound Component
+    SoundComponent* soundcomponent; 
     ///The entity's sprite
     sf::Sprite sprite;
+   
     ///the texture used to generate the entity's sprite
     sf::Texture* texture;
     
@@ -44,9 +48,16 @@ public:
     Entity();
     virtual ~Entity();
    
-     //Modifiers
-    virtual void setposition(const float x, const float y);
-    void settexture(sf::Texture& texture);
+     //Modifiers (Position and Physics) 
+    virtual void setposition(const float x, const float y); 
+        //texture and transformations
+    void settexture(sf::Texture& texture); 
+    void rotate(float angle);
+    void setorigin(sf::Vector2f origin); 
+    void setColor(sf::Color color); 
+    void setscale(float scale_x, float scale_y); 
+
+      
     
     //Accessors
     virtual const sf::Vector2f& getPosition() const;
@@ -56,7 +67,11 @@ public:
     virtual const sf::Vector2i getGridPosition(const int gridSizeI) const;
     virtual const sf::FloatRect getNextPositionBounds(const float& dt) const;
     virtual const float getDistance(const Entity& entity) const;
-    
+    virtual const sf::Texture* getTexture() const;   
+    virtual const sf::Color& getcolor() const;
+
+
+
     //Functions
     ///  Move the entity in a particular direction
     /// @param dt const float Delta-Time
@@ -93,6 +108,8 @@ public:
     /// Generate the animation component for the entity
     /// @param texturesheet A texturesheet to split into an animation
     void create_animation_componet(sf::Texture& texturesheet);
+
+    void create_sound_component(); 
     
     /// Generate the entity's hitbox
     /// @param sprite The sprite used to represent the entity on screen
@@ -114,11 +131,12 @@ public:
     
 private:
     void initvariables();
-    
-
+   
+    int vert_count;
+  
     
 protected:
-
+    bool using_vertices;
    
   
     

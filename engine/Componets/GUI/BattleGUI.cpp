@@ -11,9 +11,9 @@
 
 void BattleGUI::initButtons()
 {
-     this->BUTTONS["MAGIC"] = new GUI::Button(GUI::pixelpercentX(20,this->vm), GUI::pixelpercentY(15, this->vm), GUI::pixelpercentY(61, vm), GUI::pixelpercentX(50, this->vm), &this->font, "Attack", GUI::calcCharSize(this->vm, 100), "red_button01.png", "red_button02.png", "red_button00.png");
+     this->BUTTONS["MAGIC"] = new GUI::Button(GUI::pixelpercentX(20,this->vm), GUI::pixelpercentY(15, this->vm), GUI::pixelpercentY(61, vm), GUI::pixelpercentX(50, this->vm), &this->font, "Attack", GUI::calcCharSize(this->vm, 100), "Resources/GUI/Buttons/red_button01.png", "Resources/GUI/Buttons/red_button02.png", "Resources/GUI/Buttons/red_button00.png");
      
-    this->BUTTONS["ITEM"] = new GUI::Button(GUI::pixelpercentX(20,this->vm), GUI::pixelpercentY(15, this->vm), GUI::pixelpercentY(21, vm), GUI::pixelpercentX(50, this->vm), &this->font, "Item", GUI::calcCharSize(this->vm, 100), "red_button01.png", "red_button02.png", "red_button00.png");
+    this->BUTTONS["ITEM"] = new GUI::Button(GUI::pixelpercentX(20,this->vm), GUI::pixelpercentY(15, this->vm), GUI::pixelpercentY(21, vm), GUI::pixelpercentX(50, this->vm), &this->font, "Item", GUI::calcCharSize(this->vm, 100), "Resources/GUI/Buttons/red_button01.png", "Resources/GUI/Buttons/red_button02.png", "Resources/GUI/Buttons/red_button00.png");
     
    
     
@@ -26,8 +26,7 @@ void BattleGUI::initcontainer()
           this->BattleGUIcontainer.setOutlineThickness(1.f);
           this->BattleGUIcontainer.setOutlineColor(sf::Color::White);
           this->BattleGUIcontainer.setPosition(GUI::pixelpercentX(5, this->vm), GUI::pixelpercentY(50,this->vm));
-          
-    
+         
 }
 
 void BattleGUI::inittext()
@@ -50,7 +49,7 @@ void BattleGUI::initfont()
 
 void BattleGUI::initenemyHPbar()
 {
-    this->enemyHP = new GUI::ProgressBar(23.f, 5.f, 10.4, 2.8,this->vm, sf::Color::Red, 150, &this->font);
+    this->enemyHP = new GUI::ProgressBar(GUI::pixelpercentX(7.3, this->vm), 5.f, 10.4, 2.8, this->vm, sf::Color::Red, 150, &this->font);
     
 }
 
@@ -95,7 +94,7 @@ void BattleGUI::update(const float &dt)
 
 void BattleGUI::updateenemyHPbar()
 {
-    this->enemyHP->update(this->enemy->attributes->hpMax, this->enemy->attributes->hp);
+    this->enemyHP->update(this->enemy->attributes->hp, this->enemy->attributes->hpMax);
     
 }
 
@@ -120,7 +119,7 @@ void BattleGUI::render(sf::RenderTarget &target)
 
 void BattleGUI::renderContainer(sf::RenderTarget& target)
 {
-    target.draw(this->BattleGUIcontainer);
+   // target.draw(this->BattleGUIcontainer);
     
 }
 

@@ -147,32 +147,23 @@
     <ClCompile Include="engine\tiles\enemyspawner\EnemySpawner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="engine\tiles\light emitter\LightTile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="engine\tiles\normal tile\NormalTile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CharacterTab.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="engine\Componets\GUI\Tab.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NPC.cpp">
+    <ClCompile Include="engine\Tiles\ObjectTiles\ObjectTile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Magic.cpp">
+    <ClCompile Include="engine\Tiles\ObjectTiles\Lantern\Lantern.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
+    <ClCompile Include="SoundComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Lantern.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectTile.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="engine\Componets\GUI\CharacterTab.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -266,9 +257,6 @@
     <ClInclude Include="include\Item.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\LightTile.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\MovementComponets.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -317,9 +305,6 @@
     <ClInclude Include="include\Weapon.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\MainMenuState.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\EnemySystem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -329,19 +314,22 @@
     <ClInclude Include="include\Tab.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NPC.hpp">
+    <ClInclude Include="include\ObjectTile.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Magic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Object.hpp">
+    <ClInclude Include="ObjectSystem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Lantern.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ObjectTile.hpp">
+    <ClInclude Include="include\MainMenuState.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pugixml.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SoundComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -486,10 +474,23 @@
     <None Include="Data\Shader\vertex_shader.vert">
       <Filter>Resource Files</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Text.txt">
-      <Filter>Source Files</Filter>
-    </Text>
+    <None Include="Data\Shader\lantern.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Data\Shader\lantern.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Data\Shader\lantern3.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Data\Shader\lantern3.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Data\Shader\lantern2.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Data\Shader\lantern2.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

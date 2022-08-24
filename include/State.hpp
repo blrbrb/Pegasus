@@ -39,7 +39,10 @@ public:
     ///States
     std::stack<State*>* states;
     ///User-defined graphics settings
-    GraphicsSettings* gfxsettings; 
+    GraphicsSettings* gfxsettings;  
+    //the sounds 
+   
+
     
     
 };
@@ -80,14 +83,15 @@ class State {
     /// Un-Pause the state
     void Unpause_State();
     
+    void create_sound_component(); 
+
 
     //Pure Virtual/Template Update functions
-    virtual void updateMousePosition(sf::View* view = NULL);
+    virtual void updateMousePosition(sf::View* view = NULL); 
     virtual void updateInput(const float& dt) = 0;
     virtual void update(const float& dt) = 0;
     virtual void render(sf::RenderTarget* target = NULL) = 0;
     virtual void updatekeytime(const float& dt);  
-    virtual void updateevents() = 0; 
     
 
 protected:
@@ -97,17 +101,18 @@ protected:
     //float gridsize;
     sf::Vector2f gridsize; 
     StateData* state_data; 
-   
+    SoundComponent* soundcomponent;
     ///The cursor's position relative to the screen
     sf::Vector2i MousePosScreen;
     /// The cursor's position relative to the window
     sf::Vector2i MousePosWindow;
     /// The cursor's position relative to the view
     sf::Vector2f MousePosView;
-    /// The cursor's position relative to the tile grid
-    sf::Vector2i MousePosGrid;
-    //testing
-    sf::IntRect MousePosSquared; 
+    /// The cursor's position relative to the tile grid, 
+    //@brief  The cursor's position relative to the tile grid. Stored in a Vector of Two Integers (x, y)
+    sf::Vector2i MousePosGridI;
+    //@brief The cursor's position relative to the tile grid. Stored in a Vector of Two Floats (x, y)
+    sf::Vector2f MousePosGridF; 
      /// All useable keyboard keys
     std::map<std::string, int>* supportedkeys;
     /// Keys with a user-supplied map

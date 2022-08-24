@@ -15,9 +15,8 @@
 #include "EnemySystem.hpp"
 #include "Tile.hpp"
 #include "NormalTile.hpp"
-
 #include "ObjectTile.hpp"
-#include "Lantern.hpp"
+
 
 //TO DO 
 //create an object that dynamically and randomly creates a new tilemap using some kind of noise, then save it as a slmp, load it.
@@ -53,7 +52,7 @@ private:
     sf::Vector2i gridsizeI; 
     sf::Vector2f grid_sizeF; 
     sf::Vector2u grid_sizeU;
-   
+    size_t texturefilesize; 
  
 
     std::string texture_file;
@@ -72,10 +71,9 @@ private:
     //if the union doesn't work 
    // std::vector< std::vector< std::vector< std::vector<std::pair<Tile*, Object*> > > > Map;
     //std::vector< std::vector< std::vector< std::vector<Tile*> > > > Map;
-    std::vector<Object*> Objects; 
+    
     
     sf::Font font; 
-    
     sf::Texture tileTextureSheet;
     std::map<std::string, sf::Texture> object_textures;
     //Private Functions
@@ -96,16 +94,18 @@ private:
 public:
     
     TileMap(sf::Vector2f gridSize, int width, int height, std::string texture_file);
-    TileMap(const std::string map_file);
+    TileMap(const std::string map_file);    
     TileMap(); 
     virtual ~TileMap();
     
     
     //Variables
     bool  lock_layer;
-    bool isEntityColliding; 
+    bool isEntityColliding;  
+
+   
     
-    
+    //Acessors 
     const sf::Texture* getTileSheet() const;
     /// TileEmpty
     /// @brief Return wether or not a particular tile in the four dimensional vector is null
@@ -136,7 +136,9 @@ public:
     /// getMaxSize
     ///@brief Get the Maximum size (in pixels) of the map
     ///@returns the maximum size of the map
-    const sf::Vector2f getMaxSize() const;
+    const sf::Vector2f getMaxSize() const; 
+    
+   const sf::Vector2f get_objectTile();
    
     
     
@@ -151,8 +153,8 @@ public:
     //render functions
     void render(sf::RenderTarget& target,const sf::View& view, const sf::Vector2i& gridposition, const bool render_collision = false, sf::Shader* shader = NULL,const sf::Vector2f PlayerPosition = sf::Vector2f());
     void DefferedRender(sf::RenderTarget& target, sf::Shader* shader = NULL, const sf::Vector2f PlayerPosition = sf::Vector2f());
-    void renderlighttile(sf::RenderTarget& target, sf::Shader* shader = NULL);
-    void renderObjects(sf::RenderTarget& target, const sf::View& view, const sf::Vector2i& gridposition, const bool render_collision = false, sf::Shader* shader = NULL, const sf::Vector2f PlayerPosition = sf::Vector2f());
+   
+   
     //Modifiers
     void addTile(const int x, const int y, const int z, const sf::IntRect texture_rect, const bool& collision, const short& type);
     void addTile(const int x, const int y, const int z, const sf::IntRect texture_rect, const int enemytype, const int enemyamount, const int timeToSpawn, const int MaxDistance);

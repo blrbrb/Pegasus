@@ -16,20 +16,19 @@ WORKING ANIMATIONS FOR CHARACTERSHEET2
     this->animtioncomponet->add_animation("WALK_LEFT", 10.f, 0, 1, 2, 1, 24, 24);
     this->animtioncomponet->add_animation("WALK_DOWN", 10.f, 0, 0, 2, 0, 24, 24);
     this->animtioncomponet->add_animation("WALK_UP", 10.f, 0, 3, 2, 3, 24, 24);
-
-
 */
-Player::Player(float x, float y, sf::Texture& texturesheet)
+Player::Player(float x, float y, sf::Texture& texturesheet, int level) : level(level)
 {
     
-    
+   
     this->initcomponets();
     this->initinventory(); 
     this->setposition(x, y);
     this->create_animation_componet(texturesheet);
-    this->initanimations();
+    this->initanimations(); 
+    this->initsounds(); 
     //this->sprite.setScale(2, 2);
-
+    this->default_color = this->sprite.getColor(); 
 }
 
 Player::~Player()
@@ -45,10 +44,18 @@ Player::~Player()
 
 void Player::initcomponets()
 {
-    this->createmovementcomponet(100.f ,20000.f, 200.f);    
-    this->create_hitbox_componet(this->sprite, 0, 0, 52.f, 42.f);    //Note: is lower because cropped for more accurate collision
-    this->create_attribute_componet(1);
-    this->create_skill_component();
+    this->createmovementcomponet(100.f, 20000.f, 200.f);
+    this->create_hitbox_componet(this->sprite, 0, 0, 52.f, 42.f);
+    
+    this->create_skill_component(); 
+    this->create_sound_component();  
+    if (this->level)
+    {
+        this->create_attribute_componet(level);
+
+    }//Note: is lower because cropped for more accurate collision
+    else
+        this->create_attribute_componet(1);
 }
 
 void Player::initinventory()
@@ -66,8 +73,8 @@ void Player::initvariables()
 
 void Player::initanimations()
 {
-    
-    this->animationcomponet->add_animation("IDLE_LEFT", 5.f, 0, 2, 17, 2, 62, 74); //first row, second* sprite across *iterator starts from unsigned 0
+ 
+    this->animationcomponet->add_animation("IDLE_BLINKING", 4.f, 0, 2, 15, 2, 62, 74); //first row, second* sprite across *iterator starts from unsigned 0
     this->animationcomponet->add_animation("WALK_RIGHT", 5.f, 1, 1, 15, 1, 62, 74);
     this->animationcomponet->add_animation("WALK_LEFT", 5.f, 0, 0, 15, 0, 62, 74);
     this->animationcomponet->add_animation("WALK_DOWN", 5.f, 0, 0, 15, 0, 62, 74);
@@ -78,34 +85,57 @@ void Player::initanimations()
     //this->animtioncomponet->add_animation("PISSING_PANTS", 10.f, 0, 0, 5, 0, 16, 16);
     
 }
+
+void Player::initsounds()
+{ 
+    if (!this->walking_sound.loadFromFile("Resources/Assets/Sounds/Player/walk_grass.wav")) 
+    {
+        std::cout << "unable to load walk sound effect, player.cpp lin 87" << std::endl; 
+    }  
+
+    this->soundcomponent->add_sound("WALK", 25.f, this->walking_sound); 
+}
     
 
 void Player::updateAnimation(const float& dt)
 {
     /*!
     @brief Change the player's animations based on which direction they're walking in
-        
+
     @param const float& dt
-     
+
     @return void
      */
-       
-       this->movementcomponets->update(dt);
-       
-       if (this->movementcomponets->getStauts(IDLE))
-       {
-          this->animationcomponet->play("IDLE_LEFT", dt);
-       }
 
-       else if(this->movementcomponets->getStauts(MOVING_RIGHT))
-       {
-           this->animationcomponet->play("WALK_RIGHT", dt);
-       }
-       
-       else if (this->movementcomponets->getStauts(MOVING_LEFT))
-       {
-           this->animationcomponet->play("WALK_LEFT", dt);   
-       }
+    this->movementcomponets->update(dt);
+
+    if (this->movementcomponets->getStauts(IDLE))
+    {
+        this->animationcomponet->play("IDLE_BLINKING", dt);
+        //this->soundcomponent->play("WALK", dt);
+
+        // this->soundcomponent->stop("WALK");
+    }
+
+    else if (this->movementcomponets->getStauts(MOVING_RIGHT))
+    {
+        this->animationcomponet->play("WALK_RIGHT", dt);
+        //this->soundcomponent->play("WALK", dt, 1.f); 
+    }
+
+    else if (this->movementcomponets->getStauts(MOVING_LEFT))
+    {
+        this->animationcomponet->play("WALK_LEFT", dt);
+
+        //this->soundcomponent->play("WALK", dt, 1.f); 
+    }
+
+ //change the sprite's color to red if the player is loosing HP 
+      
+
+
+
+      
 }
 
 
@@ -134,12 +164,17 @@ void Player::update(const float& dt, sf::Vector2f& MousePosView)
 
 void Player::render(sf::RenderTarget &target, sf::Shader* shader,const sf::Vector2f light, const bool render_hitbox)
 {
+   
+    const sf::Color testcolor2 = sf::Color(250, 250, 250, 250);
     
     if (shader)
     { 
        
-        shader->setUniform("hasTexture", true);
-        shader->setUniform("lightPos", light);
+        
+      
+        shader->setUniform("lightPos", light); 
+        shader->setUniform("lightData", sf::Glsl::Vec4(testcolor2)); 
+        shader->setUniform("lightSize", sf::Vector2f(1.f, 10.f)); 
         target.draw(this->sprite, shader);
         
        
@@ -147,6 +182,12 @@ void Player::render(sf::RenderTarget &target, sf::Shader* shader,const sf::Vecto
 
     else if(render_hitbox) {
         this->hitbox->render(target); }
+
+
+    if (this->using_vertices) 
+    {
+       // target.draw(this->verticies); 
+    }
     
 }
 

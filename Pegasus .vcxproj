@@ -137,7 +137,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CharacterTab.cpp" />
     <ClCompile Include="engine\componets\animation\animationComponet.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
@@ -153,6 +152,7 @@
     <ClCompile Include="engine\componets\gui\BattleGUI.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="engine\Componets\GUI\CharacterTab.cpp" />
     <ClCompile Include="engine\componets\gui\GraphicsSettings.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
@@ -265,20 +265,15 @@
     <ClCompile Include="engine\tiles\enemyspawner\EnemySpawner.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="engine\tiles\light emitter\LightTile.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="engine\tiles\normal tile\NormalTile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="engine\Tiles\ObjectTiles\Lantern\Lantern.cpp" />
+    <ClCompile Include="engine\Tiles\ObjectTiles\ObjectTile.cpp" />
     <ClCompile Include="engine\tiles\Tile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Lantern.cpp" />
-    <ClCompile Include="Magic.cpp" />
-    <ClCompile Include="NPC.cpp" />
-    <ClCompile Include="Object.cpp" />
-    <ClCompile Include="ObjectTile.cpp" />
+    <ClCompile Include="SoundComponent.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -316,7 +311,6 @@
     <ClInclude Include="include\Item.hpp" />
     <ClInclude Include="include\items_include .h" />
     <ClInclude Include="include\Lantern.hpp" />
-    <ClInclude Include="include\LightTile.hpp" />
     <ClInclude Include="include\MainMenuState.hpp" />
     <ClInclude Include="include\MovementComponets.hpp" />
     <ClInclude Include="include\NormalTile.hpp" />
@@ -326,9 +320,11 @@
     <ClInclude Include="include\PlayerGUI.hpp" />
     <ClInclude Include="include\PlayerGUITabs.hpp" />
     <ClInclude Include="include\Potion.hpp" />
+    <ClInclude Include="include\pugixml.hpp" />
     <ClInclude Include="include\ResourcePath.hpp" />
     <ClInclude Include="include\SettingsState.hpp" />
     <ClInclude Include="include\SkillComponent.hpp" />
+    <ClInclude Include="include\SoundComponent.h" />
     <ClInclude Include="include\State.hpp" />
     <ClInclude Include="include\StatusComponet.hpp" />
     <ClInclude Include="include\Sword.hpp" />
@@ -337,10 +333,8 @@
     <ClInclude Include="include\TileMap.hpp" />
     <ClInclude Include="include\Tiles_Include.h" />
     <ClInclude Include="include\Weapon.hpp" />
-    <ClInclude Include="Magic.h" />
-    <ClInclude Include="NPC.hpp" />
-    <ClInclude Include="include\Object.hpp" />
     <ClInclude Include="include\ObjectTile.hpp" />
+    <ClInclude Include="ObjectSystem.hpp" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -394,11 +388,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Shader\fragment_shader.frag" />
+    <None Include="Data\Shader\lantern.frag" />
+    <None Include="Data\Shader\lantern.vert" />
+    <None Include="Data\Shader\lantern2.frag" />
+    <None Include="Data\Shader\lantern2.vert" />
+    <None Include="Data\Shader\lantern3.frag" />
+    <None Include="Data\Shader\lantern3.vert" />
     <None Include="Data\Shader\vertex_shader.vert" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Text.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

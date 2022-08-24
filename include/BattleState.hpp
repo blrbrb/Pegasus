@@ -15,6 +15,7 @@
 #include "PlayerGUI.hpp"
 #include "BattleGUI.hpp"
 #include "PauseMenu.hpp"
+#include "DialougeSystem.hpp"
 
 
 class Enemy;
@@ -55,6 +56,7 @@ public:
     //render functions
     void render(sf::RenderTarget* target = NULL);
     void renderBattleGUI(sf::RenderTarget& target);
+    void renderBackground(sf::RenderTarget& target);
  
     //Misc
    
@@ -66,6 +68,7 @@ protected:
     GameStateData* gamestatedata;
     Player* player;
     PlayerGUI* PlayerGUI;
+    DialougeSystem* dialougecomponent; 
     BattleGUI* battleGUI;
     Enemy* enemy;
     
@@ -90,6 +93,8 @@ private:
     void initkeybinds();
     void initpausemenu();
     void initrender();
+    void initbackground(); 
+    void initdialouge(); 
     void initplayerGUI();
     void initVariables(); 
     
@@ -99,7 +104,10 @@ private:
     //render varialbes
     sf::RenderTexture rendertexture;
     sf::Sprite rendersprite; 
+    sf::RectangleShape background; 
     sf::View view;
+    sf::Texture bg_texture; 
+
     
 };
 

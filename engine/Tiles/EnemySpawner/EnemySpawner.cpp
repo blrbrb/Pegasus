@@ -47,7 +47,7 @@ void EnemySpawner::render(sf::RenderTarget& target, sf::Shader* shader,sf::Vecto
 
     if (shader)
     {
-        shader->setUniform("hasTexture", true);
+       
         shader->setUniform("lightPos", LightPosition);
  
         target.draw(this->rect, shader);
@@ -72,6 +72,37 @@ const std::string EnemySpawner::asString() const
     
     return ss.str();
     
+}
+
+const TileData EnemySpawner::asData()
+{
+    this->tiledata.collision = this->collison_enabled;
+    this->tiledata.texturerect = this->rect.getTextureRect();
+    this->tiledata.type = this->type;
+    this->tiledata.enemy_timer = &this->timer; 
+    this->tiledata.Enemy_amount =this->Enemy_amount; 
+    this->tiledata.maxDistance = this->maxDistance; 
+    this->tiledata.Enemy_type = this->Enemy_type; 
+
+    
+
+    return this->tiledata;
+
+}
+
+void EnemySpawner::savetoFile(std::ofstream& out)
+{
+    
+    
+    out.write(reinterpret_cast<const char*>(&this->type), sizeof(this->type));
+    out.write(reinterpret_cast<const char*>(&this->rect.getTextureRect().left), sizeof(this->rect.getTextureRect().left));
+    out.write(reinterpret_cast<const char*>(&this->rect.getTextureRect().top), sizeof(this->rect.getTextureRect().top));
+    out.write(reinterpret_cast<const char*>(&this->collison_enabled), sizeof(this->collison_enabled));
+    out.write(reinterpret_cast<const char*>(&this->Enemy_type), sizeof(this->Enemy_type));
+    out.write(reinterpret_cast<const char*>(&this->Enemy_amount), sizeof(this->Enemy_amount));
+    out.write(reinterpret_cast<const char*>(&this->timer), sizeof(this->timer));
+    out.write(reinterpret_cast<const char*>(&this->maxDistance), sizeof(this->maxDistance));
+
 }
 
 void EnemySpawner::SetSpawned(const bool spawned)

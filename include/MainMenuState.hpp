@@ -6,13 +6,18 @@
 //  Copyright © 2020 Eli Reynolds. Apache License .
 //
 
+
+
+
+
 #ifndef MainMenuState_hpp
 #define MainMenuState_hpp
 
-#include "GameState.hpp"
+#include "GameState.hpp" 
 #include "EditorState.hpp"
-#include "SettingsState.hpp"
 #include "GUI.hpp"
+#include "SettingsState.hpp" 
+#include "GraphicsSettings.hpp" 
 
 
 class MainMenuState : public State
@@ -26,8 +31,7 @@ class MainMenuState : public State
     /// @param dt Delta Time 
         void updateInput(const float& dt);
         void update(const float& dt);
-        void updatebuttons();
-        void updateevents();
+        void updatebuttons(const float& dt);
            
         //Render Functions
         void renderbuttons(sf::RenderTarget& target);
@@ -43,15 +47,15 @@ private:
         void resetGUI(); 
         void initbackground();
         void initvariables();
-
-
-   
+        void initsounds(); 
          
         //Private &variables
         sf::Font font;
         sf::RectangleShape background;
         sf::Texture backgroundTexture;
- 
+        sf::SoundBuffer click; 
+      
+       
    
     
         std::map<std::string, GUI::Button*> buttons;

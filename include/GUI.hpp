@@ -204,7 +204,7 @@ private:
     float height;
     float width;
     const float keytimeMax;
-    
+    sf::Vector2u size;
     sf::RectangleShape bounds;
     sf::RectangleShape selector;
     sf::RectangleShape sidebar;
@@ -237,6 +237,7 @@ public:
     ///Return wether or not the user's mouse is hovering over the Texture selector element
     const bool& getActive() const;
     const bool& getMulitSelect() const;
+    const sf::Vector2u& getMaxSize() const; 
     ////Return an sf::IntRect refrence to the texture rectangle the user has selected
     const sf::IntRect& getTextureRect() const;
     const bool getkeytime();

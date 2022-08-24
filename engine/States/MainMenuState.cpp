@@ -11,6 +11,11 @@
 #include "MainMenuState.hpp"
 #include "MainMenuState.hpp"
 #include "MainMenuState.hpp"
+#include "MainMenuState.hpp"
+#include "MainMenuState.hpp"
+#include "MainMenuState.hpp"
+#include "MainMenuState.hpp"
+#include "MainMenuState.hpp"
 
 
 
@@ -25,6 +30,7 @@ MainMenuState::MainMenuState(StateData* state_data)
         this->initFonts();
         this->initkeybinds();
         this->initGUI();
+        this->initsounds(); 
         //this->resetGUI();  
         
      
@@ -50,8 +56,19 @@ MainMenuState::~MainMenuState() {
 
 void MainMenuState::initvariables()
 {
-  
+    this->create_sound_component(); 
 }
+
+void MainMenuState::initsounds()
+{ 
+    if (!this->click.loadFromFile("Resources/Assets/Sounds/UI/Confirm 1.wav")) 
+    {
+        std::cout << "unable to load UI sounds in MainMenuState.cpp lin 65" << std::endl; 
+    }; 
+
+    this->soundcomponent->add_sound("CONFIRM", 100.f, this->click); 
+}
+
 
 
 void MainMenuState::initkeybinds() {
@@ -130,6 +147,7 @@ void MainMenuState::resetGUI()
 }
 
 
+
 void MainMenuState::initFonts() {
 
 
@@ -183,7 +201,7 @@ void MainMenuState::update(const float& dt)
     this->updateMousePosition();
     this->updateInput(dt);
    
-    this->updatebuttons();
+    this->updatebuttons(dt);
 }
 
 void MainMenuState::updateInput(const float& dt)
@@ -234,7 +252,7 @@ void MainMenuState::renderbuttons(sf::RenderTarget& target)
        }
 }
 
-void MainMenuState::updatebuttons() {
+void MainMenuState::updatebuttons(const float& dt) {
     
     //std::cout << "updating buttons" << std::endl; 
     for (auto &it : this->buttons)
@@ -249,6 +267,7 @@ void MainMenuState::updatebuttons() {
 
     if (this->buttons["NEW GAME"]->isPressed())
     {
+        this->soundcomponent->play("CONFIRM", dt, 1.f); 
         this->states->push(new GameState(this->state_data));
     }
 
@@ -275,6 +294,7 @@ void MainMenuState::updatebuttons() {
    
     
 }
+
 
 
 

@@ -30,9 +30,9 @@ void EnemyEditorMode::updateInput(const float &dt)
                          //if adding tiles is locked to one layer
                            if (this->tilemap->lock_layer)
                            {
-                                if (!this->tilemap->TileEmpty(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer))
+                                if (!this->tilemap->TileEmpty(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer))
                                  {
-                                     this->tilemap->addTile(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer, this->TextureRect, this->Enemytype, this->Enemyamount, this->spawn_timer, this->maxDistance);
+                                     this->tilemap->addTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, this->TextureRect, this->Enemytype, this->Enemyamount, this->spawn_timer, this->maxDistance);
                                      
                                         std::cout << "LOCKED: Spawner Added" << std::endl;
                                  }
@@ -46,7 +46,7 @@ void EnemyEditorMode::updateInput(const float &dt)
                            else if (!this->tilemap->lock_layer)
                             {
                         
-                                this->tilemap->addTile(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, 0, this->TextureRect, this->Enemytype, this->Enemyamount, this->spawn_timer, this->maxDistance);
+                                this->tilemap->addTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, 0, this->TextureRect, this->Enemytype, this->Enemyamount, this->spawn_timer, this->maxDistance);
                                 
                                std::cout << "Spawner Tile Added" << std::endl;
                                
@@ -63,16 +63,16 @@ void EnemyEditorMode::updateInput(const float &dt)
     else if ((sf::Mouse::isButtonPressed(sf::Mouse::Right) && this->getkeytime()) ||  (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->editorstatedata->keybinds->at("REMOVE"))) && this->getkeytime()))
      {
          
-            if(this->tilemap->getLayerSize(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer) != -1)
+            if(this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer) != -1)
                   {
                       
                       if (this->tilemap->lock_layer)
                          {
-                              if (!this->tilemap->TileEmpty(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer))
+                              if (!this->tilemap->TileEmpty(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer))
                                {
-                                   if(this->tilemap->checktype(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer, TileTypes::SPAWNER))
+                                   if(this->tilemap->checktype(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, TileTypes::SPAWNER))
                                    {
-                                         this->tilemap->RemoveTile(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer, TileTypes::SPAWNER );
+                                         this->tilemap->RemoveTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, TileTypes::SPAWNER );
                                        
                                    }
                                    std::cout << "LOCKED: Tile Removed" << std::endl;
@@ -87,7 +87,7 @@ void EnemyEditorMode::updateInput(const float &dt)
                          else if (!this->tilemap->lock_layer)
                           {
                       
-                              this->tilemap->RemoveTile(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer, TileTypes::SPAWNER);
+                              this->tilemap->RemoveTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, TileTypes::SPAWNER);
                               
                               std::cout << "Tile Removed" << std::endl;
                               
@@ -97,7 +97,7 @@ void EnemyEditorMode::updateInput(const float &dt)
                   }
                   
                   //else play UI invalid sound
-                  else if(this->tilemap->getLayerSize(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer) == -1)
+                  else if(this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer) == -1)
                   {
                       
                   }
@@ -177,7 +177,7 @@ void EnemyEditorMode::updateGUI(const float &dt)
 
            //set the selection rectangle position
      
-            this->select_Rect.setPosition(this->editorstatedata->mouseposGrid->x * this->statedata->gridsize->x, this->editorstatedata->mouseposGrid->y * this->statedata->gridsize->y);
+            this->select_Rect.setPosition(this->editorstatedata->mouseposGridI->x * this->statedata->gridsize->x, this->editorstatedata->mouseposGridI->y * this->statedata->gridsize->y);
          
     
      
@@ -193,13 +193,13 @@ void EnemyEditorMode::updateGUI(const float &dt)
     this->cursortext.setString(cursor_text.str());
      
      //If the cursor is on a valid tile, the text color is white
-     if (this->tilemap->getLayerSize(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer) != -1)
+     if (this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer) != -1)
      {
          this->cursortext.setFillColor(sf::Color::White);
      }
      
      //if the cursor is not on a valid tile, the text color is red
-     else if (this->tilemap->getLayerSize(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer) < 0)
+     else if (this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer) < 0)
      {
          this->cursortext.setFillColor(sf::Color::Red);
      }

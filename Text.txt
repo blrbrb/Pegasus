@@ -1,7 +1,0 @@
-TO DO 
-
-Create a "magic component" 
-it will be a floating GUI bar similar to exp and health, 
-it will have a recharge time. 
-The bar will fill based on percentages, and the maximum amount of magic carried by the Player's pony can be modified with leveling. 
-The amount of time the magic takes to recharge will also be upgradeable. 

@@ -10,7 +10,7 @@
 #include "BattleState.hpp"
 
 
-BattleState::BattleState(StateData* state_data, GameStateData* gamestatedata, Player* player, class PlayerGUI* PlayerGUI, Enemy* enemy) : State(state_data), Gamestatedata(gamestatedata), player(player), PlayerGUI(PlayerGUI), enemy(enemy), eventtimeMax(50.f)
+BattleState::BattleState(StateData* state_data, GameStateData* gamestatedata, Player* player, class PlayerGUI* PlayerGUI, Enemy* enemy) : State(state_data), Gamestatedata(gamestatedata), player(player), PlayerGUI(PlayerGUI), enemy(enemy), eventtimeMax(15.f)
 {
 
     try
@@ -20,6 +20,8 @@ BattleState::BattleState(StateData* state_data, GameStateData* gamestatedata, Pl
         this->initview();
         this->initpausemenu();
         this->initplayerGUI();
+        this->initbackground(); 
+        this->initdialouge(); 
     }
     
     catch (std::runtime_error& e)
@@ -48,7 +50,7 @@ BattleState::~BattleState()
 void BattleState::initVariables()
 {
     this->eventtime = 0.f;
-
+    this->enemy->setposition(GUI::pixelpercentX(50, this->state_data->gfxsettings->resolution), GUI::pixelpercentY(66, this->state_data->gfxsettings->resolution)); 
 }
 
 
@@ -75,6 +77,23 @@ void BattleState::initrender()
         
 }
 
+void BattleState::initbackground()
+{ 
+    this->bg_texture.loadFromFile("Resources/Assets/image.png"); 
+    this->bg_texture.setRepeated(true); 
+
+
+    this->background.setSize(sf::Vector2f(static_cast<float>(this->state_data->gfxsettings->resolution.width), static_cast<float>(this->state_data->gfxsettings->resolution.height)));
+    this->background.setTexture(&this->bg_texture);
+    this->background.setPosition(0.f, 0.f);
+}
+
+void BattleState::initdialouge()
+{ 
+    this->dialougecomponent = new DialougeSystem("Resources/Assets/Fonts/PressStart2P.ttf", this->state_data->gfxsettings->resolution);
+    this->dialougecomponent->addTextbox(1, "fuck my ass fuck my ass fuck my fucking ass bro"); 
+}
+
 
 
 void BattleState::initview()
@@ -98,7 +117,8 @@ void BattleState::initpausemenu()
 
 void BattleState::updateBattleGUI(const float &dt)
 {
-    this->battleGUI->update(dt);
+    this->battleGUI->update(dt); 
+    this->dialougecomponent->update(dt);
 }
 
 void BattleState::updatePauseMenu()
@@ -131,14 +151,20 @@ void BattleState::updateButtons(const float& dt)
     this->battleGUI->updatebuttons(this->MousePosScreen);
     
 
-    if(this->battleGUI->isButtonPressed("ATTACK") && this->getEventtime())
+    if(this->battleGUI->isButtonPressed("MAGIC") && this->getEventtime())
     {
         
-        this->PlayerAttack();
+        this->PlayerAttack(); 
+        this->dialougecomponent->advance(); 
+        std::stringstream ss; 
+        ss << this->player->attributes->Magic; 
+        this->dialougecomponent->addTextbox(1, "You used ... on .... \n and did" + ss.str() + "damage!");
         this->enemy->animationcomponet->play("ATTACKED", dt);
-        
-            if(this->PlayerTurn)
-                this->PlayerTurn = false;
+      
+        if (this->PlayerTurn) {
+            this->PlayerTurn = false;
+            this->dialougecomponent->advance();
+        }
             else
                 this->PlayerTurn = true;
         
@@ -186,6 +212,7 @@ void BattleState::updateEnemies(const float& dt)
     if(this->enemy->isDead())
     {
         this->player->attributes->gainEXP(this->enemy->getGainExp());
+        
         this->states->pop();
     }
    
@@ -246,22 +273,28 @@ void BattleState::update(const float &dt)
 
 void BattleState::renderBattleGUI(sf::RenderTarget& target)
 {
-   
-    this->battleGUI->render(target);
+    target.draw(this->background);
+    this->battleGUI->render(target); 
+    this->dialougecomponent->render(target); 
+    
 }
 
 
 void BattleState::render(sf::RenderTarget *target)
 {
+
+    if (!target)
+        target = this->window;
     
     this->rendertexture.clear();
     this->renderBattleGUI(this->rendertexture);
     this->PlayerGUI->render(this->rendertexture);
     
-    if(this->enemy)
+    if(!this->enemy->isDead())
     {
         this->enemy->render(this->rendertexture);
     }
+   
     
     if(this->paused)
     {
@@ -269,7 +302,7 @@ void BattleState::render(sf::RenderTarget *target)
         this->pMenu->render(this->rendertexture);
     }
   
-    
+    //this->window->clear(); 
     this->rendertexture.display();
     
 
@@ -287,7 +320,7 @@ void BattleState::GiveEnemyDamage(const float& dt)
 {
     
     this->enemy->animationcomponet->play("ATTACKED", dt);
-    this->enemy->loseHP(2);
+    this->enemy->loseHP(this->player->attributes->damageMin);
     
 }
 

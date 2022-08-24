@@ -9,7 +9,7 @@
 #include "Entity.hpp"
 
 
-Entity::Entity()
+Entity::Entity() : using_vertices(false)
 {
     
     this->initvariables();
@@ -111,6 +111,29 @@ void Entity::settexture(sf::Texture& texture)
     
 }
 
+void Entity::rotate(float angle)
+{
+    this->sprite.rotate(angle); 
+    
+}
+
+void Entity::setorigin(sf::Vector2f origin)
+{
+    this->sprite.setOrigin(origin); 
+}
+
+void Entity::setColor(sf::Color color)
+{
+    this->sprite.setColor(color);
+}
+
+void Entity::setscale(float scale_x, float scale_y)
+{
+    this->sprite.setScale(sf::Vector2f(scale_x, scale_y));
+}
+
+
+
 void Entity::createmovementcomponet(const float maxVelocity, const float Acceleration, const float Deceleration)
 {
     
@@ -124,6 +147,12 @@ void Entity::create_animation_componet(sf::Texture& texturesheet)
     this->animationcomponet = new AnimationComponet(this->sprite, texturesheet);
     
     
+}
+
+void Entity::create_sound_component()
+{
+    this->soundcomponent = new SoundComponent(); 
+
 }
 
 
@@ -262,6 +291,8 @@ void Entity::move_rand(const float &dt, int seed)
            
        else
            this->sprite.move(0,0);
+    
+    
 }
 
 
@@ -270,6 +301,16 @@ const float Entity::getDistance(const Entity& entity) const
 {
     return sqrt(pow(this->getCenter().x - entity.getCenter().x, 2) + pow(this->getCenter().y - entity.getCenter().y, 2));
     
+}
+
+const sf::Texture* Entity::getTexture() const
+{
+    return this->sprite.getTexture();
+}
+
+const sf::Color& Entity::getcolor() const
+{
+    return this->sprite.getColor(); 
 }
 
 

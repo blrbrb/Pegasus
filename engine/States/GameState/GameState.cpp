@@ -54,7 +54,7 @@ GameState::~GameState()
     delete this->playerGUI;
     delete this->Tilemap;
     delete this->enemysystem;
-   // delete this->dialougeSystem;
+    delete this->dialougeSystem;
     
     for (size_t i = 0; i < this->activEnemies.size(); i++ )
     {
@@ -70,13 +70,16 @@ void GameState::initvariables()
 { 
     
     this->shadertime = 0.f; 
-    
+    this->create_sound_component(); 
 }
 
 
 void GameState::initdialougesystem()
 {
-    this->dialougeSystem = new DialougeSystem("Resources/Assets/Fonts/PressStart2P.ttf");
+    this->dialougeSystem = new DialougeSystem("Resources/Assets/Fonts/PressStart2P.ttf", this->state_data->gfxsettings->resolution); 
+    //this->dialougeSystem->addTextbox(DEBUG_TAG);
+    this->dialougeSystem->addTextbox(DIALOUGE, "Welcome to the tutorial/demo.\n This is a debug demonstration generic\n dialouge window. Please Enter the Key\n 'z' to obscure this message"); 
+    this->dialougeSystem->addTextbox(DIALOUGE, "Hmmmm, it would appear that\n I can safley fit about twenty or so\n characters onto the screen before\n I begin to spill over out of the dialougebox\n");
 }
 
 void GameState::initdeferedrender() {
@@ -114,14 +117,18 @@ void GameState::initworldbounds()
 
 void GameState::initshaders()
 {
+    const sf::Color testcolor = sf::Color(250, 250, 250, 100);
     if(!this->core_shader.loadFromFile("Data/Shader/vertex_shader.vert", "Data/Shader/fragment_shader.frag"))
     { 
         std::cout << "unable to load core shaders in gamestate. Line 116" << std::endl; 
         throw std::exception("ERROR Unable to load shaders Gamestate line 71");
         
-    }
+    } 
+   
+    sf::Vector2f resolution = sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height);
     
- 
+    this->core_shader.setUniform("resolution", resolution);
+    this->core_shader.setUniform("ambientData", sf::Glsl::Vec4(testcolor));
     
 }
 
@@ -175,7 +182,7 @@ void GameState::initplayerGUI()
 void GameState::inittextures()
 {
     
-    if (!this->textures["PLAYER_SHEET"].loadFromFile("Resources/Assets/Entity/PlayerSheets/character_sheet3.png"))
+    if (!this->textures["PLAYER_SHEET"].loadFromFile("Resources/Assets/Entity/PlayerSheets/character_sheet4.png"))
     {
         std::cout << "ERROR Could not load Player Sheet texture GameState lin 168" << std::endl;
        
@@ -233,7 +240,7 @@ void GameState::inittilemap()
 {
     this->Tilemap = new TileMap(*this->state_data->gridsize, 100, 100, "Resources/Assets/Tiles/sheet.png");
   
-    this->Tilemap->loadfromfile("Data/TileMap/text.slmp"); 
+    this->Tilemap->loadfromfile("Data/TileMap/text.dat"); 
 
    
 }
@@ -255,13 +262,16 @@ void GameState::update(const float& dt)
      {
        
             this->updateView(dt);
+           
+            this->updatePlayerGUI(dt);
             this->updatePlayerInput(dt);
             this->updatetilemap(dt);
             this->updatePlayer(dt); 
-            
-            this->updatePlayerGUI(dt);
+           
             this->updateEnemies(dt);
-            this->dialougeSystem->update(dt);
+            
+            
+            
      }
     else // Update while Paused
      {
@@ -369,7 +379,7 @@ void GameState::updateShaders(const float& dt)
         this->initvariables(); 
     }
    // std::cout << shadertime << std::endl; 
-    this->core_shader.setUniform("time", shadertime);
+    this->core_shader.setUniform("time", sf::Vector2f(shadertime, 0.f));
    
 }
 
@@ -380,6 +390,11 @@ void GameState::updatePlayerGUI(const float &dt)
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F) && this->getkeytime()) 
     {
        this->playerGUI->toggleCharacterTab(); 
+    } 
+
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z) && this->getkeytime()) 
+    {
+        this->dialougeSystem->advance(); 
     }
 }
 
@@ -412,7 +427,8 @@ void GameState::updatePlayerInput(const float& dt)
         
         this->player->move(dt, 0.f, 1.f);
         //std::cout << "DOWN" << std::endl;
-        this->dialougeSystem->addTextbox(DEFAULT_TAG); 
+       
+
 
     }
     
@@ -438,33 +454,38 @@ void GameState::render(sf::RenderTarget* target) {
     
     this->rendertexture.clear();
 
-    
+      
     
     this->rendertexture.setView(this->view); 
    
    // target->mapPixelToCoords(this->Tilemap->getMaxSizeGrid()); 
-    this->Tilemap->render(this->rendertexture,this->view, this->ViewGridPosition, false, &this->core_shader);
+    this->Tilemap->render(this->rendertexture,this->view, this->ViewGridPosition, false, &this->core_shader, this->Tilemap->get_objectTile());
     //this->Tilemap->render()
     //this->Tilemap->renderlighttile(this->rendertexture, &this->core_shader);
    
   
     //target->mapPixelToCoords(static_cast<sf::Vector2i>(this->player->getCenter())); 
     this->player->render(this->rendertexture, &this->core_shader, this->player->getCenter(), false);
-    //this->Tilemap->renderObjects(this->rendertexture, this->view, this->ViewGridPosition, false, &this->core_shader);
+  
 
     for (auto *i : this->activEnemies)
        {
            i->render(this->rendertexture, &this->core_shader, i->getCenter(), false);
            
+           
        }
+   
     
-   this->Tilemap->DefferedRender(this->rendertexture, &this->core_shader,this->player->getCenter());
+   this->Tilemap->DefferedRender(this->rendertexture, &this->core_shader,this->Tilemap->get_objectTile());
     
-    //this->dialougeSystem->render(this->rendertexture);
+    
     
     this->rendertexture.setView(this->rendertexture.getDefaultView());
     
-    this->playerGUI->render(this->rendertexture);
+    this->playerGUI->render(this->rendertexture); 
+
+    //the dialouge system needs to be rendered with the view set to the PlayerGUI's view, that way attached dialouge will fill the screen correctly. 
+    this->dialougeSystem->render(this->rendertexture);
     
     if(this->paused)
     {
@@ -479,16 +500,14 @@ void GameState::render(sf::RenderTarget* target) {
     target->draw(this->rendersprite);
 }
 
-void GameState::updateevents()
+void GameState::updateDialouge(const float& dt)
 {
-
-
-
-
+    if(this->getkeytime()) 
+    {
+        this->dialougeSystem->update(dt);
+    }
+    
 }
-
-
-
 
 
 
@@ -508,8 +527,6 @@ void GameState::updatePlayer(const float &dt)
     this->player->update(dt, this->MousePosView);
    
 }
-
-
 
 
 
@@ -533,7 +550,7 @@ void GameState::updateEnemies(const float &dt)
                 if(enemy->isDead())
                  {
                      
-                     this->player->attributes->gainHP(enemy->getGainExp());
+                     
                      this->enemysystem->RemoveEnemy(index);
                      this->battleState = nullptr; 
                      
@@ -547,26 +564,66 @@ void GameState::updateEnemies(const float &dt)
    
 }
 
+const bool GameState::savegame() const
+{
+    std::ofstream out;
+
+
+    out.open("Data/Saves/Save.dat", std::ios::out | std::ios::binary);
+
+    if (out.is_open())
+    {
+        //
+
+    }
+
+    else
+    {
+        std::cout << "ERROR CODE GAMESTATE:579|| SAVE || COULD NOT SAVE" << std::endl;
+
+        throw std::runtime_error("ERROR CODE GAMESTATE:579 || GAMESTATE::SAVE || COULD NOT SAVE");
+
+        return false;
+
+    }
+
+    out.close();
+
+
+
+    return true;
+}
+
+
+
 void GameState::updateEncounter(Enemy* enemy, const int index, const float & dt)
 {
     
     if (enemy->getGlobalBounds().contains(this->player->getPosition().x, this->player->getPosition().y))
     {
+        //this->player->attributes->loseHP(1); 
+        if(this->playerGUI->getTabsOpen())
+        {
+            this->playerGUI->toggleCharacterTab();
+        }
+        
         this->battleState = new BattleState(this->state_data, &this->gamestatedata, this->player, this->playerGUI, enemy);
         this->state_data->states->push(battleState);
                    
     }
     
-    
-    
-        
+    if (enemy->isDead()) 
+    {
+        std::cout << "the enemy has been defeated" << std::endl;
+      // this->states->pop();
+    }   
 }
 
 
 void GameState::initenemysystem()
 {
     this->enemysystem = new EnemySystem(this->activEnemies, this->textures);
-   // this->objecthandler = new ObjectHandler(this->Objects, this->textures); 
+   
 
 }
 

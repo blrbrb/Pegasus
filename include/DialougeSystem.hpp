@@ -6,11 +6,14 @@
 //  Copyright © 2020 Eli Reynolds. All rights reserved.
 //
 
+//ToDO Write a function that will auto-wrap any and all text that spills over the boundary of the dialouge container
+
 #ifndef DialougeSystem_hpp
 #define DialougeSystem_hpp
 
+#include "GUI.hpp"
 
-enum DialougeTypes {DEFAULT_TAG = 0, NPC, EVENT, POSITIVE, NEGATIVE};
+enum DialougeTypes {DEBUG_TAG = 0, NPC, EVENT, POSITIVE, NEGATIVE, DIALOUGE};
 
 class DialougeSystem
 {
@@ -45,6 +48,23 @@ private:
             this->life_time = lifetime; 
             
         }
+        //This is the overload constructor called when the Dialouge template Class is made 
+        //Make sure to come back here and add more constructors each time you want to create a new template class 
+        //All of the values for the text are initalized in the textbox constructor, it's 
+        //the responsibility of the overload constructors to initalize class-specific variables
+
+        Textbox(Textbox* textbox, std::string text)
+        {
+            this->text = textbox->text;
+           // this->text.setFont(this->Textbox->font)
+            this->text.setString(text);
+            //this->text.setPosition(x, y);
+            this->text.setColor(sf::Color::White); 
+            this->text.setCharacterSize(24); 
+            
+
+
+        }
         
         ~Textbox()
         {
@@ -72,29 +92,40 @@ private:
     };
     
     sf::Font font;
-    
+    sf::RectangleShape dialouge_container; 
     //internal array of text box elements
     
     std::vector<Textbox*> boxes;
-    
+    sf::VideoMode& vm;
     std::map<unsigned, Textbox*> templates; 
-     
+    int current_box; 
+    int total_boxes; 
     void initvariables();
     void inittemplates();
     void initfonts(std::string font_file); 
-    
-    
+
+
+   
     
 public:
     
-    DialougeSystem(std::string font_file);
+    DialougeSystem(std::string font_file, sf::VideoMode &vm);
     virtual ~DialougeSystem();
     
-    void addTextbox(unsigned type);
-    void removeTextbox();
+    void addTextbox(unsigned type, std::string text);
+    void removeTextbox(); 
+
     
+    void advance(); 
     void update(const float& dt);
+
     void render(sf::RenderTarget& target);
+    
+    const bool finished() const;
+
+    //Acessors 
+    
+
     
 };
 

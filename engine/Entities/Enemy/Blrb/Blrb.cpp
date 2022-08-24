@@ -110,8 +110,8 @@ void Blrb::render(sf::RenderTarget &target, sf::Shader *shader, const sf::Vector
 {
     if (shader)
       {
-          shader->setUniform("hasTexture", true);
-          shader->setUniform("light", light);
+          //shader->setUniform("hasTexture", true);
+          shader->setUniform("lightPos", light);
          
           target.draw(this->sprite, shader);
       }

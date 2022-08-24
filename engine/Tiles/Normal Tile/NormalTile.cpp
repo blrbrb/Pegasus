@@ -41,6 +41,31 @@ const std::string NormalTile::asString() const
        return out.str();
 }
 
+const TileData NormalTile::asData()
+{
+   // this->tiledata->collision = this->collison_enabled;
+    this->tiledata.texturerect = this->rect.getTextureRect();
+    this->tiledata.type = this->type;
+  
+    return this->tiledata;
+
+} 
+
+
+void NormalTile::savetoFile(std::ofstream& out) 
+{
+   
+   //will this work? 
+   
+  
+    out.write(reinterpret_cast<const char*>(&this->type), sizeof(this->type));
+    out.write(reinterpret_cast<const char*>(&this->rect.getTextureRect().left), sizeof(this->rect.getTextureRect().left));
+    out.write(reinterpret_cast<const char*>(&this->rect.getTextureRect().top), sizeof(this->rect.getTextureRect().top));
+    out.write(reinterpret_cast<const char*>(&this->collison_enabled), sizeof(this->collison_enabled));
+
+
+}
+
 void NormalTile::update(const float& dt)
 {
     
@@ -48,12 +73,12 @@ void NormalTile::update(const float& dt)
 
 void NormalTile::render(sf::RenderTarget& target, sf::Shader* shader, sf::Vector2f LightPosition)
 {
-
+    const sf::Color testcolor = sf::Color(250, 250, 250, 50); 
     if (shader)
     { 
-        shader->setUniform("hasTexture", true);
+        
         shader->setUniform("lightPos", LightPosition); 
-      
+        shader->setUniform("ambientData", sf::Glsl::Vec4(testcolor));
     
         target.draw(this->rect, shader);
     }

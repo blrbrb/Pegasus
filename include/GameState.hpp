@@ -93,11 +93,14 @@ public:
     ///Render all of the Gamestate elements
     void render(sf::RenderTarget* target);
     
-    void updateevents();
+    void updateDialouge(const float& dt); 
     
     
     void updateEnemies(const float& dt); 
    
+
+    //Modifiers 
+    const bool savegame() const;
     
 private:
     
@@ -115,7 +118,6 @@ private:
     
     
     EnemySystem* enemysystem;
-    
     DialougeSystem* dialougeSystem;
   
     
@@ -124,7 +126,8 @@ private:
     sf::Sprite rendersprite;
     
     //Shaders
-    sf::Shader core_shader;
+    sf::Shader core_shader; 
+    sf::Shader lantern_shader; 
     float shadertime; 
     
     
@@ -136,7 +139,7 @@ private:
     
     //Enemies
     std::vector<Enemy*> activEnemies;
-    std::vector<Object*> Objects; 
+   
    
     GameStateData gamestatedata; 
     
@@ -156,6 +159,7 @@ private:
     void initvariables();
     void initdialougesystem();
     void initworldbounds(); 
+    void initsounds(); 
 
 
     //Exception handler Functions 

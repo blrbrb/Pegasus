@@ -16,7 +16,7 @@ private:
     //sounds
     sf::SoundBuffer buffer;
     sf::Sound Levelsound;
-    
+    bool attacked;
     void initsounds(); 
  
 public:
@@ -67,6 +67,9 @@ public:
       int defense;
       int luck; 
       int MagicMax; 
+      
+
+      
     
     //COINS
     int coins; 
@@ -122,6 +125,7 @@ public:
     ///@brief Get wether or not an entity is out of health points
     ///@returns bool wether or not the entity has run out of health points
     const bool isdead() const;  
+    const bool loosing_hp() const;
 };
 
 

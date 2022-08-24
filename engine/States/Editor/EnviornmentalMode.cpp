@@ -90,14 +90,14 @@ void EnviornmentalMode::updateInput(const float &dt)
             //if the texure selector is not active
              if(!this->texture_selector->getActive())
              {
-                 if(this->tilemap->getLayerSize(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer) != -1)
+                 if(this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer) != -1)
                      {
                          //if adding tiles is locked to one layer
                            if (this->tilemap->lock_layer)
                            {
-                                if (this->tilemap->TileEmpty(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer))
+                                if (this->tilemap->TileEmpty(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer))
                                  {
-                                     this->tilemap->addTile(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer, this->TextureRect, collision, type);
+                                     this->tilemap->addTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, this->TextureRect, collision, type);
                                      
                                         std::cout << "LOCKED: Tile Added" << std::endl;
                                  }
@@ -111,7 +111,7 @@ void EnviornmentalMode::updateInput(const float &dt)
                            else if (!this->tilemap->lock_layer)
                             {
                                 
-                                this->tilemap->addTile(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer, this->TextureRect, collision, type);
+                                this->tilemap->addTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, this->TextureRect, collision, type);
                                 
                                 std::cout << "Tile Added" << std::endl;
                                
@@ -121,7 +121,7 @@ void EnviornmentalMode::updateInput(const float &dt)
                  
                     //else play UI invalid sound for invalid tile placement
                  
-                 else if(this->tilemap->getLayerSize(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer) == -1)
+                 else if(this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer) == -1)
                      {
                          std::cout << "Invalid Tile Space" << std::endl;
                      }
@@ -148,14 +148,14 @@ void EnviornmentalMode::updateInput(const float &dt)
              if(!this->texture_selector->getActive() && !this->sidebar.getGlobalBounds().contains(sf::Vector2f(*this->editorstatedata->mousePosWindow)))
               {
                   //if the cursor is over a valid tile, ok to place
-                  if(this->tilemap->getLayerSize(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer) != -1)
+                  if(this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer) != -1)
                   {
                       
                       if (this->tilemap->lock_layer)
                          {
-                              if (!this->tilemap->TileEmpty(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer))
+                              if (!this->tilemap->TileEmpty(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer))
                                {
-                                   this->tilemap->RemoveTile(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer, TileTypes::DEFAULT);
+                                   this->tilemap->RemoveTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, TileTypes::DEFAULT);
                                    std::cout << "LOCKED: Tile Removed" << std::endl;
                                }
                                else
@@ -168,7 +168,7 @@ void EnviornmentalMode::updateInput(const float &dt)
                          else if (!this->tilemap->lock_layer)
                           {
                       
-                              this->tilemap->RemoveTile(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer, TileTypes::DEFAULT);
+                              this->tilemap->RemoveTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, TileTypes::DEFAULT);
                               
                               std::cout << "Tile Removed" << std::endl;
                               
@@ -179,7 +179,7 @@ void EnviornmentalMode::updateInput(const float &dt)
                   
                   //else play UI invalid sound
                 // TO DO: Create soundbuffer to load GUI sounds
-                  else if(this->tilemap->getLayerSize(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer) == -1)
+                  else if(this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer) == -1)
                   {
                       
                   }
@@ -242,7 +242,7 @@ void EnviornmentalMode::updateGUI(const float &dt)
     {
           //set the selection rectangle position
         this->select_Rect.setTextureRect(this->TextureRect);
-        this->select_Rect.setPosition(this->editorstatedata->mouseposGrid->x * this->statedata->gridsize->x, this->editorstatedata->mouseposGrid->y * this->statedata->gridsize->y);
+        this->select_Rect.setPosition(this->editorstatedata->mouseposGridI->x * this->statedata->gridsize->x, this->editorstatedata->mouseposGridI->y * this->statedata->gridsize->y);
         
     }
     
@@ -259,16 +259,16 @@ void EnviornmentalMode::updateGUI(const float &dt)
     std::stringstream cursor_text;
     cursor_text << "MouseX: " << this->editorstatedata->mousePosView->x << "\n"
     << "MouseY:" << this->editorstatedata->mousePosView->y
-    << "\n" << "GridX: " << this->editorstatedata->mouseposGrid->x
-    << "\n" << "GridY: " << this->editorstatedata->mouseposGrid->y
+    << "\n" << "GridX: " << this->editorstatedata->mouseposGridI->x
+    << "\n" << "GridY: " << this->editorstatedata->mouseposGridI->y
     << "\n" << "TextureRectX: " << this->TextureRect.left
     << "\n" << "TextureRectY: " << this->TextureRect.top
     << "\n" << "Collision: " << this->collision
     << "\n" << "Type: " << this->type
-    << "\n" << "Tiles:" << this->tilemap->getLayerSize(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer);
+    << "\n" << "Tiles:" << this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer);
     
     //If the cursor is on a valid tile, the text color is white
-    if (this->tilemap->getLayerSize(this->editorstatedata->mouseposGrid->x, this->editorstatedata->mouseposGrid->y, this->layer) != -1)
+    if (this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer) != -1)
     {
         this->cursortext.setFillColor(sf::Color::White);
     }

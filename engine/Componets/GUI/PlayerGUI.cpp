@@ -29,7 +29,6 @@ PlayerGUI::~PlayerGUI()
     delete this->HPbar;
     delete this->ExpBar;
     delete this->playerTabs; 
-    
 }
 
 
@@ -46,7 +45,7 @@ void PlayerGUI::initMONEY()
 void PlayerGUI::initHPbar()
 {
     //args are as follows, float x, float y, float width, float height
-    this->HPbar = new GUI::ProgressBar(1.f, 6.3, 50, 3.5,this->vm, sf::Color(255, 0, 0, 200), 150, &this->font);
+    this->HPbar = new GUI::ProgressBar(GUI::pixelpercentX(0.1, this->vm), GUI::pixelpercentY(0.63, this->vm), 50, 3.5,this->vm, sf::Color(255, 0, 0, 200), 150, &this->font);
   
 }
 
@@ -70,12 +69,12 @@ void PlayerGUI::initLevelTag()
 
 void PlayerGUI::initEXPbar()
 {   //args are as follows, float x float y float width float height 
-    this->ExpBar = new GUI::ProgressBar(1.f, 10.6, 20.4, 1.8,this->vm, sf::Color::Green, 150, &this->font);
+    this->ExpBar = new GUI::ProgressBar(GUI::pixelpercentX(0.1, this->vm), GUI::pixelpercentY(1.09, this->vm), 20.4, 1.8, this->vm, sf::Color::Green, 150, &this->font);
 }
 
 void PlayerGUI::initMagicbar()
 { 
-    this->MagicBar = new GUI::ProgressBar(1.f, 14.6, 20.4, 1.8, this->vm, sf::Color::Blue, 150, &this->font); 
+    this->MagicBar = new GUI::ProgressBar(GUI::pixelpercentX(0.1, this->vm),GUI::pixelpercentY(1.46,this->vm), 20.4, 1.8, this->vm, sf::Color::Blue, 150, &this->font);
     
 }
 
@@ -147,12 +146,12 @@ void PlayerGUI::updateInventory()
 
 void PlayerGUI::updateHPbar()
 {
-    this->HPbar->update(this->player->attributes->hpMax, this->player->attributes->hp);
+    this->HPbar->update(this->player->attributes->hp, this->player->attributes->hpMax);
 }
 
 void PlayerGUI::updateEXPbar()
 {
-    this->ExpBar->update(this->player->attributes->expNextlvl, this->player->attributes->exp);
+    this->ExpBar->update(this->player->attributes->exp, this->player->attributes->expNextlvl);
 }
 
 void PlayerGUI::updateMagicbar()
@@ -252,6 +251,11 @@ const bool PlayerGUI::getInventoryHidden()
     return this->hidden;
 }
 
+const bool PlayerGUI::getTabsOpen() const
+{
+    return this->playerTabs->istabopen(); 
+}
+
 void PlayerGUI::toggleCharacterTab()
 { 
   
@@ -262,6 +266,7 @@ void PlayerGUI::toggleCharacterTab()
 
 void PlayerGUI::renderPlayerTabs(sf::RenderTarget& target) 
 {
+  
     this->playerTabs->render(target);  
 }
 

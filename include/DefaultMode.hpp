@@ -34,7 +34,7 @@ private:
           sf::RectangleShape text_container;
           sf::RectangleShape controlsContainer; 
           sf::IntRect TextureRect;
-          Object* object; 
+        
       
          
      

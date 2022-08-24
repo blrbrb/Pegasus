@@ -90,10 +90,15 @@ void State::updateMousePosition(sf::View* view)
       this->window->setView(*view);
     
     
-    this->MousePosView = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window)); 
+    this->MousePosView = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window));  
+
     if(this->state_data->gridsize->y) 
-        this->MousePosGrid = sf::Vector2i(static_cast<int>(this->MousePosView.x) / static_cast<int>(this->gridsize.x),
-            static_cast<int>(this->MousePosView.y) / static_cast<int>(this->gridsize.y));
+        this->MousePosGridI = sf::Vector2i(static_cast<int>(this->MousePosView.x) / static_cast<int>(this->gridsize.x),
+            static_cast<int>(this->MousePosView.y) / static_cast<int>(this->gridsize.y)); 
+
+
+    this->MousePosGridF = sf::Vector2f(this->MousePosView.x / static_cast<int>(this->gridsize.x),
+        this->MousePosView.y / static_cast<int>(this->gridsize.y));
     
     /*else 
     this->MousePosGrid = sf::Vector2i(static_cast<int>(this->MousePosView.x) / static_cast<int>(this->gridsize.x),
@@ -113,13 +118,6 @@ void State::updatekeytime(const float& dt)
 
 }
 
-void State::updateevents()
-{
-
-
-
-
-}
 
 
 
@@ -136,6 +134,12 @@ void State::Unpause_State()
   
     this->paused = false; 
     
+}
+
+void State::create_sound_component()
+{
+    this->soundcomponent = new SoundComponent(); 
+
 }
 
 

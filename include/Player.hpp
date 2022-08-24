@@ -23,20 +23,23 @@ private:
     void initvariables();
     void initcomponets();
     void initanimations(); 
-    void initinventory();
-    
-    
-    
-   
+    void initsounds(); 
+    void initinventory(); 
+
+    int& level; 
+    sf::Color default_color; 
     
     Inventory* inventory;
     
-    //Variables
+    //Variables 
+    sf::SoundBuffer  walking_sound; 
+
+    //does the entity rendersprite need 
  
 
 public:
 
-    Player(float x, float y, sf::Texture& texturesheet);
+    Player(float x, float y, sf::Texture& texturesheet, int level = 0);
     virtual ~Player();
     
     //Accessors
@@ -45,7 +48,7 @@ public:
     ///Retrieve a pointer to the Player's Inventory
     Inventory* getInventory();
     const std::string  InfoString() const; 
-
+                                                                               
    
     
     ///  Update the Player

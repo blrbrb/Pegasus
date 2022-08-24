@@ -12,7 +12,8 @@
 
 Enemy::Enemy(EnemySpawner& spawnertile) :EnemySpawnerTile(spawnertile)
 {
-   
+    //if this->initvariables(); is missing here, it's probably the reason why battlestate gets stuck in a loop
+    this->initvariables();
    
 }
 
@@ -62,6 +63,7 @@ const bool Enemy::isDead() const
 {
     if (this->attributes)
     {
+       // std::cout << "enemy attribs working" << std::endl;
         return this->attributes->isdead();
     }
 

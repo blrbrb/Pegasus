@@ -17,6 +17,22 @@ enum TileTypes {DEFAULT=0, UNPASSABLE, OBJECT, SPAWNER, LIGHT, NORMAL};
 static const char * EnumStrings[] = { "Default", "Unpassable", "Object", "Spawner", "Light", "Stop", "YOU FOOL", "NO" };
 
 
+typedef struct TileData
+{
+     float  obX, obY, maxDistance;
+     short type, object_type;
+    sf::IntRect texturerect;
+     bool collision;
+     sf::Int32* enemy_timer; 
+    int Enemy_type, Enemy_amount;
+    sf::Vector2f position;
+
+
+};
+
+
+
+
 class Tile
 {
 private:
@@ -26,7 +42,11 @@ protected:
     
     sf::Sprite rect;
     short type;
-    bool collison_enabled;  
+    
+
+
+
+
 
 public:
     
@@ -37,21 +57,26 @@ public:
     
     //Accessors
     virtual const std::string asString() const =0;
+    virtual const TileData asData() = 0;
     virtual const short& gettype() const;
     virtual const sf::Vector2f& getposition() const;
     virtual const bool& getCollision() const;
     virtual const bool intersects(const sf::FloatRect bounds) const;
     virtual const sf::FloatRect getGlobalBounds() const;
     virtual const sf::Vector2f getCenter() const;
-
+    virtual void savetoFile(std::ofstream& out) = 0; 
     
     //Functions
     virtual void update(const float& dt) =0;
     virtual void render(sf::RenderTarget & target, sf::Shader* shader = NULL, sf::Vector2f LightPosition = sf::Vector2f())=0;
    
+    bool collison_enabled;
 
     //Modifiers 
-   
+
+
+    //Data 
+    
 };
 
 

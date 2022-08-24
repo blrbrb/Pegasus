@@ -25,7 +25,7 @@ StatusComponet::StatusComponet(int level)
     this->attributepts = 2;
     this->MagicMax = 100; 
     //init stats
-  
+    this->attacked = false; 
     //Init Positive Multipliers
     this->friendship = 1; 
     this->honesty = 1; 
@@ -34,7 +34,7 @@ StatusComponet::StatusComponet(int level)
     this->laughter = 1; 
     this->kindness = 1; 
     this->strength = 1; 
-
+    this->hp = 0; 
     //Init Negative Multipliers 
     this->animosity = 0; 
     this->deceit = 0; 
@@ -43,17 +43,17 @@ StatusComponet::StatusComponet(int level)
     this->despair = 0; 
     this->malice = 0; 
     this->treachery = 0; 
-   
+    this->coins = 0;
    
     this->initsounds();
-    this->UpdateStats(true);
+  
     
     
     this->UpdateLevel();
     this->UpdateStats(true);
     
     //init money
-    this->coins = 0; 
+    
     
 }
 
@@ -84,7 +84,7 @@ void StatusComponet::UpdateStats(const bool reset)
     
     ///x = y2 + y/4 + xn/5;
     
-    this->hpMax = this->Heart * 9 + this->friendship + (this->strength / 5 + this->treachery);
+    this->hpMax = this->Heart * 9 + this->friendship;
     this->damageMin = this->strength * 2 + this->animosity + this->strength / 4 - this->Heart / 10;
     this->damMax = this->strength * 2 + (this->indifference * 10 + this->animosity) + this->strength / 2 + (this->friendship / 5 - this->Heart / 10); 
     this->MagicMax = this->Magic * 10 + this->friendship / 2 + this->honesty / 2 - (this->despair * 2 + this->malice + this->treachery / 2);
@@ -159,19 +159,36 @@ std::string StatusComponet::debugPrint() const
 
 const bool StatusComponet::isdead() const
 {
-    return this->hp <= 0;
-    
+  
+    if (this->hp <= 0)
+    {
+        std::cout << "dead" << std::endl;
+        return true;
+    }
+    //return this->hp <= 0;
+    else return false;
 }
+
+const bool StatusComponet::loosing_hp() const
+{
+    int currentHP = this->hp - 1; 
+   //return this->attacked; 
+    return this->hp == currentHP; 
+}
+
+
 
 //Modifiers
 //Begin
 
-void StatusComponet::loseHP(const int hp)
+void StatusComponet::loseHP(const int hp) 
 {
+    this->attacked = true;
     this->hp -= hp;
 
     if (this->hp < 0)
-        this->hp = 0;
+        this->hp = 0;   
+    
 }
 
 void StatusComponet::gainHP(const int hp)

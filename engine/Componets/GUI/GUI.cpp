@@ -489,7 +489,7 @@ GUI::TextureSelector::TextureSelector(float x, float y,float width, float height
     this->bounds.setFillColor(sf::Color(50, 50, 50, 100));
     this->bounds.setOutlineThickness(1.f);
     this->bounds.setOutlineColor(sf::Color(255, 255, 255, 200));
-    
+    this->size = texture_sheet->getSize();
     this->sheet.setTexture(*texture_sheet);
     this->sheet.setPosition(x + offset.x, y + offset.y);
     
@@ -631,6 +631,11 @@ const bool& GUI::TextureSelector::getMulitSelect() const
     return this->multi_select;
 }
 
+const sf::Vector2u& GUI::TextureSelector::getMaxSize() const
+{
+    return this->size; 
+}
+
 /*END TEXTURE SELECTOR*/
 
 
@@ -753,21 +758,21 @@ const float GUI::pixelpercentY(const float percent, const sf::VideoMode& vm)
 
 GUI::ProgressBar::ProgressBar(float x, float y, float width, float height,sf::VideoMode& vm, sf::Color inner_color, unsigned charSize, sf::Font* font)
 {
-    float widthh = GUI::pixelpercentX(width, vm);
-    float heightt = GUI::pixelpercentY(height, vm);
+    float _width = GUI::pixelpercentX(width, vm);
+    float _height = GUI::pixelpercentY(height, vm);
     float xx = GUI::pixelpercentX(x, vm);
     float yy = GUI::pixelpercentY(y, vm);
     
     
    
-    this->Max_width = width;
+    this->Max_width = _width;
     
-    this->Exterior.setSize(sf::Vector2f(widthh, heightt));
+    this->Exterior.setSize(sf::Vector2f(_width, _height));
     this->Exterior.setFillColor(sf::Color(50,50,50,200)); 
    
     this->Exterior.setPosition(xx,yy);
     
-    this->Interior.setSize(sf::Vector2f(widthh, heightt));
+    this->Interior.setSize(sf::Vector2f(_width, _height));
     this->Interior.setFillColor(inner_color);
     this->Interior.setPosition(this->Exterior.getPosition());
 

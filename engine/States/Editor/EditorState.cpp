@@ -115,7 +115,7 @@ void EditorState::updatepausemenubuttons()
         //handle TileMap saving errors
         try
         {
-            this->Tilemap->savetofile("Data/TileMap/text.slmp");
+            this->Tilemap->savetofile("Data/TileMap/text.dat");
         }
         
         catch (std::runtime_error& e)
@@ -131,7 +131,7 @@ void EditorState::updatepausemenubuttons()
     {
         try
         {
-            this->Tilemap->loadfromfile("Data/TileMap/text.slmp");
+            this->Tilemap->loadfromfile("Data/TileMap/text.dat");
         }
         
         catch (std::runtime_error& e)
@@ -254,10 +254,11 @@ void EditorState::initeditorstatedata()
     this->editorstatedata.keytime = &this->keytime;
     this->editorstatedata.ketyimeMax = &this->keytime_MAX;
 
-    this->editorstatedata.mouseposGrid = &this->MousePosGrid;
+    this->editorstatedata.mouseposGridI = &this->MousePosGridI;
     this->editorstatedata.mousePosView = &this->MousePosView;
     this->editorstatedata.mousePosWindow = &this->MousePosWindow;
-    this->editorstatedata.mousePosScreen= &this->MousePosScreen;
+    this->editorstatedata.mousePosScreen= &this->MousePosScreen; 
+    this->editorstatedata.mouseposGridF = &this->MousePosGridF; 
     this->editorstatedata.view = &this->mainview;
     this->editorstatedata.font = &this->font; 
     
@@ -462,7 +463,7 @@ void EditorState::render(sf::RenderTarget* target)
     
     //Tilemap Camera (same as game camera)
     this->window->setView(this->mainview);
-    this->Tilemap->render(*target, this->mainview, this->MousePosGrid);
+    this->Tilemap->render(*target, this->mainview, this->MousePosGridI);
         
     //Buttons Camera
     this->window->setView(this->window->getDefaultView());
