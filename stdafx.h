@@ -3,6 +3,11 @@
 #define stdafx_h
 
 
+
+
+
+
+
 //Core
 #include <algorithm>
 #include <deque>
@@ -37,7 +42,9 @@
 
 
 //Windows Debug Tools 
-
+#include "imgui.h"
+#include "imgui-SFML.h"
+#include "GUI.hpp"
 
 
 

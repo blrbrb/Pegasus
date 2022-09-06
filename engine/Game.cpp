@@ -104,7 +104,7 @@ void Game::initwindow() {
 
     */
 
-
+    ImGui::CreateContext();
    
 
     if (this->gfxsettings.fullscreen) {
@@ -120,11 +120,15 @@ void Game::initwindow() {
    this->window->setFramerateLimit(this->gfxsettings.framerate_limit);
     this->window->setVerticalSyncEnabled(this->gfxsettings.vsync);    
 
+    sf::RenderWindow& window = *this->window;  
 
     std::cout << "window created" << std::endl; 
     //ImGui::CreateContext();
     //ImGui::ShowDemoWindow();
-  
+    if (ImGui::SFML::Init(window)) 
+    {
+        std::cout << "ImGui has properly been initalized" << std::endl; 
+    }
 
     ///ImGui::StyleColorsDark();
    // ImGui::SetCurrentContext()
@@ -232,23 +236,27 @@ void Game::UpdateEvents() {
             this->window->close();
                    
         }      
-        //if (!this->states.empty())
-           // this->states.top()->updateevents(&this->event);
+
+        ImGui::SFML::ProcessEvent(this->event); 
+        
        
     }
 }
 
 void Game::render() {
-    
+ 
     this->window->clear(sf::Color::Black); 
-    //ImGui::NewFrame();
-    if (!this->states.empty()) 
-        //OnImGui();
    
-         this->states.top()->render();
-    
+    if (!this->states.empty())
+     
+       
+
+
+         this->states.top()->render(); 
+        
+    ImGui::SFML::Render(*this->window);
   
-   this->window->display();
+   this->window->display();  
                                                        
     
   }
@@ -257,10 +265,14 @@ void Game::UpdateDT()
 {
     
    // Updates the time variable with the time taken for each frame to render
-    this-> dt = this -> dtClock.restart().asSeconds();
-    //std::cout << this->dt  << std::endl;
+  
+
 
     
+    this-> dt = this -> dtClock.restart().asSeconds();
+    //std::cout << this->dt  << std::endl;
+   
+   
 }
 
 
@@ -268,10 +280,13 @@ void Game::running() {
     
     while (this->window->isOpen()) {
       
+        ImGui::SFML::Update(*this->window, this->ImGuiClock.restart());
+       // ImGui::End(); 
         this->UpdateDT();
         this->Update();
          this->render();
     }
+    ImGui::SFML::Shutdown();
     
 } //main loop
 

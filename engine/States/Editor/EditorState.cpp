@@ -10,6 +10,7 @@
 #include "EnemyEditorMode.hpp"
 #include "EnviornmentalMode.hpp"
 #include "DefaultMode.hpp" 
+#include "GUI.hpp"
 
 EditorState::EditorState(StateData* state_data)
 : State(state_data)
@@ -23,6 +24,7 @@ EditorState::EditorState(StateData* state_data)
     this->initpausemenu();
     this->initButtons();
     this->inittilemap();
+    this->initbg(); 
     this->initGUI();
     this->initmodes();
     this->activeMode = EDITOR_MODES::DEFAULT_MODE;
@@ -30,6 +32,7 @@ EditorState::EditorState(StateData* state_data)
      
 
 }
+
 
 EditorState::~EditorState() {
     
@@ -73,7 +76,7 @@ void EditorState::initButtons()
 void EditorState::inittilemap()
 {
     this->Tilemap = new TileMap(this->gridsize, 100, 100, "Resources/Assets/Tiles/sheet.png");
-
+    this->Tilemap->addGenerationTexture("Resources/Assets/Tiles/sheet.png"); 
 }
 
 void EditorState::initview()
@@ -141,6 +144,12 @@ void EditorState::updatepausemenubuttons()
 
     }
         
+}
+
+void EditorState::updateImGui()
+{ 
+   
+
 }
 
 
@@ -213,8 +222,24 @@ void EditorState::initsidebar()
 
 void EditorState::initGUI()
 {
-     
+
+  
     
+
+}
+
+void EditorState::initbg()
+{
+   
+    
+    sf::FloatRect screen = sf::FloatRect(0, 0, this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height); 
+    this->bg.setSize(sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height));   
+      //this->bg.setSize(sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height));   
+    this->bg_interior.setSize(this->Tilemap->getMaxSize()); 
+    this->bg_interior.setPosition(sf::Vector2f(0.f, 0.f)); 
+    this->bg_interior.setFillColor(sf::Color::Black); 
+    this->bg.setFillColor(sf::Color(250.f, 0.f, 0.f, 90.f)); 
+     
 
 }
 
@@ -450,7 +475,132 @@ void EditorState::updateEditorinput(const float& dt)
 
 void EditorState::updateGUI(const float& dt)
 {
-    
+    static char str0[128] = "Map.dat";
+    static int switchTabs; 
+    static bool p_open = NULL;
+
+    ImGui::Begin("Map Editor",&p_open, ImGuiWindowFlags_NoMove);
+     //is there any way to set the window flags from within this loop? 
+    //that would be pretty poggers, I think
+
+   
+
+    if (ImGui::Button("Save Map", sf::Vector2f(100.f, 25.f)))
+    {
+        this->Tilemap->savetofile("Data/TileMap/"+ GUI::convertToString(str0, this->str_size)); 
+    } 
+    if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+    {
+        ImGui::BeginTooltip(); 
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted("Save the current map"); 
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    } 
+   
+
+    ImGui::SameLine(0.0, 8.0f);
+    if (ImGui::Button("Load Saved Map", sf::Vector2f(125.f, 25.f)))
+    {
+        if (!this->Tilemap->loadfromfile("Data/TileMap/" + GUI::convertToString(str0, this->str_size))) 
+        {
+           
+            std::cout << "Invalid filename/path!!" << std::endl; 
+        }
+        
+    }
+    ImGui::SameLine(0.0, 8.f);
+    ImGui::InputText("New File",str0,IM_ARRAYSIZE(str0));
+    if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+    {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted("Leave default text to save to an existing file, or save to a new file");
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+    ImGui::SameLine(); 
+   
+    ImGui::Separator(); 
+
+   // ImGui::ShowDemoWindow(); 
+    //ImGui::SameLine(0.0, 2.0f);
+   
+    if (ImGui::Button("Tiles", sf::Vector2f(50.f, 0.f))) {
+        switchTabs = 0;
+       
+    }
+    if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+    {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted("Enter the Default TileMap Editor");
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+    ImGui::SameLine(0.0, 2.0f);
+    if (ImGui::Button("Enemies", sf::Vector2f(100.0f, 0.0f))) {
+        switchTabs = 1;
+    }
+    if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+    {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted("Place Enemy Spawner Tiles");
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+    ImGui::SameLine(0.0, 2.0f);
+    if (ImGui::Button("Enviornmental Tiles", sf::Vector2f(150.0f, 0.0f))) {
+        switchTabs = 2;
+    }
+    if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+    {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted("Place objects / enviornment tiles");
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+
+   
+    switch (switchTabs) {
+    case 0:
+      
+        this->activeMode = 0; 
+  
+       
+        break;   
+    case 1:
+        
+        this->activeMode = 1;
+       
+        break;
+    case 2:
+       
+        this->activeMode = 2; 
+      
+        break;
+    default:
+        break;
+    }
+   
+    std::stringstream cursor_text;
+    cursor_text << "MouseX: " << this->MousePosView.x << "\n"
+        << "MouseY:" << this->MousePosView.y;
+    std::string text = cursor_text.str();  
+
+    ImGui::Separator();  
+
+    ImGui::Text(text.c_str()); 
+
+
+   this->str_size = sizeof(str0) / sizeof(char);
+  
+
+ 
+   ImGui::End(); 
+
 }
 
 
@@ -460,10 +610,15 @@ void EditorState::render(sf::RenderTarget* target)
 {
     if (!target)
         target = this->window;
-    
+    target->draw(this->bg);     
+
+
+
     //Tilemap Camera (same as game camera)
     this->window->setView(this->mainview);
+    target->draw(this->bg_interior); 
     this->Tilemap->render(*target, this->mainview, this->MousePosGridI);
+
         
     //Buttons Camera
     this->window->setView(this->window->getDefaultView());
@@ -477,7 +632,11 @@ void EditorState::render(sf::RenderTarget* target)
        {
            this->window->setView(this->window->getDefaultView());
            this->pMenu->render(*target);
-       }
+       }   
+
+
+    
+   
     
 }
 

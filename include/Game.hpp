@@ -53,6 +53,7 @@ private:
     bool fullscreen;
     
     sf::Clock dtClock;
+    sf::Clock ImGuiClock; 
     ///Delta Time
     float dt;
     ///Elapsed Time 

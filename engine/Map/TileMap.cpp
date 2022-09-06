@@ -52,6 +52,21 @@ void TileMap::initobjecthandler()
     //this->objecthandler = new ObjectHandler(this->Objects, this->textures);
 }
 
+void TileMap::initgeometry()
+{ 
+
+    this->geometry["CORNER_TOP_LEFT"] = sf::Vector2i(0, 48); 
+    this->geometry["GRASS_BORDER_TOP"] = sf::Vector2i(32, 48);
+    this->geometry["CORNER_TOP_LEFT"] = sf::Vector2i(0, 72);
+    this->geometry["GRASS_BORDER_BOTTOM"] = sf::Vector2i(0, 168);
+    this->geometry["CORNER_BOTTOM_RIGHT"] = sf::Vector2i(128, 144);
+    this->geometry["GRASS_BORDER_TOP_RIGHT"] = sf::Vector2i(96, 72);
+    this->geometry["GRASS"] = sf::Vector2i(0, 0);
+    this->geometry["DIRT"] = sf::Vector2i(32, 0);
+    this->geometry["GRASS_ISLAND"] = sf::Vector2i(64, 96);
+
+}
+
 void TileMap::init_object_textures()
 {
     std::cout << "the stupid fucking texture is being initalized " << std::endl;
@@ -84,6 +99,7 @@ TileMap::TileMap(sf::Vector2f gridsize, int width, int height, std::string textu
             */
   
     this->init_object_textures();
+    this->initgeometry(); 
     //this->initobjecthandler(); 
    /// this->tileTextureSheet
     this->grid_sizeF = gridsize;
@@ -402,7 +418,9 @@ const sf::Texture* TileMap::getTileSheet() const
 
     
 
-}          
+}
+
+
 
 
 bool TileMap::savetofile(const std::string filename)
@@ -421,32 +439,29 @@ bool TileMap::savetofile(const std::string filename)
         type of the tiles at position x, y, z:
  
   @return void
- 
+
     */
     //int string_size1 = this->texture_file.length(); 
     //std::cout << string_size1 << std::endl; 
     std::ofstream out;
     
-       
+   // this->randomGeneration();
     out.open(filename, std::ios::out | std::ios::binary);
     
     if (out.is_open())
     { 
         //DONT CHANGE THIS SHIT 
         
-        out.write(reinterpret_cast<const char *>(&this->MaxSizeWorldGrid.x), sizeof(this->MaxSizeWorldGrid.x));
-        out.write(reinterpret_cast<const char*>(&this->MaxSizeWorldGrid.y), sizeof(this->MaxSizeWorldGrid.y));
-        out.write(reinterpret_cast<const char*>(&this->gridsizeI.x), sizeof(this->gridsizeI.x));
-        out.write(reinterpret_cast<const char*>(&this->gridsizeI.y), sizeof(this->gridsizeI.y));
-        out.write(reinterpret_cast<const char*>(&this->layers), sizeof(this->layers));
+        out << std::hex << this->MaxSizeWorldGrid.x << " " << this->MaxSizeWorldGrid.y << "\n"
+            << this->gridsizeI.x << " " << this->gridsizeI.y << "\n"
+            << this->layers << "\n"
+            << this->texture_file << "\n";
        
       
        // out.write((char*)&this->gridsizeI.x, sizeof(int)); 
        // out.write((char*)&this->gridsizeI.y, sizeof(int)); 
        // out.write((char*)&this->layers, sizeof(int)); 
-        size_t len = this->texture_file.size();
-         out.write((char*)&len, sizeof(len)); 
-         out.write(&this->texture_file[0], len);
+        
      
        // out.write(char*)
        
@@ -471,74 +486,13 @@ bool TileMap::savetofile(const std::string filename)
                         {
 
 
-                            // out << x << " " << y << " " << z << " " << this->Map[x][y][z][k]->asString() << " ";      
+                             out << std::hex << x << " " << y << " " << z << " " << this->Map[x][y][z][k]->asString() << " ";      
                            
-                            out.write(reinterpret_cast<const char*>(&x), sizeof(z));
-                            out.write(reinterpret_cast<const char*>(&y), sizeof(y));
-                            out.write(reinterpret_cast<const char*>(&z), sizeof(z)); 
-
-                           // out.write(reinterpret_cast<const char*>(&this->Map[x][y][z][k]), sizeof(this->Map[x][y][z][k]));
-                            this->Map[x][y][z][k]->savetoFile(out);     
-
-                            //short type = this->Map[x][y][z][k]->asData().type;
-                            //out.write(reinterpret_cast<const char*>(&x), sizeof(x));
                            
-                           // std::cout << "X: " << x << std::endl;
-                           //// out.write(reinterpret_cast<const char*>(&y), sizeof(y));
-                           // std::cout << "Y: " << y << std::endl;
-                           // out.write(reinterpret_cast<const char*>(&z), sizeof(z));
 
-                            //Variables that we need to grab from the tile class, and convert into binary 
-                            // type 
-                            //getTextureRect().left 
-                            //gettextureRect().top; 
-                            //object_type
-                            // ?? if possible to store vectors in binary format then only getPosition(), if not then
-                            //getPosition.x 
-                            //getPosition.y 
-
-
-
-                           // int left = this->Map[x][y][z][k]->asData().texturerect.left;
-                          //  int top = this->Map[x][y][z][k]->asData().texturerect.top;
                            
-                          //  bool collision = this->Map[x][y][z][k]->asData().collision;
-                            
-                          //  int enemy_amount = this->Map[x][y][z][k]->asData().Enemy_amount;
-                          //  sf::Int32* timer = this->Map[x][y][z][k]->asData().enemy_timer;
-                          //  float maxDistance = this->Map[x][y][z][k]->asData().maxDistance;
-
-
-
-                          //  out.write(reinterpret_cast<const char*>(&type), sizeof(type));
-                          //  out.write(reinterpret_cast<const char*>(&left), sizeof(left));
-                           // out.write(reinterpret_cast<const char*>(&top), sizeof(top));
-                           // out.write(reinterpret_cast<const char*>(&collision), sizeof(collision));
-
-
-
-
-
-                            //std::cout << "the value of the texturerect.left is currently: " << left << std::endl;
-                            // out.write((const char*)&top, sizeof(int));
-                             //out.write((const char*)&type, sizeof(short));
-                             //out.write((const char*)&object_type, sizeof(short));
-                             //out.write((const char*)&Obx, sizeof(float));
-                             //out.write((const char*)&Oby, sizeof(float));
-                             //out.write((const char*)&enemy_amount, sizeof(int));
-                             //out.write((const char*)&timer, sizeof(sf::Int32)); 
-                            // temp = this->Map[x][y][z][k]->asString(); 
-                             //size_t len2 = temp.size();
-                            // out.write((char*)&len2, sizeof(len));
-                            // out.write(&temp[0], len2);
                         }
 
-                          //size_t len2 = this->Map[x][y][z][k]->asString().size(); 
-                         //out.write((char*)&len2, sizeof(size_t)); 
-                         //out.write((char*) )
-
-
-                         // dont save this last space
 
                     
                     }
@@ -578,14 +532,13 @@ bool TileMap::savetofile(const std::string filename)
 bool TileMap::loadfromfile(const std::string filename)
 {
 
-
-
     
+
+
     std::ifstream in;
 
     in.open(filename, std::ios::in);
 
-    
     if (in.is_open())
 
     {
@@ -601,47 +554,19 @@ bool TileMap::loadfromfile(const std::string filename)
         int z = 0;
         int textureX = 0;
         int textureY = 0;
-        int objects_iterator = 0; 
+        int objects_iterator = 0;
         float x1 = 0.f;
         float y1 = 0.f;
-        float z1 = 0.f; 
         bool collision = false;
-        short  type = 0;
-        int str_length;
-       
-   
-       
-      
-
-      
-
-        std::string string;
-        size_t size2; 
+        int  type = 0;
 
 
-        in.read((char*)&size.x, sizeof(int)); 
-        std::cout << "total Map Size: " << size.x << std::endl; 
-        in.read((char*)& size.y, sizeof(int)); 
-        std::cout << "total Map Size size.y: " << size.y << std::endl; 
-        in.read((char*)&gridsize.x, sizeof(int)); 
-        std::cout << "gridsize x: " << gridsize.x << std::endl;
-        in.read((char*)&gridsize.y, sizeof(int)); 
-        std::cout << "gridsize.y: " << gridsize.y << std::endl; 
-        in.read((char*)&layers, sizeof(int)); 
-        std::cout << layers << std::endl;
-        in.read((char*)&size2, sizeof(size2)); 
-        string.resize(size2); 
-        in.read(&string[0], size2); 
-        std::cout << string << std::endl; 
-        //temp[size2] = '\0';
-        texture_file = string; 
-        std::cout << this->texture_file << std::endl; 
-      
-      //  delete[] temp; 
-       // in.read(&this->texture_file[0], size2); 
 
+        //Basic Variables
         //std::cout << gridsize.x << " " << gridsize.y << std::endl;
-        
+        in >> std::hex >> size.x >> size.y >> gridsize.x >> gridsize.y >> layers >> texture_file;
+        //std::cout << gridsize.x << " " << gridsize.y << std::endl;
+
 
         //Tiles 
 
@@ -653,12 +578,12 @@ bool TileMap::loadfromfile(const std::string filename)
         this->MaxSizeWorld_F.x = static_cast<float>(size.x) * gridsize.x;
         this->MaxSizeWorld_F.y = static_cast<float>(size.y) * gridsize.y;
         this->layers = layers;
-       // this->texture_file = texture_file;
+        this->texture_file = texture_file;
 
 
 
-     
-       
+
+
         this->clear();
 
         this->Map.resize(this->MaxSizeWorldGrid.x, std::vector< std::vector< std::vector<Tile*> > >());
@@ -678,7 +603,6 @@ bool TileMap::loadfromfile(const std::string filename)
                 for (int z = 0; z < this->layers; z++)
                 {
                     this->Map[x][y].resize(this->layers, std::vector<Tile*>());
-                   // in.read((char*)&this->Map[x][y][z], sizeof(Tile));
 
                 }   //sf::Vector2f(); 
 
@@ -691,94 +615,105 @@ bool TileMap::loadfromfile(const std::string filename)
             std::cout << "ERROR CODE TILEMAP:458 || LOADFROMFILE || Reason: UNABLE_TO_OPEN_FILE" << std::endl;
 
             throw std::runtime_error("ERROR CODE TILEMAP:458 || LOADFROMFILE || Reason: UNABLE_TO_OPEN_FILE");
-
-        } 
-
-
-
-
-        while (in.read((char*)&x, sizeof(x)) && in.read((char*)&y, sizeof(y)) && in.read((char*)&z, sizeof(z)) && in.read((char*)&type, sizeof(type)))
-        {
-            std::cout << "X: " << x << std::endl; 
-            std::cout << "Y: " << y << std::endl;
-            std::cout << "Z: " << z << std::endl;
-            std::cout << "Type: " << type << std::endl;
-
-                if (type == 2)
-                {
-
-                    float obX = 0.f;
-                    float obY = 0.f;
-                    short ObjectType = 0;
-
-
-
-                    in >> textureX >> textureY >> ObjectType >> obX >> obY;
-
-                    std::cout << "reading the object tile position X: it's  " << obX << "position Y:  " << obY << " " << std::endl;
-                    std::cout << "reading the object tile object type it's " << ObjectType << std::endl;
-                    std::cout << "reading the Object texutre rect X it's  " << textureX << "& " << textureY << "\n";
-                    this->Map[x][y][z].push_back(new ObjectTile(obX, obY, this->grid_sizeF, this->object_textures["LANTERN"], sf::IntRect(textureX, textureY, this->gridsizeI.x, this->gridsizeI.y), ObjectType));
-
-                }
-                //very important for all of these to be ELSE IF statements, otherwise garbage happens.
-                else if (type == TileTypes::SPAWNER)
-                {
-
-                    int enemy_type = 0;
-                    int enemyAmount = 0;
-                    int enemyTimer = 0;
-                    int enemyMaxDistance = 0;
-
-                    in >> textureX >> textureY >> enemy_type >> enemyAmount >> enemyTimer >> enemyMaxDistance;
-                    std::cout << "reading the spawner tile position X: it's  " << x << "position Y:  " << y << " " << std::endl;
-                    std::cout << "reading the spawner tile layer, it's  " << z << std::endl;
-                    std::cout << "reading the spawner tile ememy amount, it's  " << enemyAmount << std::endl;
-                    std::cout << "reading the spawner tile enemy_type, it's  " << enemy_type << std::endl;
-                    std::cout << "reading the spawner tile enemyTimer, it's  " << enemyTimer << std::endl;
-                    std::cout << "reading the spawner texutre rect it's  " << textureX << "& " << textureY << "\n";
-
-                    this->Map[x][y][z].push_back(new EnemySpawner(x, y, this->grid_sizeF, this->tileTextureSheet,
-                        sf::IntRect(textureX, textureY, this->gridsizeI.x, this->gridsizeI.y), enemy_type,
-                        enemyAmount, enemyTimer, enemyMaxDistance));
-                }
-
-                else
-                {
-
-                    //in >> textureX >> textureY >> collision;
-                    in.read((char*)&textureX, sizeof(textureX)); 
-                    in.read((char*)&textureY, sizeof(textureY)); 
-                    in.read((char*)&collision, sizeof(collision)); 
-                   
-
-                    this->Map[x][y][z].push_back(new NormalTile(TileTypes::NORMAL, x, y, grid_sizeF, this->tileTextureSheet, sf::IntRect(static_cast<int>(textureX), static_cast<int>(textureY), this->gridsizeI.x, this->gridsizeI.y), collision));
-
-                }
         }
-        
-           
-       
-            return true;
-        
-            in.close();
-    }
 
+        while (in >> std::hex >> x >> y >> z >> type)
+        {
+            std::cout << "reading the x position... it's " << x << std::endl;
+            std::cout << "reading the y position it's  " << y << std::endl;
+            std::cout << "reading the layer... it's " << z << std::endl;
+            std::cout << "\n";
 
-         else
+            if (type == 2)
             {
-            std::cout << "ERROR CODE TILEMAP:3 || LOADFROMFILE || COULD NOT LOAD" << std::endl;
 
-            throw std::runtime_error("ERROR CODE TILEMAP:3 || LOADFROMFILE || COULD NOT LOAD");
+                float obX = 0.f;
+                float obY = 0.f;
+                short ObjectType = 0;
 
-            return false;
+
+
+                in >> std::hex >> textureX >> textureY >> ObjectType >> obX >> obY;
+
+                std::cout << "reading the object tile position X: it's  " << obX << "position Y:  " << obY << " " << std::endl;
+                std::cout << "reading the object tile object type it's " << ObjectType << std::endl;
+                std::cout << "reading the Object texutre rect X it's  " << textureX << "& " << textureY << "\n";
+                this->Map[x][y][z].push_back(new ObjectTile(obX, obY, this->grid_sizeF, this->object_textures["LANTERN"], sf::IntRect(textureX, textureY, this->gridsizeI.x, this->gridsizeI.y), ObjectType));
+
+            }
+            //very important for all of these to be ELSE IF statements, otherwise garbage happens.
+            else if (type == TileTypes::SPAWNER)
+            {
+
+                int enemy_type = 0;
+                int enemyAmount = 0;
+                int enemyTimer = 0;
+                int enemyMaxDistance = 0;
+
+                in >> std::hex >> textureX >> textureY >> enemy_type >> enemyAmount >> enemyTimer >> enemyMaxDistance;
+                std::cout << "reading the spawner tile position X: it's  " << x << "position Y:  " << y << " " << std::endl;
+                std::cout << "reading the spawner tile layer, it's  " << z << std::endl;
+                std::cout << "reading the spawner tile ememy amount, it's  " << enemyAmount << std::endl;
+                std::cout << "reading the spawner tile enemy_type, it's  " << enemy_type << std::endl;
+                std::cout << "reading the spawner tile enemyTimer, it's  " << enemyTimer << std::endl;
+                std::cout << "reading the spawner texutre rect it's  " << textureX << "& " << textureY << "\n";
+
+                this->Map[x][y][z].push_back(new EnemySpawner(x, y, this->grid_sizeF, this->tileTextureSheet,
+                    sf::IntRect(textureX, textureY, this->gridsizeI.x, this->gridsizeI.y), enemy_type,
+                    enemyAmount, enemyTimer, enemyMaxDistance));
             }
 
 
+            else
+            {
+                std::cout << "Texture X: " << textureY << std::endl;
+                std::cout << "Texture Y" << textureX << std::endl;
+               // std::cout << "reading the layer... it's " << z << std::endl;
+                in >> std::hex >> textureX >> textureY >> collision;
+                //std::cout << "the grid size in normal tiles  " << grid_sizeF.x << " " << grid_sizeF.y << std::endl;
+                //std::cout << "the position for norm tile " << x << " " << y << std::endl; 
+
+                this->Map[x][y][z].push_back(new NormalTile(TileTypes::NORMAL, x, y, grid_sizeF, this->tileTextureSheet, sf::IntRect(static_cast<int>(textureX), static_cast<int>(textureY), this->gridsizeI.x, this->gridsizeI.y), collision));
+
+            }
+
+
+
+        }
+
+
+        return true;
+    }
+    else
+    {
+        std::cout << "ERROR CODE TILEMAP:3 || LOADFROMFILE || COULD NOT LOAD" << std::endl;
+
+        throw std::runtime_error("ERROR CODE TILEMAP:3 || LOADFROMFILE || COULD NOT LOAD");
+
+        return false;
+    }
+
+    in.close();
 }
+
+void TileMap::addGenerationTexture(const std::string texture_filename)
+{ 
+    if (!this->tilegenerationSheet.loadFromFile(texture_filename)) 
+    {
+        std::cout << "tilemap.cpp unable to load procedural generation tile textures" << std::endl; 
+
+    }
+}
+
+
+
+
+
+
+
 void TileMap::update(Entity *entity, const float& dt)
 {
-    
+   // this->randomGeneration(); 
    // this->objecthandler->update(dt);
     
 }
@@ -895,6 +830,11 @@ const sf::Vector2f TileMap::get_objectTile()
 
        
     }
+}
+
+const sf::Texture* TileMap::getGenerationSheet() const
+{
+    return &this->tilegenerationSheet; 
 }
 
 const bool TileMap::TileEmpty(const int x, const int y, const int z) const
@@ -1187,3 +1127,74 @@ void TileMap::updateTileCollision(Entity *entity, const float &dt)
 
     
 }
+
+void TileMap::randomGeneration()
+{ 
+
+   
+    
+        for (int x = 0; x < this->Map.size(); x++)
+        {
+            for (int y = 0; y < this->Map[x].size(); y++)
+            {
+                for (int z = 0; z < this->Map[x][y].size(); z++)
+                {
+                    this->Map[x][y][z].push_back(this->genTile(x, y, z));
+                  
+                    for (size_t k = 0; k < this->Map[x][y][z].size(); k++)
+                    {
+                        //replace this call to delete, with a call to a function to randomly generate tile values 
+                     
+                        
+                    }
+                    break; 
+                  
+                }
+               
+            }
+           
+        }
+      
+
+        //std::cout << "Map Local Memory Size: " << " " << this->Map.size();
+    
+
+        return; 
+
+
+}
+
+Tile* TileMap::genTile(int x, int y, int z)
+{
+    short type = 5; 
+  //  std::cout << "type: " << type << std::endl; 
+
+    int textureX = (rand() % (this->gridsizeI.x * 32)) / 6;
+    int textureY = (rand() % (this->gridsizeI.y * 24)) / 6;
+   // std::cout << "Texture X: " << textureX << std::endl; 
+   // std::cout << "Texture Y: " << textureY << std::endl; 
+   
+  
+    
+ 
+
+  //  std::cout << this->tileTextureSheet.getMaximumSize() << "max texture size" << std::endl; 
+    //find a way to pass the texutre selector text rectangle into this fucntion. 
+    //std::cout << TileTypes::NORMAL << std::endl;
+    switch (type) 
+    {
+    case TileTypes::NORMAL:
+       // std::cout << "now generating a normal tile" << std::endl;     
+        
+        return new NormalTile(TileTypes::NORMAL,x, y, this->grid_sizeF, this->tileTextureSheet, sf::IntRect(static_cast<int>(textureX), static_cast<int>(textureY), this->gridsizeI.x, this->gridsizeI.y));
+        break; 
+    
+    } 
+
+    return nullptr; 
+}
+
+
+
+
+

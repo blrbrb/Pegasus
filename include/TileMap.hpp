@@ -75,10 +75,14 @@ private:
     
     sf::Font font; 
     sf::Texture tileTextureSheet;
+    sf::Texture tilegenerationSheet; 
     std::map<std::string, sf::Texture> object_textures;
+    std::map<std::string, sf::Vector2i> geometry;
+
     //Private Functions
     void clear();
     void initobjecthandler();
+    void initgeometry(); 
     void init_object_textures();
 
     
@@ -107,6 +111,8 @@ public:
     
     //Acessors 
     const sf::Texture* getTileSheet() const;
+
+  
     /// TileEmpty
     /// @brief Return wether or not a particular tile in the four dimensional vector is null
     /// @param x the X-axis of the vector (width in tiles)
@@ -138,14 +144,13 @@ public:
     ///@returns the maximum size of the map
     const sf::Vector2f getMaxSize() const; 
     
-   const sf::Vector2f get_objectTile();
+   const sf::Vector2f get_objectTile(); 
+
+
+   const sf::Texture* getGenerationSheet() const;
    
     
     
-    //Functions
-    void RemoveTile(const int x, const int y, const int z, const int type);
-    bool savetofile(const std::string filename);
-    bool loadfromfile(const std::string filename);
    
     
    
@@ -160,12 +165,29 @@ public:
     void addTile(const int x, const int y, const int z, const sf::IntRect texture_rect, const int enemytype, const int enemyamount, const int timeToSpawn, const int MaxDistance);
     void addTile(const int x, const int y, const int z, float obX, float obY, const short type); 
     void addObject(const short type, const int x, const int y); 
+
+
+    void RemoveTile(const int x, const int y, const int z, const int type);
+    bool savetofile(const std::string filename);
+    bool loadfromfile(const std::string filename);
+    void addGenerationTexture(const std::string texture_filename);
     
     //update functions
     void update(Entity* entity, const float& dt);
     void updateWorldBoundsCollision(Entity* entity, const float& dt);
     void updateTiles(Entity* entity, const float& dt, EnemySystem& enemysystem);
-    void updateTileCollision(Entity* entity, const float& dt);
+    void updateTileCollision(Entity* entity, const float& dt); 
+
+    //testing functions 
+    void randomGeneration();
+    Tile* genTile(int x, int y, int z);
+
+   
+
+   // const bool good_geometry(sf::Vector2i texture_coords, std::string geometry_key) const;
+   // const bool good_geometry(sf::Vector2i texture_coords) const;
+
+    
     
     
     

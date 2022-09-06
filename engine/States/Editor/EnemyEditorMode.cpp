@@ -170,41 +170,95 @@ void EnemyEditorMode::update(const float &dt)
     this->updateInput(dt);
 }
 
-void EnemyEditorMode::updateGUI(const float &dt)
+void EnemyEditorMode::updateGUI(const float& dt)
 {
+
+
+    ImGui::ShowDemoWindow(); 
+
+    ImGui::Begin("Map Editor");
+    //set the selection rectangle position
+
+    this->select_Rect.setPosition(this->editorstatedata->mouseposGridI->x * this->statedata->gridsize->x, this->editorstatedata->mouseposGridI->y * this->statedata->gridsize->y);
+
+
+    this->enemy_texture.loadFromFile("Resources/GUI/Icons/Blrb_Icon.png"); 
+
+    std::stringstream cursor_text;
+    cursor_text << "MouseX: " << this->editorstatedata->mousePosView->x << "\n"
+        << "MouseY:" << this->editorstatedata->mousePosView->y
+        << "\n" << "GridX: " << this->editorstatedata->mouseposGridI->x
+        << "\n" << "GridY: " << this->editorstatedata->mouseposGridI->y
+        << "\n" << "TextureRectX: " << this->TextureRect.left
+        << "\n" << "TextureRectY: " << this->TextureRect.top
+        << "\n" << "Type: " << EnumStrings[this->type]
+        << "\n" << "Tiles:" << this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer);
+
+    std::string text = cursor_text.str();
+
+
+    ImGui::Text(text.c_str());
    
-     
+    //set the cursor text
+    std::stringstream amount_text;
+    amount_text << this->Enemyamount;
+    std::string amount = amount_text.str();
+    std::stringstream type_text;
+    type_text << this->Enemytype;
+    std::string type = type_text.str();
+    std::stringstream timer_text;
+    timer_text << this->spawn_timer;
+    std::string timer = timer_text.str();
+    std::stringstream distance_text;
+    distance_text << this->maxDistance << ".f";
+    std::string distance = distance_text.str();
+    ImGui::Text("Spawn Controls"); 
+    ImGui::SliderInt("Enemy Amount: ", &this->Enemyamount, 1, 100);
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::Text("Increase or decrease the amount of enemies that will spawn on this tile"); 
 
-           //set the selection rectangle position
-     
-            this->select_Rect.setPosition(this->editorstatedata->mouseposGridI->x * this->statedata->gridsize->x, this->editorstatedata->mouseposGridI->y * this->statedata->gridsize->y);
-         
-    
-     
+    }
+    ImGui::SliderInt("Tile Spawn Timer (seconds): ", &this->spawn_timer, 1, 100);
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::Text("Increase or decrease the seconds inbetween each invidiual spawn event");
 
-     //set the cursor text
-     std::stringstream cursor_text;
-     cursor_text <<
-    "\n" << "Enemy Type: " << this->Enemytype <<
-    "\n" << "Enemy Amount: " << this->Enemyamount <<
-    "\n" << "Time to Spawn: " << this->spawn_timer <<
-    "\n" << "Max Distance: " << this->maxDistance;
+    }
+    ImGui::SliderFloat("Maximum Wandering Distance", &this->maxDistance, 1.f, 10000.f, "%.4f", ImGuiSliderFlags_Logarithmic);
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::Text("Increase or decrease the maximum distance, (in floating point sfml cordinates) that an enemy can travel from it's parent tile");
 
-    this->cursortext.setString(cursor_text.str());
+    }
+    ImGui::Separator();
+    ImGui::Text("Enemy Type");
+    ImGui::RadioButton("Blrb", &this->Enemytype, EnemyTypes::BLRB); 
+
+    if (this->Enemytype == EnemyTypes::BLRB) 
+    {
+        this->enemy_GUI_sprite.setTexture(this->enemy_texture);
+        ImGui::Image(this->enemy_GUI_sprite); 
+
+    }
+ 
+   
+
+  
      
      //If the cursor is on a valid tile, the text color is white
      if (this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer) != -1)
      {
-         this->cursortext.setFillColor(sf::Color::White);
+        ImGui::TextColored(sf::Color::Red, "Cannot Place Tiles Over the Maximum Map boundaries!!!");
      }
      
      //if the cursor is not on a valid tile, the text color is red
      else if (this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer) < 0)
      {
-         this->cursortext.setFillColor(sf::Color::Red);
+        // ImGui::TextColored(sf::Color::Red, "Cannot Place Tiles Over the Maximum Map boundaries!!!");
      }
 
-
+     ImGui::End();
     }
     
 
@@ -217,11 +271,7 @@ void EnemyEditorMode::renderGUI(sf::RenderTarget &target)
    
     
     target.setView(this->statedata->window->getDefaultView());
-    target.draw(this->sidebar);
-    target.draw(this->cursortext);
-    target.draw(this->text_container);
-    target.draw(this->controlsContainer);
-    target.draw(this->controls); 
+ 
 }
 
 void EnemyEditorMode::render(sf::RenderTarget &target)
@@ -233,28 +283,15 @@ void EnemyEditorMode::initGUI()
 {
      sf::VideoMode vm = statedata->gfxsettings->resolution;
     
-       this->sidebar.setSize(sf::Vector2f(64.f, static_cast<float>(this->statedata->gfxsettings->resolution.height)));
-       this->sidebar.setFillColor(sf::Color(50,50,50, 100));
-       this->sidebar.setOutlineColor(sf::Color(200,200,200,150));
-       this->sidebar.setOutlineThickness(1.f);
        
         //config the selection rectangle
         this->select_Rect.setSize(sf::Vector2f(statedata->gridsize->x, statedata->gridsize->y));
         this->select_Rect.setFillColor(sf::Color::White);
     
-        //init the box to display controls information to the user
-        this->controlsContainer.setSize(sf::Vector2f(GUI::pixelpercentX(22.57, vm), GUI::pixelpercentY(30, vm)));
-        this->controlsContainer.setFillColor(sf::Color(50,50,50,100));
-        this->controlsContainer.setPosition(GUI::pixelpercentX(77.4, vm), GUI::pixelpercentY(30, vm));
-        this->controlsContainer.setOutlineThickness(1.f);
-        this->controlsContainer.setOutlineColor(sf::Color(200, 200, 200, 150));
+    
          
         //init the box for the cursor text to be displayed in
-        this->text_container.setSize(sf::Vector2f(GUI::pixelpercentX(22.57, vm), (GUI::pixelpercentY(30, vm))));
-        this->text_container.setFillColor(sf::Color(50,50,50,100));
-        this->text_container.setPosition(GUI::pixelpercentX(77.4, vm), GUI::pixelpercentY(0, vm));
-        this->text_container.setOutlineThickness(1.f);
-        this->text_container.setOutlineColor(sf::Color(200, 200, 200, 150));
+       
         
     
 }

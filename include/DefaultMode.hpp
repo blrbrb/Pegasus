@@ -26,23 +26,25 @@ private:
           sf::Text cursortext;
           sf::Text controls;
           GUI::TextureSelector* texture_selector; 
+          GUI::TextureSelector* generation_selector; 
           sf::RectangleShape select_Rect;
           sf::RectangleShape sidebar;
           sf::RectangleShape sidebar_texture;
-          sf::RectangleShape texturesample;
+          sf::Sprite texturesample;
           sf::RectangleShape texturesample_container; 
           sf::RectangleShape text_container;
           sf::RectangleShape controlsContainer; 
           sf::IntRect TextureRect;
-        
+          sf::Sprite gui_sprite1; 
+
       
-         
+            
      
         //Tile variables
     bool collision;
     short type;
     int layer;
-    
+    bool showgrid;
     //initalizer functions
     void initvariables();
     void inittext();

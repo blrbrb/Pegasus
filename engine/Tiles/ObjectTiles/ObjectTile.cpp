@@ -32,7 +32,7 @@ const std::string ObjectTile::asString() const
     //std::cout << "Obj Tile Info: " << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->object_type << " " << std::setprecision(5) << std::setprecision(5) << this->rect.getPosition().x << " " << std::setprecision(5) << this->rect.getPosition().y;
     std::stringstream out; 
    
-    out << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->object_type << " " << std::setprecision(20) << this->rect.getPosition().x << " " <<  std::setprecision(20) << this->rect.getPosition().y;
+    out << std::hex << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->object_type << " " << std::setprecision(20) << this->rect.getPosition().x << " " <<  std::setprecision(20) << this->rect.getPosition().y;
     return out.str(); 
 }
 
@@ -94,14 +94,14 @@ void ObjectTile::update(const float& dt)
 }
 void ObjectTile::savetoFile(std::ofstream& out)
 {
-  
+    //DEPRECIATED
     out.write(reinterpret_cast<const char*>(&this->type), sizeof(this->type));
     out.write(reinterpret_cast<const char*>(&this->rect.getTextureRect().left), sizeof(this->rect.getTextureRect().left));
     out.write(reinterpret_cast<const char*>(&this->rect.getTextureRect().top), sizeof(this->rect.getTextureRect().top));
     out.write(reinterpret_cast<const char*>(&this->collison_enabled), sizeof(this->collison_enabled));  
     out.write(reinterpret_cast<const char*>(&this->object_type), sizeof(this->object_type));
-    out.write(reinterpret_cast<const char*>(&this->rect.getPosition().x), sizeof(this->rect.getPosition().x));
-    out.write(reinterpret_cast<const char*>(&this->rect.getPosition().y), sizeof(this->rect.getPosition().y));
+    out.write(reinterpret_cast<const char*>(&this->rect.getPosition().x), sizeof(float));
+    out.write(reinterpret_cast<const char*>(&this->rect.getPosition().y), sizeof(float));
     
 
 

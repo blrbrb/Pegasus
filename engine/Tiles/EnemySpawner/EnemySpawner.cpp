@@ -65,7 +65,7 @@ const std::string EnemySpawner::asString() const
 {
     std::stringstream ss;
     std::cout << "writing an Enemy Spawaner Tile... " << std::endl; 
-    ss << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->Enemy_type
+    ss << std::hex << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->Enemy_type
         << " " << this->Enemy_amount << " " << this->timer << " " << this->maxDistance;
     
     //std::cout << ss.str() << std::endl;
@@ -93,7 +93,7 @@ const TileData EnemySpawner::asData()
 void EnemySpawner::savetoFile(std::ofstream& out)
 {
     
-    
+    //DEPRECIATED
     out.write(reinterpret_cast<const char*>(&this->type), sizeof(this->type));
     out.write(reinterpret_cast<const char*>(&this->rect.getTextureRect().left), sizeof(this->rect.getTextureRect().left));
     out.write(reinterpret_cast<const char*>(&this->rect.getTextureRect().top), sizeof(this->rect.getTextureRect().top));

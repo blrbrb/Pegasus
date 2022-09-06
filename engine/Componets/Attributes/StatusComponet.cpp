@@ -7,6 +7,7 @@
 //
 #include "stdafx.h"
 #include "StatusComponet.hpp"
+#include <iostream>
 
 
 ///me secret leveling formular

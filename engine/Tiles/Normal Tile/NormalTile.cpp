@@ -35,7 +35,7 @@ const std::string NormalTile::asString() const
 {
     std::stringstream out;
     //std::cout << "pooping" << std::endl; 
-    out << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->collison_enabled;
+    out << std::hex << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->collison_enabled;
        
        
        return out.str();
@@ -54,10 +54,15 @@ const TileData NormalTile::asData()
 
 void NormalTile::savetoFile(std::ofstream& out) 
 {
+    //DEPRECIATED
    
    //will this work? 
    
-  
+  //bin is not going to work bc different machines will have different endianess 
+
+  //re-write the toString function to export a hexidecimal value instead. 
+  //it will be easier to read and write on different machines
+
     out.write(reinterpret_cast<const char*>(&this->type), sizeof(this->type));
     out.write(reinterpret_cast<const char*>(&this->rect.getTextureRect().left), sizeof(this->rect.getTextureRect().left));
     out.write(reinterpret_cast<const char*>(&this->rect.getTextureRect().top), sizeof(this->rect.getTextureRect().top));

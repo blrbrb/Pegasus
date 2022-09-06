@@ -54,13 +54,15 @@ class EditorState : public State
         void updateGUI(const float& dt);
         void updateModes(const float& dt);
         void updatepausemenubuttons(); 
+        void updateImGui(); 
         void TextInput();  
         
         //Render Funcions
         void renderbuttons(sf::RenderTarget& target);
         void renderGUI(sf::RenderTarget& target);
         void renderModes(sf::RenderTarget& target);
-        void render(sf::RenderTarget* target = nullptr);
+        void render(sf::RenderTarget* target = nullptr);   
+
             
 private:
     
@@ -76,6 +78,7 @@ private:
         void inittilemap();
         void initsidebar();
         void initGUI();
+        void initbg(); 
         void initmodes(); 
       
         //Exception Handler Functions 
@@ -103,6 +106,7 @@ private:
     
         //TileMap
         TileMap* Tilemap;
+        GUI::EditorStateGUI* EditorStateGUI; 
     
         //Data
         EditorStateData editorstatedata; 
@@ -116,8 +120,11 @@ private:
 
         std::string customfile; 
 
-
-    
+        //GUI 
+        int str_size; 
+       sf::RectangleShape bg; 
+        //sf::ConvexShape bg; 
+       sf::RectangleShape bg_interior; 
    
 };
     

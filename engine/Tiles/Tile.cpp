@@ -50,14 +50,15 @@ Tile::Tile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& t
 
     //  
     sf::Vector2f gridPosition = sf::Vector2f(gridsize_f.x * x, gridsize_f.y * y); 
-    this->rect.setPosition(gridPosition.x - x, gridPosition.y - this->rect.getPosition().y);
+    this->rect.setPosition(x, y);
 
 
    // this->rect.setTextureRect(texturerect);
     this->collison_enabled = collision_enabled;
     short fart;
     fart = type;
-    this->type = fart;
+    this->type = fart; 
+    //this->rect.get
 }
 
 
@@ -101,6 +102,21 @@ const sf::Vector2f Tile::getCenter() const
 {
     return sf::Vector2f(this->rect.getGlobalBounds().width / 2, this->rect.getGlobalBounds().height / 2);
 }
+
+const sf::IntRect Tile::gettexturerect() const
+{
+    return this->rect.getTextureRect(); 
+}
+
+const sf::Vector2i Tile::getTextureCoords() const
+{
+    sf::Vector2i test; 
+    test.x = this->rect.getTextureRect().left; 
+    test.y = this->rect.getTextureRect().top; 
+
+    return test;
+}
+
 
 
 

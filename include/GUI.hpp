@@ -42,6 +42,8 @@ const float pixelpercentX(const float percent, const sf::VideoMode& vm);
 /// @returns A new calculated percent
    const float pixelpercentY(const float percent, const sf::VideoMode& vm);
 
+   const std::string convertToString(char* a, int size);
+
 /// Calculate a good character size for text based on the total size of the renderable window space
 /// @param vm A refrence to the sf::VideoMode
 ///@returns const unsigned character size
@@ -197,7 +199,8 @@ class TextureSelector
 private:
     
     bool active;
-    bool hidden;
+    bool ImGui; 
+    //bool hidden;
     bool multi_select; 
     sf::Vector2f gridsize; 
     float keytime;
@@ -205,14 +208,18 @@ private:
     float width;
     const float keytimeMax;
     sf::Vector2u size;
+    sf::Texture texturesheet; 
     sf::RectangleShape bounds;
     sf::RectangleShape selector;
     sf::RectangleShape sidebar;
+    std::vector<sf::Sprite> guisprites;
+    std::vector<sf::Texture> guitextures; 
+    std::map<std::string, int> guiTextureKeys; 
     sf::Sprite sheet;
-    
+  
     sf::Vector2u MousePosGrid;
     sf::IntRect texturerect;
-    
+    sf::IntRect textureRect2; 
     Button* hide;
   
   
@@ -229,8 +236,15 @@ public:
     /// @param texture_sheet the texture sheet for the Texture Selector element to source tile textures from
     /// @param font the font for the Texture Selector to use
     /// @param text a string of text for the Texture Selector
-    TextureSelector(float x, float y, float width, float height, sf::Vector2f gridsize, const sf::Texture* texture_sheet, sf::Font& font, std::string text);
+    TextureSelector(float x, float y, float width, float height, sf::Vector2f gridsize, const sf::Texture* texture_sheet, sf::Font& font, std::string text, bool ImGui = false);
     
+
+
+
+    /// <summary>
+    /// Overload For ImGui Texture Editor
+    /// </summary>
+   
     ~TextureSelector();
     
     //Accessors
@@ -240,6 +254,7 @@ public:
     const sf::Vector2u& getMaxSize() const; 
     ////Return an sf::IntRect refrence to the texture rectangle the user has selected
     const sf::IntRect& getTextureRect() const;
+    const std::vector<sf::IntRect> getTextureRects() const;
     const bool getkeytime();
     
     
@@ -248,7 +263,8 @@ public:
     void update(const sf::Vector2i& MousePosWindow, const float& dt);
     void updatekeytime(const float& dt);
     void render(sf::RenderTarget &target);
-    
+    bool hidden;
+    std::vector<sf::IntRect> texture_rects;
 };
 
 class CheckBox
@@ -341,8 +357,19 @@ private:
     
 };
 
+class EditorStateGUI
+{
+public:
 
+    EditorStateGUI();
+    virtual ~EditorStateGUI();
+
+private:
+
+
+};
 }
+
 
 
 #endif /* GUI_hpp */

@@ -459,7 +459,7 @@ void GameState::render(sf::RenderTarget* target) {
     this->rendertexture.setView(this->view); 
    
    // target->mapPixelToCoords(this->Tilemap->getMaxSizeGrid()); 
-    this->Tilemap->render(this->rendertexture,this->view, this->ViewGridPosition, false, &this->core_shader, this->Tilemap->get_objectTile());
+    this->Tilemap->render(this->rendertexture,this->view, this->ViewGridPosition, false, &this->core_shader);
     //this->Tilemap->render()
     //this->Tilemap->renderlighttile(this->rendertexture, &this->core_shader);
    
@@ -476,7 +476,7 @@ void GameState::render(sf::RenderTarget* target) {
        }
    
     
-   this->Tilemap->DefferedRender(this->rendertexture, &this->core_shader,this->Tilemap->get_objectTile());
+   this->Tilemap->DefferedRender(this->rendertexture, &this->core_shader);
     
     
     
@@ -557,7 +557,7 @@ void GameState::updateEnemies(const float &dt)
                      --index;
                     
                  }
-   
+  
         
         }
      ++index;

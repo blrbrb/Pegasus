@@ -55,7 +55,9 @@ private:
     void initGUI();
     void initvariables();
     void inittext();
-    
+    sf::Sprite enemy_GUI_sprite; 
+    sf::Texture enemy_texture; 
+
     
     
 };

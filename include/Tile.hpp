@@ -64,6 +64,8 @@ public:
     virtual const bool intersects(const sf::FloatRect bounds) const;
     virtual const sf::FloatRect getGlobalBounds() const;
     virtual const sf::Vector2f getCenter() const;
+    virtual const sf::IntRect gettexturerect() const;
+    virtual const sf::Vector2i getTextureCoords() const;
     virtual void savetoFile(std::ofstream& out) = 0; 
     
     //Functions

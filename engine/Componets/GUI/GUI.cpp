@@ -7,6 +7,7 @@
 //
 #include "stdafx.h"
 #include "GUI.hpp"
+#include <iostream>
 
 /* BEGIN BUTTON */
 
@@ -468,7 +469,7 @@ void GUI::DropDownList::updateketime(const float& dt)
 /* BEGIN TEXTURE SELECTOR*/
 
 //this Is NOT the version of the texture Selector being called in EditorState
-GUI::TextureSelector::TextureSelector(float x, float y,float width, float height, sf::Vector2f gridsize, const sf::Texture* texture_sheet, sf::Font& font, std::string text) : keytimeMax(2.f), keytime(0.f)
+GUI::TextureSelector::TextureSelector(float x, float y,float width, float height, sf::Vector2f gridsize, const sf::Texture* texture_sheet, sf::Font& font, std::string text, bool ImGui) : keytimeMax(2.f), keytime(0.f)
 {
     /*!
                 @brief Construct's the Texture Selector Element
@@ -480,48 +481,84 @@ GUI::TextureSelector::TextureSelector(float x, float y,float width, float height
                 @param const sf::Texture Texture_sheet
                 @param sf::Font& font
                 @param std::string text
-                @return void 
-                        
+                @return void
+
      */
-    sf::Vector2f offset = gridsize;
-    this->bounds.setSize(sf::Vector2f(width, height));
-    this->bounds.setPosition(x + offset.x, y + offset.y);
-    this->bounds.setFillColor(sf::Color(50, 50, 50, 100));
-    this->bounds.setOutlineThickness(1.f);
-    this->bounds.setOutlineColor(sf::Color(255, 255, 255, 200));
-    this->size = texture_sheet->getSize();
-    this->sheet.setTexture(*texture_sheet);
-    this->sheet.setPosition(x + offset.x, y + offset.y);
-    
-    if (this->sheet.getGlobalBounds().width > this->bounds.getGlobalBounds().width)
+sf::Vector2f offset = gridsize;
+
+this->ImGui = ImGui; 
+this->bounds.setSize(sf::Vector2f(width, height));
+this->bounds.setPosition(x + offset.x, y + offset.y);
+this->bounds.setFillColor(sf::Color(50, 50, 50, 100));
+this->bounds.setOutlineThickness(1.f);
+this->bounds.setOutlineColor(sf::Color(255, 255, 255, 200));
+this->texturesheet = *texture_sheet;
+this->size = texture_sheet->getSize();
+this->sheet.setTexture(*texture_sheet);
+this->sheet.setPosition(x + offset.x, y + offset.y);
+
+if (this->sheet.getGlobalBounds().width > this->bounds.getGlobalBounds().width)
+{
+    this->sheet.setTextureRect(sf::IntRect(0, 0, static_cast<int>(this->bounds.getGlobalBounds().width), static_cast<int>(this->sheet.getGlobalBounds().height)));
+}
+if (this->sheet.getGlobalBounds().height > this->bounds.getGlobalBounds().height)
+{
+    this->sheet.setTextureRect(sf::IntRect(0, 0, static_cast<int>(this->sheet.getGlobalBounds().width), static_cast<int>(this->bounds.getGlobalBounds().height)));
+}
+
+//Configure the texture selector element
+this->selector.setPosition(x + offset.x, y + offset.y);
+this->selector.setSize(gridsize);
+this->selector.setFillColor(sf::Color::Transparent);
+this->selector.setOutlineColor(sf::Color::Green);
+this->selector.setOutlineThickness(1.f);
+
+this->active = false;
+this->gridsize = gridsize;
+
+this->texturerect.width = gridsize.x;
+this->texturerect.height = gridsize.y;
+this->hidden = false;
+
+this->hide = new GUI::Button(x, y, gridsize.x, gridsize.y, "Resources/GUI/TickBox/Orange/red_boxCross.png", "Resources/GUI/TickBox/Orange/red_boxTick.png", "Resources/GUI/TickBox/Orange/red_boxTick.png");
+
+std::cout << this->bounds.getGlobalBounds().width << std::endl;
+
+if (ImGui)
+{
+    int count = 0;
+    for (auto& p : std::filesystem::recursive_directory_iterator("Resources/GUI/Icons/guitile"))
     {
-        this->sheet.setTextureRect(sf::IntRect(0, 0, static_cast<int>(this->bounds.getGlobalBounds().width), static_cast<int>(this->sheet.getGlobalBounds().height)));
+        if (p.path().extension() == ".png") {
+
+            count++;
+            std::cout << p.path() << std::endl;
+            std::cout << p.path().filename() << std::endl;
+
+            std::string path = p.path().string();
+
+
+            std::cout << "Resources/GUI/Icons/guitile/" + p.path().filename().string() << std::endl;
+
+
+            this->guitextures.push_back(sf::Texture());
+            this->guitextures[count - 1].loadFromFile("Resources/GUI/Icons/guitile/" + p.path().filename().string());
+
+
+
+        }
+
+
     }
-    if (this->sheet.getGlobalBounds().height > this->bounds.getGlobalBounds().height)
-    {
-        this->sheet.setTextureRect(sf::IntRect(0, 0, static_cast<int>(this->sheet.getGlobalBounds().width), static_cast<int>(this->bounds.getGlobalBounds().height)));
-    }
-    
-    //Configure the texture selector element
-    this->selector.setPosition(x + offset.x, y + offset.y);
-    this->selector.setSize(gridsize);
-    this->selector.setFillColor(sf::Color::Transparent);
-    this->selector.setOutlineColor(sf::Color::Green);
-    this->selector.setOutlineThickness(1.f);
-    
-    this->active = false;
-    this->gridsize = gridsize;
-    
-    this->texturerect.width = gridsize.x;
-    this->texturerect.height = gridsize.y;
-    this->hidden = false;
-    
-    this->hide = new GUI::Button(x, y, gridsize.x, gridsize.y, "Resources/GUI/TickBox/Orange/red_boxCross.png", "Resources/GUI/TickBox/Orange/red_boxTick.png", "Resources/GUI/TickBox/Orange/red_boxTick.png");
-   
-    
+    this->hide = nullptr;
+}
+
+
 }
 
 //Functions
+
+
 
 GUI::TextureSelector::~TextureSelector()
 {
@@ -530,28 +567,35 @@ GUI::TextureSelector::~TextureSelector()
 
 void GUI::TextureSelector::update(const sf::Vector2i& MousePosWindow, const float& dt)
 {
+
+   
+
     this->updatekeytime(dt);
-    this->hide->update((MousePosWindow));
-    
-    
-    
-    if(this->hide->isPressed() && this->getkeytime())
-    {
-        if(this->hidden == true)
-            this->hidden = false;
-        
-        else
-            this->hidden = true;
-           
-    }
-    
+   
+
+        this->hide->update((MousePosWindow));
+
+        //ImGui::Image(this->sheet);    
+
+
+
+        if (this->hide->isPressed() && this->getkeytime())
+        {
+            if (this->hidden == true)
+                this->hidden = false;
+
+            else
+                this->hidden = true;
+
+        }
+
     
 
     //Update the Selector, if the Texture Selector element is not hidden
     
     if(!this->hidden)
     {
-    
+       
 
           if (this->bounds.getGlobalBounds().contains(static_cast<sf::Vector2f>(MousePosWindow)))
           {
@@ -570,13 +614,18 @@ void GUI::TextureSelector::update(const sf::Vector2i& MousePosWindow, const floa
               
               
               
-              
+            //  this->texture_rects.push_back(this->texturerect); 
               
           }
           
     }
-    else if(this->hidden)
+    else if (this->hidden)
         this->active = false;
+
+  
+   
+
+    
     
 }
 
@@ -599,6 +648,7 @@ void GUI::TextureSelector::render(sf::RenderTarget &target)
         if(this->active)
            target.draw(this->selector);
     }
+    if(!this->ImGui)
      this->hide->render(target);
    
 }
@@ -612,6 +662,11 @@ const bool &GUI::TextureSelector::getActive() const
 const sf::IntRect &GUI::TextureSelector::getTextureRect() const
 {
     return this->texturerect;
+}
+
+const std::vector<sf::IntRect> GUI::TextureSelector::getTextureRects() const
+{
+    return this->texture_rects;
 }
 
 const bool GUI::TextureSelector::getkeytime()
@@ -756,6 +811,17 @@ const float GUI::pixelpercentY(const float percent, const sf::VideoMode& vm)
 }
 
 
+const std::string GUI::convertToString(char* a, int size)
+{
+    int i;
+    std::string s = "";
+    for (i = 0; i < size; i++) {
+        s = s + a[i];
+    }
+    return s;
+}
+
+
 GUI::ProgressBar::ProgressBar(float x, float y, float width, float height,sf::VideoMode& vm, sf::Color inner_color, unsigned charSize, sf::Font* font)
 {
     float _width = GUI::pixelpercentX(width, vm);
@@ -861,4 +927,42 @@ void GUI::Icon::render(sf::RenderTarget& target)
     
     target.draw(this->Box);
     
+}
+
+GUI::EditorStateGUI::EditorStateGUI()
+{
+
+    if (ImGui::BeginMenuBar())
+    {
+        if (ImGui::BeginMenu("Menu"))
+        {
+            
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Examples"))
+        {
+
+            ImGui::MenuItem("Main menu bar", NULL, false);
+            ImGui::MenuItem("Console", NULL, 1);
+            ImGui::MenuItem("Log", NULL, false);
+            ImGui::MenuItem("Simple layout", NULL, true);
+            ImGui::MenuItem("Property editor", NULL, false);
+            ImGui::MenuItem("Long text display", NULL, true);
+            ImGui::MenuItem("Auto-resizing window", NULL, false);
+            ImGui::MenuItem("Constrained-resizing window", NULL, false);
+            ImGui::MenuItem("Simple overlay", NULL, false);
+            ImGui::MenuItem("Fullscreen window", NULL, false);
+            ImGui::MenuItem("Manipulating window titles", NULL, false);
+            ImGui::MenuItem("Custom rendering", NULL, true);
+            ImGui::MenuItem("Documents", NULL, true);
+            ImGui::EndMenu();
+        }
+
+
+    }
+
+}
+
+GUI::EditorStateGUI::~EditorStateGUI()
+{
 }
