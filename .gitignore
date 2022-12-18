@@ -6,10 +6,12 @@
 
 #Application Resources 
 *.png
+*.PNG
 *.wav
 *.jpeg. 
 *.ttf
 *.tif
+*.pdb
 
 
 # Compiled Object files
@@ -30,6 +32,7 @@
 # Fortran module files
 *.mod
 *.smod
+/.Data
 
 # Compiled Static libraries
 *.lai
@@ -41,3 +44,9 @@
 *.exe
 *.out
 *.app
+
+#Library Dependencies 
+./Imgui 
+./packages
+./include/boost
+./include/Imgui
