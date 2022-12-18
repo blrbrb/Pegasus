@@ -5,10 +5,14 @@
 @author Eli Reynolds on 2/5/20
 @copyright © 2020 Eli Reynolds. 
 */
-
+#include "red_button00.h"
+#include "red_button01.h"
+#include "red_button02.h" 
 
 #ifndef GUI_hpp
 #define GUI_hpp
+
+
 
 
 
@@ -31,16 +35,17 @@ namespace GUI {
 
 
 
-/// Convert a percantage value, to a percentage of the total width of the renderable window space
-/// @param percent const float percentage value
-/// @param vm A refrence to the sf::VideoMode
-/// @returns A new calculated percent
+/// <summary>
+///  Convert a percantage value, to a percentage of the total width of the renderable window space
+/// </summary>
+/// <param name="percent"></param>
+/// <param name="vm"></param>
+/// <param name="view"></param>
+/// <returns>newly calculated size / position for gui object</returns>
 const float pixelpercentX(const float percent, const sf::VideoMode& vm);
-/// Convert a percantage value, to a percentage of the total height of the renderable window space
-/// @param percent const float percentage value
-/// @param vm A refrence to the sf::VideoMode
-/// @returns A new calculated percent
-   const float pixelpercentY(const float percent, const sf::VideoMode& vm);
+
+const float pixelpercentY(const float percent, const sf::VideoMode& vm);
+
 
    const std::string convertToString(char* a, int size);
 
@@ -65,11 +70,19 @@ private:
     sf::Font *font;
     sf::Text text;
     
+
+    sf::Image idle_loader; 
+    sf::Image hover_loader; 
+    sf::Image active_loader; 
+
     //degug colors remove later
     sf::Color idleColor;
     sf::Color hoverColor;
     sf::Color activeColor;
     //debug colors removce later
+   
+   
+    /// <value>outline color</value> 
     sf::Color outline_idleColor;
     sf::Color outline_hoverColor;
     sf::Color outline_activeColor;
@@ -80,56 +93,54 @@ private:
     
     bool hover;
     bool pressed;
+    bool resources_from_header; 
     
 public:
-    
-    /// @brief Construct a GUI button element with user definable colors for fonts, active state, idle state, hover state
-    /// @param x float  the X position of the Button
-    /// @param y float the Y position of the Button
-    /// @param width  the width of the Button
-    /// @param height  the height of the Button
-    /// @param font  the font for the Button's text
-    /// @param text the text to be displayed on the Button
-    /// @param character_size  the size of the Button's text
-    /// @param idlecolor  the idle Button color
-    /// @param hovercolor  the hover color of the Button
-    /// @param activecolor  the active color of the Button
-    /// @param text_idlecolor  the Button text's idle color
-    /// @param text_hovercolor  the Button text's hover color
-    /// @param text_activecolor  the Button text's active color
-    /// @param Transparent default idle outline color
-    /// @param Transparent default   active outline color
-    /// @param Transparent default hover outline color
+     
+    /// <summary>
+    ///  Construct a GUI button element with user definable colors for text, active state, idle state, hover state. 
+    ///  Additionally, you can choose to supply outline colors and create advanced visually complete UI elements. 
+    ///  At the bare minimum can be constructed with only values for position, and size. Will load default textures from header file
+    ///  In all cases, can either contain text or be blank  
+    ///
+    ///  
+    /// </summary>
+    /// <param name="x">position x</param>
+    /// <param name="y">position y</param>
+    /// <param name="width">width</param>
+    /// <param name="height">height</param>
+    /// <param name="font"><type name ="sf::Font"/>font</param>
+    /// <param name="text">text</param>
+    /// <param name="character_size">text size</param>
+    /// <param name="idlecolor">idle color</param>
+    /// <param name="hovercolor">mouseover color</param>
+    /// <param name="activecolor">active color </param>
+    /// <remarks> the <paramref name="activecolor"/> is the color that the button texture will be updated with when it is being interacted with <type name="sf::Color"/> </remarks> 
+    /// <param name="text_idlecolor">text idle color</param>
+    /// <param name="text_hovercolor">text hover color</param>
+    /// <param name="text_activecolor">text_activecolor</param>
+    /// <param name="outline_activeColor">outline active color</param>
+    /// <param name="outline_idleColor">outline idle color</param>
+    /// <param name="outline_hoverColor">outline hover color</param>
+    /// <param name="ID">optional ID</param>
     Button(float x, float y, float width, float height, sf::Font *font, std::string text, unsigned character_size, sf::Color idlecolor, sf::Color hovercolor, sf::Color activecolor, sf::Color text_idlecolor, sf::Color text_hovercolor, sf::Color text_activecolor,sf::Color outline_activeColor = sf::Color::Transparent, sf::Color outline_idleColor = sf::Color::Transparent, sf::Color outline_hoverColor = sf::Color::Transparent, short unsigned ID = 0);
 
-    
-    /// @brief Construct a GUI Button element from a set ot textures
-    /// @param x  the X position of the Button
-    /// @param y  the Y positon of the Button
-    /// @param width  the width of the Button
-    /// @param height  the height of the Button
-    /// @param font the font
-    /// @param text the text for the Button to display
-    /// @param character_size the size of the Button's text
-    /// @param idle_texture the Button's idle texture
-    /// @param active_texture the Button's active texture
-    /// @param hover_texture the Button's hover texture
-    ///@overload
-    Button(float x, float y, float width, float height, sf::Font* font, std::string text, unsigned character_size, const std::string idle_texture, const std::string active_texture, const std::string hover_texture, short unsigned ID = 0);
+
+   
+	
+	Button(float x, float y, float width, float height, sf::Font* font, std::string text, unsigned character_size, const std::string idle_texture, const std::string active_texture, const std::string hover_texture, short unsigned ID = 0);
     
     
     
-    /// @brief Construct a GUI Button element from a set of textures, without any text
-    /// @param x the X positon of the Button
-    /// @param y the Y position of the Button
-    /// @param width the width of the Button
-    /// @param height the height of the Button
-    /// @param idle_texture the Button's idle texture
-    /// @param active_texture the Button's active texture
-    /// @param hover_texture the Button's hover texture
-    /// @overload
-    Button(float x, float y, float width, float height, const std::string idle_texture, const std::string active_texture, const std::string hover_texture, short unsigned ID = 0);
-  
+   
+
+	Button(float x, float y, float width, float height, const std::string idle_texture, const std::string active_texture, const std::string hover_texture, short unsigned ID = 0);
+
+	Button(float x, float y, float width, float height, sf::Font* font, std::string text, unsigned int character_size, short unsigned ID = 0);
+
+
+    Button(float x, float y, float width, float height, short unsigned ID);
+
     virtual ~Button();
    
     
@@ -151,6 +162,8 @@ public:
     void setText(const std::string text);
     ///Change, or set the Button's unique ID
     void setID(const short unsigned ID);
+
+    void load_from_header();
     
 
 };

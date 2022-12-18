@@ -124,7 +124,8 @@ private:
     sf::Font font;
     sf::RenderTexture rendertexture;
     sf::Sprite rendersprite;
-    
+    sf::Color selection_color; 
+    ImVec4 Selection_colorImGui; 
     //Shaders
     sf::Shader core_shader; 
     sf::Shader lantern_shader; 

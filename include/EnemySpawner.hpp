@@ -28,7 +28,7 @@ private:
     float maxDistance;
     bool Spawned;  
 
-    TileData tiledata; 
+  
     
 public:
     //construtor and destructor
@@ -41,12 +41,14 @@ public:
     
     //Accessors
     const std::string asString() const;
-    const TileData asData();
     void savetoFile(std::ofstream& out);
   
     const bool& getSpawned() const;
     const int& getEnemyAmount() const;
     const int& getEnemyCounter() const; 
+    const float& getMaxDistance() const; 
+    const int& getEnemyType() const ;
+    const sf::Int32& getTime() const; 
     //Functions
     const bool canSpawn() const;
     void increaseEnemyCounter();
@@ -56,6 +58,10 @@ public:
     void update(const float& dt);
     void render(sf::RenderTarget& target, sf::Shader* shader = NULL, sf::Vector2f LightPosition = sf::Vector2f());
     
+
+    // Inherited via Tile
+    
+
 };
 
 #endif /* EnemySpawner_hpp */

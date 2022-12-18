@@ -22,19 +22,25 @@ private:
          void initGUI();
          void resetGUI();
          void initvariables();
-       
+         void initview(); 
     
        //Variables
     sf::Font font;
     sf::RectangleShape background;
-    
+    sf::View view; 
     sf::Texture backgroundTexture;
     sf::Text option_text;
     std::map<std::string, GUI::Button*> buttons;
     std::map<std::string, GUI::DropDownList*> dropdownlists;
-    std::vector<sf::VideoMode> modes;
+    std::map<std::string, sf::VideoMode> modes;
     
+    //Gui variables 
+    const char* items[120];
+    const char* current_item; 
+    std::string selection_temp; 
+    //const char* current_item;
     
+
     
 public:
     
@@ -47,6 +53,7 @@ public:
     //Functions
     void updateInput(const float& dt);
     void updateGUI(const float& dt);
+    void updateView(); 
     void update(const float& dt);
     void renderGUI(sf::RenderTarget& target);
     void updateevents();

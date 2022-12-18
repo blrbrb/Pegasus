@@ -7,13 +7,14 @@
 // 
 #include "stdafx.h"
 #include "Game.hpp"
+#include "../stdafx.h"
 
 Game::Game() {
     
     std::cout << "init game" << std::endl; 
     this->initVariables();
-    this->initwindow();
     this->initGraphicsSettings();
+    this->initwindow();
     this->initkeys();
     this->initstatedata();
     this->initstates(); 
@@ -88,7 +89,8 @@ void Game::initstates() {
 
 void Game::initGraphicsSettings() {
     
-    this->gfxsettings.loadfromfile("Init/Window.ini"); 
+    this->gfxsettings = new GraphicsSettings(); 
+    this->gfxsettings->loadfromfile("Config/Window.cfg");
     
   
 }
@@ -107,27 +109,34 @@ void Game::initwindow() {
     ImGui::CreateContext();
    
 
-    if (this->gfxsettings.fullscreen) {
-        this->window = new sf::RenderWindow(this->gfxsettings.resolution, this->gfxsettings.title, sf::Style::Fullscreen, this->gfxsettings.windowSettings);
+    if (this->gfxsettings->fullscreen) {
+        //it might be a good idea to assign the hanging window pointer a value, and then use the newer .create method
+        this->window = new sf::RenderWindow(); 
+        this->window = new sf::RenderWindow(this->gfxsettings->resolution, this->gfxsettings->title, sf::Style::Fullscreen, this->gfxsettings->windowSettings);
     }
 
-   
-     else
-        this->window = new sf::RenderWindow(this->gfxsettings.resolution, this->gfxsettings.title, sf::Style::Resize | sf::Style::Close);
-        
-      
-        
-   this->window->setFramerateLimit(this->gfxsettings.framerate_limit);
-    this->window->setVerticalSyncEnabled(this->gfxsettings.vsync);    
 
-    sf::RenderWindow& window = *this->window;  
+    else
+        this->window = new sf::RenderWindow(); 
+        assert(this->gfxsettings->resolution.isValid());
+  
+        this->window->create(this->gfxsettings->resolution, this->gfxsettings->title, sf::Style::Titlebar, this->gfxsettings->windowSettings);
+ 
+        
+   this->window->setFramerateLimit(this->gfxsettings->framerate_limit);
+   // this->window->setVerticalSyncEnabled(this->gfxsettings.vsync);       
 
-    std::cout << "window created" << std::endl; 
+ 
+
+    sf::RenderWindow& window = *this->window;   
+  
+ 
     //ImGui::CreateContext();
     //ImGui::ShowDemoWindow();
     if (ImGui::SFML::Init(window)) 
     {
-        std::cout << "ImGui has properly been initalized" << std::endl; 
+      // this->states.top()->log("ImGui has properly been initalized", "Main");
+        std::cout << "initalized imgui" << std::endl;
     }
 
     ///ImGui::StyleColorsDark();
@@ -139,7 +148,7 @@ void Game::initwindow() {
 void Game::initstatedata()
 {
     this->state_data.window = this->window;
-    this->state_data.gfxsettings = &this->gfxsettings; 
+    this->state_data.gfxsettings = this->gfxsettings; 
     this->state_data.supportedkeys = &this->supportedkeys;
     this->state_data.states = &this->states;
     this->state_data.gridsize = &this->gridsize; 
@@ -207,11 +216,10 @@ void Game::Update()
                 if (this->states.top()->getquit())
                 {
                     this->states.top()->endstate();
-                    delete this->states.top();
-                    this->states.pop();
-                    std::cout << "Main Loop. State Deleted. Game.cpp" << std::endl; 
                    
+                    delete this->states.top();
                     
+                    this->states.pop();
                
                 }
             }
@@ -226,15 +234,18 @@ void Game::Update()
 
 
 
+
 void Game::UpdateEvents() {
     
     while (this->window->pollEvent(this->event))
     {
         
         if (this->event.type == sf::Event::Closed) {
-            
-            this->window->close();
-                   
+            if (!this->states.empty()) 
+            {
+                this->states.top()->log("destroying window...", "Main");
+                this->window->close();
+            }
         }      
 
         ImGui::SFML::ProcessEvent(this->event); 
@@ -292,7 +303,8 @@ void Game::running() {
 
 void Game::endapplication()
 {
-    std::cout << "Ending the application..." << std::endl;
+    if(this->states.size() > 0)
+    this->states.top()->log("Ending the application...", "Main"); 
 }
 
 
@@ -303,11 +315,12 @@ void Game::initVariables()
 
     this->gridsize = sf::Vector2f(32.f, 24.f);
     //This is the size of the stolen ponytown assets 
-    //I am a shameless pirate.
-    //this->GridSizeIrr = 
+    //I am a shameless pirate.qweqweqweqeqweqweqweqweqeqweqwe
+    //this->GridSizeIrr = asdasdasdasdasdasdasdsad
 
     
 }
+
 
 
 

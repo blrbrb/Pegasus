@@ -11,12 +11,14 @@
 
 
 
+
+
 Tile::Tile()
 {
     this->collison_enabled = false;
-    this->type = 0;
-    
-    
+    this->type = 0; 
+    this->object_type = 0; 
+   
 }
 
                                                                                         
@@ -24,6 +26,9 @@ Tile::Tile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& t
 {
    //Tile constructor that needs to be called if there is a tile object/object tile on the map.
     this->type = type;
+   
+    this->object_type = object_type; 
+    
     this->rect.setTexture(texture);
    
     this->rect.setTextureRect(texturerect);
@@ -58,6 +63,11 @@ Tile::Tile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& t
     short fart;
     fart = type;
     this->type = fart; 
+
+    if (object_type)
+    {
+        this->object_type = object_type;
+    }
     //this->rect.get
 }
 
@@ -117,6 +127,10 @@ const sf::Vector2i Tile::getTextureCoords() const
     return test;
 }
 
+const short& Tile::getObject_type() const
+{
+    return this->object_type; 
+}
 
 
 

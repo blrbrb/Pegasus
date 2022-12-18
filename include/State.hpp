@@ -42,7 +42,7 @@ public:
     GraphicsSettings* gfxsettings;  
     //the sounds 
    
-
+   
     
     
 };
@@ -54,16 +54,18 @@ class State {
     public:
   
     State(StateData* state_data);
-  
     
     virtual ~State();
-    
+
+
+
+
     //public variables
     ///Has the State been quit?
     bool quit;
     ///Has the State been Paused?
     bool paused;
-    
+
     
     //Acessors
     /// Retrieve wether or not the user has requested to end the Application
@@ -71,7 +73,8 @@ class State {
     /// Retrieve wether or not the minimum allowed time between individual keystrokes has passed
     const bool getkeytime();
     
-
+    //this has gotta be a virtual method for some reason, or the compiler will shit itself very hard.
+     virtual void log(std::string stat, std::string log_instance);
     
     
     //Modifiers
@@ -82,7 +85,8 @@ class State {
     void Pause_State();
     /// Un-Pause the state
     void Unpause_State();
-    
+    //Write to the Log file
+
     void create_sound_component(); 
 
 
@@ -96,7 +100,11 @@ class State {
 
 protected:
    
-    
+
+    ///string ID of the state, e.g. "MainMenu", "Game" 
+    std::string name;
+    //unsigned int ID of the state
+    unsigned state_ID; 
     sf::RenderWindow* window;
     //float gridsize;
     sf::Vector2f gridsize; 
@@ -117,22 +125,24 @@ protected:
     std::map<std::string, int>* supportedkeys;
     /// Keys with a user-supplied map
     std::map<std::string, int> keybinds;
+    //Logging file 
+    std::ofstream* outfile;
 
-    
-    
-    virtual void initkeybinds() = 0;
+
+    virtual void initkeybinds() = 0; 
+  
     float keytime;
     float keytime_MAX;
     
- 
+    void initlog(); 
     //State mechanism
     std::stack<State*>* states; 
     
     ///Texture Asset storage. Saved as a Map container and can be retrieved with a string
     std::map<std::string,sf::Texture> textures;
    
-    
-
+  
+  
     
   
 };

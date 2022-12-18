@@ -14,23 +14,7 @@
 
 
 enum TileTypes {DEFAULT=0, UNPASSABLE, OBJECT, SPAWNER, LIGHT, NORMAL};
-static const char * EnumStrings[] = { "Default", "Unpassable", "Object", "Spawner", "Light", "Stop", "YOU FOOL", "NO" };
-
-
-typedef struct TileData
-{
-     float  obX, obY, maxDistance;
-     short type, object_type;
-    sf::IntRect texturerect;
-     bool collision;
-     sf::Int32* enemy_timer; 
-    int Enemy_type, Enemy_amount;
-    sf::Vector2f position;
-
-
-};
-
-
+static const char * EnumStrings[] = { "Default", "Unpassable", "Object", "Spawner", "Light", "Stop", "YOU FOOL", "NO" }; 
 
 
 class Tile
@@ -42,22 +26,21 @@ protected:
     
     sf::Sprite rect;
     short type;
-    
+    short object_type;
 
 
 
 
 
 public:
-    
+   
     Tile();
-    Tile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, bool collision_enabled = false);
+    Tile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, bool collision_enabled = false );
     Tile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture,bool collision_enabled = false);
     virtual ~Tile();
     
     //Accessors
-    virtual const std::string asString() const =0;
-    virtual const TileData asData() = 0;
+    virtual const std::string asString() const =0; 
     virtual const short& gettype() const;
     virtual const sf::Vector2f& getposition() const;
     virtual const bool& getCollision() const;
@@ -66,7 +49,9 @@ public:
     virtual const sf::Vector2f getCenter() const;
     virtual const sf::IntRect gettexturerect() const;
     virtual const sf::Vector2i getTextureCoords() const;
+    virtual const short& getObject_type() const;
     virtual void savetoFile(std::ofstream& out) = 0; 
+   
     
     //Functions
     virtual void update(const float& dt) =0;

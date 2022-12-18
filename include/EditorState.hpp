@@ -17,7 +17,8 @@
 #include "DefaultMode.hpp" 
 #include "EnemyEditorMode.hpp" 
 #include "EnviornmentalMode.hpp"
-
+#include "LevelManagerMode.hpp" 
+#include "ShaderEditorMode.h"
 
 
 
@@ -29,10 +30,11 @@ class EnemyEditorMode;
 class DefaultMode;
 class PauseMenu;
 class EditorStateData; 
+class LevelManagerMode; 
+class ShaderEditorMode; 
 
 
-
-enum EDITOR_MODES {DEFAULT_MODE = 0, ENEMY, ENV};
+enum EDITOR_MODES {DEFAULT_MODE = 0, ENEMY, ENV, LEVEL, SHADER};
 
 
 class EditorState : public State
@@ -63,7 +65,9 @@ class EditorState : public State
         void renderModes(sf::RenderTarget& target);
         void render(sf::RenderTarget* target = nullptr);   
 
-            
+       
+
+   
 private:
     
         //Initalizer Functions
@@ -80,7 +84,8 @@ private:
         void initGUI();
         void initbg(); 
         void initmodes(); 
-      
+        void initlevels(); 
+        bool initshader();
         //Exception Handler Functions 
         void handlefonts(); 
 
@@ -95,6 +100,8 @@ private:
         //Modes
         std::vector<EditorModes*> modes;
         unsigned activeMode;
+        //Active Level Manager
+       
                        
     
         //Text
@@ -107,9 +114,11 @@ private:
         //TileMap
         TileMap* Tilemap;
         GUI::EditorStateGUI* EditorStateGUI; 
+        std::string curr_level;
     
         //Data
-        EditorStateData editorstatedata; 
+        EditorStateData editorstatedata;  
+        Levels* levels;
        
         //Sounds
         sf::SoundBuffer buffer;
@@ -125,7 +134,8 @@ private:
        sf::RectangleShape bg; 
         //sf::ConvexShape bg; 
        sf::RectangleShape bg_interior; 
-   
+       sf::Shader core_shader;
+    
 };
     
 

@@ -7,6 +7,7 @@
 //
 #include "stdafx.h"
 #include "GUI.hpp"
+
 #include <iostream>
 
 /* BEGIN BUTTON */
@@ -81,8 +82,13 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
 
 
 GUI::Button::Button(float x, float y, float width, float height, sf::Font *font, std::string text, unsigned int character_size, const std::string idle_texture, const std::string active_texture, const std::string hover_texture, short unsigned ID)
-{ 
-    //std::cout << "Button Constructor Works" << std::endl; 
+{
+    //const int x = 1;
+    ///const sf::Uint8* test = reinterpret_cast<sf::Uint8*>(red_button00_data);
+  
+  
+
+     
     this->ButtonState = IDLE_BUTTON;
     this->ID = ID; 
        
@@ -101,18 +107,25 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
     
     try
     {
-        if(!this->idle.loadFromFile(idle_texture))
+       
+        if (!this->idle.loadFromFile(idle_texture))
         {
-            throw std::invalid_argument("FATAL ERROR EX_C 21 || GUI::Button Constructor || Unable to find idle texture file");
+            std::cout << "unable to initalize custom button [IDLE_BUTTON] texture " << idle_texture << " . Falling back on default button [IDLE_BUTTON] texture" << std::endl;
+            this->load_from_header();
         }
-        if(!this->clicked.loadFromFile(active_texture))
+
+        if (!this->clicked.loadFromFile(active_texture))
         {
-            throw std::invalid_argument("FATAL ERROR EX_C 22 || GUI::Button Constructor || Unable to find active texture file");
+
+            std::cout << "unable to initalize custom button [PRESSED] texture " << active_texture << " . Falling back on default button [PRESSED] texture" << std::endl;
+            this->load_from_header();
         }
-        if(!this->hover_texture.loadFromFile( hover_texture))
+        if (!this->hover_texture.loadFromFile(hover_texture))
         {
-            throw std::invalid_argument("FATAL ERROR EX_C 23 || GUI::Button Constructor || Unable to find hover texture file");
+            std::cout << "unable to initalize custom button [HOVER] texture " << hover_texture << " . Falling back on default button [HOVER] texture" << std::endl;
+            this->load_from_header();
         }
+
     }
     catch (std::invalid_argument& e)
     {
@@ -128,6 +141,7 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
 
 GUI::Button::Button(float x, float y, float width, float height, const std::string idle_texture, const std::string active_texture, const std::string hover_texture, short unsigned ID)
 {
+  
     
     /*!
     
@@ -152,20 +166,23 @@ GUI::Button::Button(float x, float y, float width, float height, const std::stri
     
     try
     {
-    
-        if(!this->idle.loadFromFile(idle_texture))
+        if (!this->idle.loadFromFile(idle_texture))
         {
-            throw std::invalid_argument("FATAL ERROR EX_C 24 || GUI::BUTTON CONSTRUCTOR || Unable to find idle texture");
+            std::cout << "unable to initalize custom button [IDLE_BUTTON] texture " << idle_texture << " . Falling back on default button [IDLE_BUTTON] texture" <<  std::endl;
+            this->load_from_header(); 
+
         }
         
         if(!this->clicked.loadFromFile( active_texture))
         {
             
-            throw std::invalid_argument("FATAL ERROR EX_C 25 || GUI::Button CONSTRUCTOR || Unable to find active texture");
+            std::cout << "unable to initalize custom button [PRESSED] texture " << active_texture << " . Falling back on default button [PRESSED] texture" << std::endl;
+            this->load_from_header();
         }
         if(!this->hover_texture.loadFromFile(hover_texture))
         {
-            throw std::invalid_argument("FATAL ERROR EX_C 26 || GUI::Button CONSTRUCTOR || Unable to find hover texture");
+            std::cout << "unable to initalize custom button [HOVER] texture " << hover_texture << " . Falling back on default button [HOVER] texture" << std::endl;
+            this->load_from_header();
         }
            
         this->rectangle.setTexture(&idle);
@@ -192,10 +209,49 @@ GUI::Button::Button(float x, float y, float width, float height, const std::stri
 }
 
 
+GUI::Button::Button(float x, float y, float width, float height, sf::Font* font, std::string text, unsigned int character_size, short unsigned ID)
+{
+   
+    this->ButtonState = IDLE_BUTTON;
+    this->ID = ID;
+    //load the default textures from header
+    this->load_from_header();
+    this->rectangle.setTexture(&idle);
+    this->rectangle.setSize(sf::Vector2f(x, y));
+    this->rectangle.setPosition(width, height);
+
+  
+
+    this->font = font;
+    this->text.setFont(*this->font);
+    this->text.setString(text);
+    this->text.setFillColor(text_idlecolor);
+    this->text.setCharacterSize(character_size);
+
+
+
+    this->text.setPosition(this->rectangle.getPosition().x + this->rectangle.getPosition().x / 2.f + 20.f - this->rectangle.getPosition().x / 2.f, this->rectangle.getPosition().y + this->rectangle.getSize().y / 2.f - 20.f);
+}
+
+GUI::Button::Button(float x, float y, float width, float height, short unsigned ID)
+{
+  
+    this->ButtonState = IDLE_BUTTON;
+    this->ID = ID;
+    //load the default textures from header
+    this->load_from_header();
+    this->rectangle.setTexture(&idle);
+    this->rectangle.setSize(sf::Vector2f(x, y));
+    this->rectangle.setPosition(width, height);
+
+
+    this->text.setPosition(this->rectangle.getPosition().x + this->rectangle.getPosition().x / 2.f + 20.f - this->rectangle.getPosition().x / 2.f, this->rectangle.getPosition().y + this->rectangle.getSize().y / 2.f - 20.f);
+}
+
 GUI::Button::~Button()
 {
     
-    
+ 
     
 }
 
@@ -306,6 +362,18 @@ void GUI::Button::setText(const std::string text)
     this->text.setString(text);
     
     
+}
+
+void GUI::Button::load_from_header()
+{
+    this->idle_loader.create(RED_BUTTON01.width, RED_BUTTON01.height, RED_BUTTON01.data);
+    this->hover_loader.create(RED_BUTTON00.width, RED_BUTTON00.height, RED_BUTTON00.data); 
+    this->active_loader.create(RED_BUTTON02.width, RED_BUTTON02.height, RED_BUTTON02.data);
+
+    this->idle.loadFromImage(this->idle_loader);
+    this->hover_texture.loadFromImage(this->hover_loader);
+    this->clicked.loadFromImage(this->active_loader); 
+
 }
 
 const unsigned short &GUI::Button::getID() const
@@ -799,16 +867,19 @@ const unsigned GUI::calcCharSize(const sf::VideoMode& vm, const unsigned modifie
 
 const float GUI::pixelpercentX(const float percent, const sf::VideoMode& vm)
 {
-   
+    
+    
+
     return std::floor(static_cast<float>(vm.width) * (percent / 100.f));
 }
 
 const float GUI::pixelpercentY(const float percent, const sf::VideoMode& vm)
 {
-    
+  
     
      return std::floor(static_cast<float>(vm.height) * (percent / 100.f));
 }
+
 
 
 const std::string GUI::convertToString(char* a, int size)

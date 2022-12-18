@@ -42,6 +42,10 @@ void EnviornmentalMode::inittext()
 
 void EnviornmentalMode::initGUI()
 {
+   //
+    this->guitexture.loadFromFile("Resources/GUI/Icons/Lantern.png");
+    this->guisprite.setTexture(this->guitexture);
+    this->guisprite.setScale(4.f, 4.f); 
     this->sidebar.setSize(sf::Vector2f(80.f, static_cast<float>(this->statedata->gfxsettings->resolution.height)));
     this->sidebar.setFillColor(sf::Color(50,50,50, 100));
     this->sidebar.setOutlineColor(sf::Color(200,200,200,150));
@@ -66,11 +70,12 @@ void EnviornmentalMode::initGUI()
 }
 
 
-EnviornmentalMode::EnviornmentalMode(StateData *statedata, TileMap *tilemap, EditorStateData *editorstatedata) : EditorModes(statedata, tilemap, editorstatedata)
+EnviornmentalMode::EnviornmentalMode(StateData *statedata, TileMap *tilemap, EditorStateData *editorstatedata, Levels* levels) : EditorModes(statedata, tilemap, editorstatedata, levels)
 {
     this->initvariables();
     this->inittext();
     this->initGUI();
+    this->type = TileTypes::OBJECT; 
 }
 
 EnviornmentalMode::~EnviornmentalMode()
@@ -97,7 +102,7 @@ void EnviornmentalMode::updateInput(const float &dt)
                            {
                                 if (this->tilemap->TileEmpty(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer))
                                  {
-                                     this->tilemap->addTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, this->TextureRect, collision, type);
+                                    this->tilemap->addTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, this->editorstatedata->mouseposGridF->x, this->editorstatedata->mouseposGridF->y, this->object_type);
                                      
                                         std::cout << "LOCKED: Tile Added" << std::endl;
                                  }
@@ -235,64 +240,24 @@ void EnviornmentalMode::update(const float &dt)
 void EnviornmentalMode::updateGUI(const float &dt)
 {
    
-    
-    this->texture_selector->update(*this->editorstatedata->mousePosWindow, dt);
-    
-    if(!this->texture_selector->getActive())
-    {
-          //set the selection rectangle position
-        this->select_Rect.setTextureRect(this->TextureRect);
-        this->select_Rect.setPosition(this->editorstatedata->mouseposGridI->x * this->statedata->gridsize->x, this->editorstatedata->mouseposGridI->y * this->statedata->gridsize->y);
-        
-    }
-    
-    
-  
-    this->texturesample.setSize(sf::Vector2f(64, 64));
-    this->texturesample.setTexture(this->select_Rect.getTexture());
-    this->texturesample.setTextureRect(this->select_Rect.getTextureRect());
-    this->texturesample.setPosition(this->text_container.getPosition().x, this->text_container.getPosition().y / 0.5f);
-        
-    
+    ImGui::Begin("Map Editor"); 
 
-    //set the cursor text
-    std::stringstream cursor_text;
-    cursor_text << "MouseX: " << this->editorstatedata->mousePosView->x << "\n"
-    << "MouseY:" << this->editorstatedata->mousePosView->y
-    << "\n" << "GridX: " << this->editorstatedata->mouseposGridI->x
-    << "\n" << "GridY: " << this->editorstatedata->mouseposGridI->y
-    << "\n" << "TextureRectX: " << this->TextureRect.left
-    << "\n" << "TextureRectY: " << this->TextureRect.top
-    << "\n" << "Collision: " << this->collision
-    << "\n" << "Type: " << this->type
-    << "\n" << "Tiles:" << this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer);
+    ImGui::Text("Place misc objects onto the tilemap"); 
     
-    //If the cursor is on a valid tile, the text color is white
-    if (this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer) != -1)
+    if (ImGui::ImageButton(this->guisprite)) 
     {
-        this->cursortext.setFillColor(sf::Color::White);
+      //  this->curr_type = TileTypes::OBJECT; 
+        this->object_type = ObjectTypes::LANTERN; 
     }
-    
-    //if the cursor is not on a valid tile, the text color is red
-    
+
+   // ImGui::Button///
+    ImGui::End(); 
+  
 }
 
 void EnviornmentalMode::renderGUI(sf::RenderTarget &target)
 {
-    if (!this->texture_selector->getActive())
-          {
-              target.setView(*this->editorstatedata->view);
-              target.draw(this->select_Rect);
-              
-          }
-          
-          target.setView(this->statedata->window->getDefaultView());
-          this->texture_selector->render(target);
-          target.draw(this->sidebar);
-          target.draw(this->cursortext);
-          target.draw(this->text_container);
-          target.draw(this->texturesample);
-          target.setView(*this->editorstatedata->view);
+   
 
 }
 

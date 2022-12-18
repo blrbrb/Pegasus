@@ -10,15 +10,54 @@
 
 //Constructors/ Destructors
 
+
+
 GraphicsSettings::GraphicsSettings()
 {
-    this->title = "Debug"; 
-    this->resolution = sf::VideoMode::getDesktopMode(); 
+    //std::cout << sf::VideoMode::getDesktopMode().height << " " << sf::VideoMode::getDesktopMode().width << " " << sf::VideoMode::getDesktopMode().bitsPerPixel << std::endl; 
+    this->title = "Debug";
+    
+  
+
+
+    this->resolution = sf::VideoMode::getDesktopMode();
     this->fullscreen = false;
     this->vsync = false;
     this->windowSettings.antialiasingLevel = 0;
-    this->Videomodes = sf::VideoMode::getFullscreenModes();  
+    this->Videomodes = sf::VideoMode::getFullscreenModes();
+    this->antialias_level = 0;
+    this->framerate_limit = 0; 
+    std::cout << this->windowSettings.depthBits << std::endl;
+
+    //Make sure to only push valid video modes. 
+    for (auto& videomode : sf::VideoMode::getFullscreenModes())
+    {
+        if (videomode.isValid())
+        {
+            this->Videomodes.push_back(videomode); 
+        }
+    }
+   
     std::cout << "video resolution depth is " << this->Videomodes.at(2).bitsPerPixel << " bits per pixel" << std::endl;
+    pt.put("window.title", this->title);
+    pt.put("window.resolution.width", this->resolution.width);
+    pt.put("window.resolution.height", this->resolution.height);
+    pt.put("window.fullscreen", this->fullscreen);
+    pt.put("window.vsync", this->vsync);
+    pt.put("contextSettings.bitdepth", this->windowSettings.depthBits);
+    pt.put("contextSettings.debug", this->windowSettings.Debug);
+    pt.put("contextSettings.framerate_limit", this->framerate_limit);
+    pt.put("contextSettings.stencil_depth", this->windowSettings.stencilBits);
+    pt.put("contextSettings.version_maj", this->windowSettings.majorVersion);
+    pt.put("contextSettings.version_min", this->windowSettings.minorVersion);
+    pt.put("contextSettings.device_accept_sRgb", this->windowSettings.sRgbCapable);
+    pt.put("contextSettings.antialias_level", this->antialias_level);
+    pt.put("contextSettings.stencildepth", this->windowSettings.stencilBits);
+    pt.put("contextSettings.windowFlags", this->windowSettings.attributeFlags);
+  
+
+
+    boost::property_tree::json_parser::write_json("Config/Window.cfg", pt);
     //this->Videomodes = sf::VideoMode::
            
 }
@@ -27,41 +66,44 @@ GraphicsSettings::GraphicsSettings()
 
 void GraphicsSettings::savetofile(const std::string path)
          {
-            std::ofstream out(path);
-              
-             if (out.is_open())
-             {
-                 out << this->title;
-                 out << this->resolution.width << "" << this->resolution.height;
-                 out << fullscreen;
-                 out << framerate_limit;
-                 out << vsync;
-                 out << this->windowSettings.antialiasingLevel;
-             }
            
-           out.close();
-             
+
+           //There needs to be a thread resource use manager embedded somewhere here.
+           //Assume we don't understand what the user's hardware is yet. Call this->graphicssettings->CUDA_Flush();
+           /// 0 no cuda onboard. Switch to openGL. Fuck vulkan
+           // Glut.h? fuck it
+
+            
+               boost::property_tree::json_parser::write_json(path, pt);
          }
+
+
 
 void GraphicsSettings::loadfromfile(const std::string path)
        {
-           std::fstream in(path);
            
-           if (in.is_open())
-           {
-               
-               std::getline(in, this->title);
-               in >> this->resolution.width >> this->resolution.height;
-               in >> fullscreen;
-               in >> framerate_limit;
-               std::cout << framerate_limit << std::endl; 
-               in >> vsync;
-               in >> this->windowSettings.antialiasingLevel;
-           }
+           //Make sure to actually initalize the property tree so It's not a nullptr when you try and save dumdum
+           boost::property_tree::json_parser::read_json(path, this->pt);
+
+
+
+           this->resolution.width = this->pt.get<unsigned>("window.resolution.width");
+           this->resolution.height = this->pt.get<unsigned>("window.resolution.height");
+           this->fullscreen = this->pt.get<bool>("window.fullscreen");
+           this->windowSettings.depthBits = this->pt.get<unsigned>("contextSettings.bitdepth");
+           this->vsync = this->pt.get<bool>("window.vsync"); 
+           this->title = this->pt.get<std::string>("window.title"); 
+          
+           this->framerate_limit = this->pt.get<unsigned>("contextSettings.framerate_limit");
            
-           in.close();
+           this->antialias_level = this->pt.get<unsigned>("contextSettings.antialias_level"); 
+           this->windowSettings.majorVersion = this->pt.get<unsigned>("contextSettings.version_maj");
+           this->windowSettings.sRgbCapable = this->pt.get<bool>("contextSettings.device_accept_sRgb");
+           this->windowSettings.stencilBits = this->pt.get<unsigned>("contextSettings.stencildepth");
+           this->windowSettings.attributeFlags = this->pt.get<sf::Uint32>("contextSettings.windowFlags"); 
            
            std::cout << "the window init file is being read properly" << std::endl; 
 
           
        }
+

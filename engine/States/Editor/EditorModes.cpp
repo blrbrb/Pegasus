@@ -8,7 +8,7 @@
 #include "stdafx.h"
 #include "EditorModes.hpp"
 
-EditorModes::EditorModes(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata) : statedata(statedata), tilemap(tilemap), editorstatedata(editorstatedata)
+EditorModes::EditorModes(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata, Levels* levels) : statedata(statedata), tilemap(tilemap), editorstatedata(editorstatedata), levels(levels)
 {
     
     
@@ -31,7 +31,11 @@ EditorModes::~EditorModes()
 
 void EditorModes::updateInput(const float& dt)
 {
-    
+   
+  
+
+   
+  
 }
 
 void EditorModes::update(const float &dt)

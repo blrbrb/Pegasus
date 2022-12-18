@@ -21,10 +21,20 @@ class GraphicsSettings
           sf::VideoMode resolution;
           std::vector<sf::VideoMode> Videomodes;
           sf::ContextSettings windowSettings;
+          boost::property_tree::ptree pt;
+          
+
           bool fullscreen;
           bool vsync;
           unsigned framerate_limit;
-          
+          unsigned depth; 
+          unsigned antialias_level; 
+          unsigned stencil_depth; 
+          unsigned ppi; 
+
+
+    
+        
           //Constructors/Destructors
           GraphicsSettings();
           
@@ -39,6 +49,15 @@ class GraphicsSettings
           /// @brief Load saved graphics settings from a file.
           /// @param path to the file to read from
           void loadfromfile(const std::string path);
+
+
+          //Modifiers 
+
+          //windowtitle
+          //@breif Set the Title of the current Window \n
+          //(window must be re-created with sfml window.create() for changes to apply) 
+          //@param title 
+         
           
       };
 

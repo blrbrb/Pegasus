@@ -10,7 +10,7 @@
 
 
 
-DefaultMode::DefaultMode(StateData *statedata, TileMap* tilemap, EditorStateData* editorstatedata) : EditorModes(statedata, tilemap, editorstatedata)
+DefaultMode::DefaultMode(StateData *statedata, TileMap* tilemap, EditorStateData* editorstatedata, Levels* levels) : EditorModes(statedata, tilemap, editorstatedata, levels)
 {
     this->initvariables();
     this->inittext();
@@ -59,9 +59,11 @@ void DefaultMode::updateInput(const float& dt)
                                 { 
                                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::M)) 
                                    {
-                                       this->tilemap->addTile(this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, 0, this->TextureRect, collision, this->type);
+                                       this->levels->addTile(this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, 0, this->TextureRect, collision, this->type); 
+                                       //this->levels[curr_level]->addTile(this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, 0, this->TextureRect, collision, this->type);
                                    }
-                                    this->tilemap->addTile(this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, this->layer, this->TextureRect, collision, this->type);
+                                   this->levels->addTile(this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, this->layer, this->TextureRect, collision, this->type);
+                                   // this->tilemap->addTile(this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, this->layer, this->TextureRect, collision, this->type);
                                     
                                        std::cout << "LOCKED: Tile Added" << std::endl;
                                 }
@@ -76,28 +78,30 @@ void DefaultMode::updateInput(const float& dt)
                            {
                              
                               if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
-                             
-                                      
 
-                                  for (int x = 0; x < this->tilemap->getMaxSizeGrid().x; x++) 
+
+
+                                  for (int x = 0; x < this->tilemap->getMaxSizeGrid().x; x++)
                                   {
-                                      for(int y = 0; y < this->tilemap->getMaxSizeGrid().y; y++) 
+                                      for (int y = 0; y < this->tilemap->getMaxSizeGrid().y; y++)
                                       {
-                                          this->tilemap->addTile(x, y, this->layer, this->TextureRect, collision, this->type);
+                                          this->levels->addTile(x, y, this->layer, this->TextureRect, collision, this->type);
+                                          //this->tilemap->addTile(x, y, this->layer, this->TextureRect, collision, this->type);
                                       }
-                                   
+
                                   }
-                                      
-                                     
-                                          
-          
-                                          //this->tilemap->addTile(this->editorstatedata->mouseposGrid->x + (t * this->statedata->gridsize->x) ,this->editorstatedata->mouseposGrid->y + (i * this->statedata->gridsize->y), this->layer, this->TextureRect, collision, type);
-                                      
-                                     // this->tilemap->addTile(this->editorstatedata->mouseposGrid->x + i, this->editorstatedata->mouseposGrid->y, this->layer, this->TextureRect, collision, type);
-                                  
+
+
+
+
+                                  //this->tilemap->addTile(this->editorstatedata->mouseposGrid->x + (t * this->statedata->gridsize->x) ,this->editorstatedata->mouseposGrid->y + (i * this->statedata->gridsize->y), this->layer, this->TextureRect, collision, type);
+
+                             // this->tilemap->addTile(this->editorstatedata->mouseposGrid->x + i, this->editorstatedata->mouseposGrid->y, this->layer, this->TextureRect, collision, type);
+
                               }
                               else
-                                  this->tilemap->addTile(this->editorstatedata->mouseposGridI->x++, this->editorstatedata->mouseposGridI->y++, this->layer, this->TextureRect, collision, this->type);
+                                  this->levels->addTile(this->editorstatedata->mouseposGridI->x++, this->editorstatedata->mouseposGridI->y++, this->layer, this->TextureRect, collision, this->type); 
+                                 // this->tilemap->addTile(this->editorstatedata->mouseposGridI->x++, this->editorstatedata->mouseposGridI->y++, this->layer, this->TextureRect, collision, this->type);
                                std::cout << "Tile Added" << std::endl;
                               
                            }
@@ -235,7 +239,7 @@ void DefaultMode::updateInput(const float& dt)
        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::H) && this->getkeytime())
        {
            std::cout << "object added" << std::endl;
-           this->tilemap->addTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, this->editorstatedata->mouseposGridF->x, this->editorstatedata->mouseposGridF->y, 2);
+           this->tilemap->addTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, this->editorstatedata->mouseposGridF->x, this->editorstatedata->mouseposGridF->y, ObjectTypes::LANTERN);
            //this->tilemap->addObject(this->editorstatedata->mousePosWindow->x, this->editorstatedata->mousePosWindow->y);
        }
        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Numpad4) && this->getkeytime())
@@ -277,7 +281,13 @@ void DefaultMode::updateInput(const float& dt)
 void DefaultMode::update(const float &dt)
 {
     this->updateGUI(dt);
-    this->updateInput(dt);
+
+    if (ImGui::GetIO().WantCaptureMouse == false)
+    {
+        this->updateInput(dt);
+    }
+
+    // this->updateInput(dt);
 }
 
 void DefaultMode::updateGUI(const float& dt)
@@ -442,10 +452,10 @@ void DefaultMode::initGUI()
     this->select_Rect.setSize(sf::Vector2f(statedata->gridsize->x, statedata->gridsize->y));
     this->select_Rect.setTexture(tilemap->getTileSheet());
  
-   // this->texturesample.setSize(sf::Vector2f(64, 64));
+    //this->texturesample.setSize(sf::Vector2f(64, 64));
     this->texturesample.setScale(sf::Vector2f(3, 3)); 
     this->texturesample.setTexture(*this->select_Rect.getTexture());
-   this->texturesample.setTextureRect(this->select_Rect.getTextureRect()); 
+    this->texturesample.setTextureRect(this->select_Rect.getTextureRect()); 
     
     //this->texturesample.setPosition(GUI::pixelpercentX(100, vm), GUI::pixelpercentY(20, vm));
    

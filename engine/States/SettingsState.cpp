@@ -15,9 +15,26 @@
 
 void SettingsState::initvariables()
 {
-    this->modes = sf::VideoMode::getFullscreenModes();
+    //sthis->current_item = NULL;
+    this->selection_temp = "";
+    this->current_item = "";
+    std::vector video_modes = sf::VideoMode::getFullscreenModes(); 
+    for (auto& i : video_modes) 
+    {
+        //std::cout << std::to_string(i.width) + 'x' + std::to_string(i.height) << std::endl;
+        this->modes[std::to_string(i.width) + 'x' + std::to_string(i.height)] = i;
     
+    }
+
     
+}
+
+void SettingsState::initview()
+{
+
+    this->view.setSize(sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.width)); 
+
+
 }
 
 
@@ -44,67 +61,34 @@ void SettingsState::initGUI() {
     
     sf::VideoMode& vm = this->state_data->gfxsettings->resolution;
     
+  
+
+
     
     this->background.setSize(sf::Vector2f(static_cast<float>(vm.width), static_cast<float>(vm.height)));
     
 
     this->background.setTexture(&this->backgroundTexture);
     
-    
-    
-    this->buttons["EXIT"] = new GUI::Button(GUI::pixelpercentX(27.1, vm), GUI::pixelpercentY(9, vm), GUI::pixelpercentX(7.1, vm), GUI::pixelpercentY(44, vm), &this->font, "Exit", GUI::calcCharSize(vm), "red_button01.png", "red_button02.png", "red_button00.png");
-    
-    this->buttons["APPLY"] = new GUI::Button(GUI::pixelpercentX(10, vm), GUI::pixelpercentY(10, vm), GUI::pixelpercentX(7.1, vm), GUI::pixelpercentY(60.5, vm), "grey_box.png", "red_boxCheckmark.png", "grey_box.png");
+   
 
     std::vector<std::string> modes_str;
     
     for (auto &i : this->modes)
     {
-        modes_str.push_back(static_cast<std::string>(std::to_string(i.width) + 'x' + std::to_string(i.height)));
-    
+        std::cout << i.second.width << "x" << i.second.height << std::endl; 
+        modes_str.push_back(static_cast<std::string>(std::to_string(i.second.width) + 'x' + std::to_string(i.second.height)));
+        
         
     }
-    
-    //std::string list[] = {"1920x1080","720x1080","640x400","400x400"};
-    
-    this->dropdownlists["RESOLUTION"] = new GUI::DropDownList(GUI::pixelpercentX(75, vm), GUI::pixelpercentY(10, vm), GUI::pixelpercentX(25, vm), GUI::pixelpercentY(25, vm), font, modes_str.data(), 2, 3);
-    
-    this->option_text.setFont(font);
-    
-    //text
-    this->option_text.setFont(this->font);
-    this->option_text.setPosition(sf::Vector2f(GUI::pixelpercentX(7.1, vm), GUI::pixelpercentY(45, vm)));
-    this->option_text.setCharacterSize(GUI::calcCharSize(vm, 70));
-    this->option_text.setFillColor(sf::Color::White);
+   
+
     
 }
 
 void SettingsState::resetGUI()
 {
-  /* Clears all of the GUI elements, and re-initalizes the GUI
-   *
-   *
-   *
-   *
-   * @return void
-   */
-    
-    auto it = this->buttons.begin();
-    for(it = this->buttons.begin(); it != this->buttons.end(); it++)
-    {
-        delete it->second;
-    }
-    this->buttons.clear();
-    
-    auto it2 = this->dropdownlists.begin();
-    for(it2 = this->dropdownlists.begin(); it2 != this->dropdownlists.end(); it2++)
-    {
-        delete it2->second;
-    }
-    this->dropdownlists.clear();
-    
-
-    this->initGUI();
+ 
 }
 
 
@@ -116,7 +100,7 @@ void SettingsState::initFonts()
     
     if (!this->font.loadFromFile("Resources/Assets/Fonts/PressStart2P.ttf"))
     {
-        std::cout << "ERROR CODE 05: SettingsState::initFonts COULD NOT LOAD FONT FROM FILE" << std::endl;
+        this->log("unable to load default font", "State::Settings"); 
         throw std::runtime_error("ERROR CODE 05: SettingsState::initFonts COULD NOT LOAD FONT FROM FILE");
         
     }
@@ -159,6 +143,7 @@ SettingsState::~SettingsState()
 //Functions 
 void SettingsState::update(const float& dt) {
     
+    this->updateView();
     this->updateInput(dt);
     this->updateMousePosition();
     this->updateGUI(dt);
@@ -179,18 +164,11 @@ void SettingsState::render(sf::RenderTarget* target) {
    if (!target)
        target = this->window;
 
+   target->setView(this->view);
   // target->draw(this->background);
-
+   
     this->renderGUI(*target);
- 
-    //sf::Text mouseText;
-    //mouseText.setPosition(this->MousePosView.x, this->MousePosView.y - 50);
-    //mouseText.setFont(this->font);
-    //mouseText.setCharacterSize(12);
-    //std::stringstream Position;
-    //Position << this->MousePosView.x << " " << this->MousePosView.y;
-    //mouseText.setString(Position.str());
-    //target->draw(mouseText);
+
 }
 
 
@@ -199,15 +177,6 @@ void SettingsState::render(sf::RenderTarget* target) {
 void SettingsState::renderGUI(sf::RenderTarget& target)
 {
     
-   for (auto &it : this->buttons)
-   {
-       it.second->render(target);
-   }
-
-    for (auto &it : this->dropdownlists)
-   {
-       it.second->render(target);
-   }
    
 }
 
@@ -227,42 +196,107 @@ void SettingsState::updateevents()
 void SettingsState::updateGUI(const float& dt) {
     
     //GUI element functionality
+    static char str0[128] = "Map.dat";
+    static char str1[128] = "New Area";
+    static int switchTabs;
+    static bool p_open = NULL;
+    static bool style_titlebar = false;
+    static bool style_fullscreen = false;
+    static bool vertical_sync = false;
     
-    //button functions
-    for (auto &it2 : this-> buttons)
+   //bool is_selected = false; 
+     
+
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+
+    ImGui::SetNextWindowSize(ImVec2(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height));
+    ImGui::Begin("Settings");
+        
    
+    ImGui::Text("Resolution"); 
+    if (ImGui::BeginCombo("##Resolution", this->current_item))
     {
-        it2.second->update(this->MousePosWindow);
-        
-    }
+        for (auto & n: this->modes)
+        {
+          
+              
+            bool is_selected = (this->current_item == n.first.c_str());
+            if (ImGui::Selectable(n.first.c_str(), is_selected))
+                this->selection_temp = n.first;
+                this->current_item = this->selection_temp.c_str();
+            if(is_selected)
+                     ImGui::SetItemDefaultFocus();
+           
+        }
+        ImGui::EndCombo();
     
-    //return to main Menu
-    if(this->buttons["EXIT"]->isPressed())
+    }
+
+
+
+    if (ImGui::CollapsingHeader("Window options"))
     {
-        this->endstate();
-        
+        if (ImGui::BeginTable("split", 3))
+        {
+            ImGui::SameLine(); 
+            ImGui::TableNextColumn(); ImGui::Checkbox("Bordered", &style_titlebar);
+            ImGui::TableNextColumn(); ImGui::Checkbox("Fullscreen", &this->state_data->gfxsettings->fullscreen);
+            ImGui::TableNextColumn(); ImGui::Checkbox("vertical sync", &vertical_sync);
+            ImGui::EndTable();
+        }
     }
+
+
+
+
+
     
-    //Apply Changes
-    
-    if(this->buttons["APPLY"]->isPressed())
-    {
-        this->state_data->gfxsettings->resolution = this->modes[this->dropdownlists["RESOLUTION"]->getID()];
+
+       
+        //ImGui::SetItemDefaultFocus();
+       
+        if (ImGui::Button("Apply Changes") && this->selection_temp != "")
+        {
+            std::cout << this->current_item << std::endl; 
+            this->state_data->gfxsettings->resolution = this->modes[this->selection_temp];
+            ///Changes are stored as static bool within the update function. Changed values are passed on to the graphics settings object here.
+            ///changes are applied. The graphics settings are saved, and then the window is recreated. 
+         
+            this->state_data->gfxsettings->vsync = &vertical_sync;
+            this->state_data->gfxsettings->savetofile("Init/window.ini");
+            if (vertical_sync)
+            {
+
+            }
+
+            if (this->state_data->gfxsettings->fullscreen) 
+            {
+                
+                this->window->create(this->state_data->gfxsettings->resolution, this->state_data->gfxsettings->title, sf::Style::Fullscreen);
+            }
+            else 
+            {
+                this->window->create(this->state_data->gfxsettings->resolution, this->state_data->gfxsettings->title);
+            }
+
+        }
+
+
+        if(ImGui::Button("Exit"))
+        {
+            this->endstate();
         
-        this->window->create(this->state_data->gfxsettings->resolution, this->state_data->gfxsettings->title,sf::Style::Default);
-        
-        this->resetGUI();
-    }
+        }
     
+
+    ImGui::End();
+
     
-    //Drop Down list functions
-    
-  for (auto &it2 : this-> dropdownlists)
-   {
-       it2.second->update(this->MousePosWindow, dt);
-   }
-   
-    
+}
+
+void SettingsState::updateView()
+{
+   // this->view.setSize(sf::Vector2f(GUI::calcCharSize(this->state_data->gfxsettings->resolution, 2), GUI::calcCharSize(this->state_data->gfxsettings->resolution, 2)));
 }
 
 

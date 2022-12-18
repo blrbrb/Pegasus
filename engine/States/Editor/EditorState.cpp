@@ -16,7 +16,7 @@ EditorState::EditorState(StateData* state_data)
 : State(state_data)
 {
     this->initvariables();
- 
+    this->initshader(); 
     this->initeditorstatedata();
     this->initview();
     this->initFonts();
@@ -24,10 +24,13 @@ EditorState::EditorState(StateData* state_data)
     this->initpausemenu();
     this->initButtons();
     this->inittilemap();
+    this->initlevels();
     this->initbg(); 
     this->initGUI();
     this->initmodes();
     this->activeMode = EDITOR_MODES::DEFAULT_MODE;
+   
+ 
     
      
 
@@ -118,6 +121,7 @@ void EditorState::updatepausemenubuttons()
         //handle TileMap saving errors
         try
         {
+           
             this->Tilemap->savetofile("Data/TileMap/text.dat");
         }
         
@@ -153,6 +157,7 @@ void EditorState::updateImGui()
 }
 
 
+
 void EditorState::initkeybinds()
 {
   
@@ -185,11 +190,23 @@ void EditorState::initkeybinds()
 
 void EditorState::initmodes()
 {
-    this->modes.push_back(new DefaultMode(this->state_data, this->Tilemap, &this->editorstatedata));
-    this->modes.push_back(new EnemyEditorMode(this->state_data, this->Tilemap, &this->editorstatedata));
-    this->modes.push_back(new EnviornmentalMode(this->state_data, this->Tilemap, &this->editorstatedata));
+    //INIT LEVELS MUST ALWAYS, ALWAYS BE CALLED FIRST FOR THIS FUNCTION TO WORK!!!!!!!!!!!
+    this->modes.push_back(new DefaultMode(this->state_data, this->levels->getCurrent(), &this->editorstatedata, this->levels));
+    this->modes.push_back(new EnemyEditorMode(this->state_data, this->Tilemap, &this->editorstatedata, this->levels));
+    this->modes.push_back(new EnviornmentalMode(this->state_data, this->Tilemap, &this->editorstatedata, this->levels));
+    this->modes.push_back(new LevelManagerMode(this->state_data, this->Tilemap, &this->editorstatedata, this->levels)); 
+    this->modes.push_back(new ShaderEditorMode(this->state_data, this->levels->getCurrent(), &this->editorstatedata, this->levels));
     
     this->activeMode = EDITOR_MODES::DEFAULT_MODE;
+}
+
+void EditorState::initlevels()
+{
+    this->levels = new Levels(*this->state_data->gridsize); 
+    this->levels->add_level("Map"); 
+    this->curr_level = "Map";
+    this->levels->set_current_level(this->curr_level); 
+
 }
 
 void EditorState::handlefonts()
@@ -235,7 +252,7 @@ void EditorState::initbg()
     sf::FloatRect screen = sf::FloatRect(0, 0, this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height); 
     this->bg.setSize(sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height));   
       //this->bg.setSize(sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height));   
-    this->bg_interior.setSize(this->Tilemap->getMaxSize()); 
+    this->bg_interior.setSize(this->levels->getCurrent()->getMaxSize());
     this->bg_interior.setPosition(sf::Vector2f(0.f, 0.f)); 
     this->bg_interior.setFillColor(sf::Color::Black); 
     this->bg.setFillColor(sf::Color(250.f, 0.f, 0.f, 90.f)); 
@@ -248,8 +265,16 @@ void EditorState::initbg()
 
 
 
-
-
+bool EditorState::initshader() 
+{
+  //  sf::VideoMode& vm = sf::VideoMode::get
+    if (!this->core_shader.loadFromFile("Data/Shader/vertex_shader.vert", "Data/Shader/fragment_shader.frag"))
+        return false;
+    return true;
+    sf::Vector2f resolution = sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height);
+    this->core_shader.setUniform("resolution", resolution);
+    this->core_shader.setUniform("LightPos",this->editorstatedata.mousePosView);
+}
 
 void EditorState::initFonts() {
     
@@ -286,6 +311,8 @@ void EditorState::initeditorstatedata()
     this->editorstatedata.mouseposGridF = &this->MousePosGridF; 
     this->editorstatedata.view = &this->mainview;
     this->editorstatedata.font = &this->font; 
+    this->editorstatedata.selection_color = ImVec4(sf::Color::Transparent); 
+    this->editorstatedata.shader = &this->core_shader; 
     
     
 }
@@ -294,16 +321,20 @@ void EditorState::initeditorstatedata()
 
 void EditorState::update(const float& dt) {
     
+   
+ 
     this->updateMousePosition(&this->mainview);
     this->updatekeytime(dt);
     this->updateEditorinput(dt);
     
    
    
+   
     if (!this->paused) //Unpaused
     {
         this->updatebuttons();
-        this->updateGUI(dt);
+            this->updateGUI(dt);
+        
         this->updateInput(dt);
         this->updateModes(dt);
     }
@@ -318,7 +349,12 @@ void EditorState::update(const float& dt) {
 
 void EditorState::updateInput(const float& dt) {
     
-  
+    if (ImGui::GetIO().WantCaptureMouse)
+        return;
+    else
+
+
+
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_CAMERA_RIGHT"))))
     {
         this->mainview.move(this->cameraspeed * dt, 0.f);
@@ -344,11 +380,11 @@ void EditorState::updateInput(const float& dt) {
     
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::L) && this->getkeytime())
     {
-        if(this->Tilemap->lock_layer)
+        if(this->levels->getCurrent()->lock_layer)
        this->Tilemap->lock_layer = false;
         
       else
-          this->Tilemap->lock_layer = true;
+          this->levels->getCurrent()->lock_layer = true;
     }
     
     
@@ -475,19 +511,31 @@ void EditorState::updateEditorinput(const float& dt)
 
 void EditorState::updateGUI(const float& dt)
 {
-    static char str0[128] = "Map.dat";
+    static char str0[128] = "New_Map.cfg";   
+    static char str1[128] = "New Area"; 
     static int switchTabs; 
     static bool p_open = NULL;
+
+    ImGui::ShowDemoWindow(); 
 
     ImGui::Begin("Map Editor",&p_open, ImGuiWindowFlags_NoMove);
      //is there any way to set the window flags from within this loop? 
     //that would be pretty poggers, I think
 
    
-
+   // if (ImGui::Button(view_is_local ? "Local###ViewMode" : "Global###ViewMode"))
+    
     if (ImGui::Button("Save Map", sf::Vector2f(100.f, 25.f)))
     {
-        this->Tilemap->savetofile("Data/TileMap/"+ GUI::convertToString(str0, this->str_size)); 
+       
+      
+        //if the path is not EXACTLY fucking correct, god help you. Make sure that it follows a /../../.. format from the working dir.
+        while (this->levels->saveLevel(this->curr_level, GUI::convertToString(str0, this->str_size))) 
+        {
+            ImGui::Button("Saving...", sf::Vector2f(100.f, 25.f));
+        
+        };
+      
     } 
     if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
     {
@@ -502,11 +550,7 @@ void EditorState::updateGUI(const float& dt)
     ImGui::SameLine(0.0, 8.0f);
     if (ImGui::Button("Load Saved Map", sf::Vector2f(125.f, 25.f)))
     {
-        if (!this->Tilemap->loadfromfile("Data/TileMap/" + GUI::convertToString(str0, this->str_size))) 
-        {
-           
-            std::cout << "Invalid filename/path!!" << std::endl; 
-        }
+        this->levels->loadLevel(this->curr_level, "Data/TileMap/" + GUI::convertToString(str0, this->str_size)); 
         
     }
     ImGui::SameLine(0.0, 8.f);
@@ -562,6 +606,17 @@ void EditorState::updateGUI(const float& dt)
         ImGui::PopTextWrapPos();
         ImGui::EndTooltip();
     }
+    if (ImGui::Button("Level Manager", sf::Vector2f(150.0f, 0.0f))) {
+        switchTabs = 3;
+    } 
+    if (ImGui::Button("Shader Editor", sf::Vector2f(100.f, 0.0f))) 
+    {
+        switchTabs = 4; 
+        std::cout << "switching to shader editor mode" << std::endl;
+    }
+
+            
+
 
    
     switch (switchTabs) {
@@ -581,6 +636,16 @@ void EditorState::updateGUI(const float& dt)
         this->activeMode = 2; 
       
         break;
+
+    case 3: 
+        this->activeMode = 3; 
+       
+        break;
+
+    case 4: 
+        this->activeMode = 4; 
+        break; 
+
     default:
         break;
     }
@@ -613,13 +678,14 @@ void EditorState::render(sf::RenderTarget* target)
     target->draw(this->bg);     
 
 
-
+   
     //Tilemap Camera (same as game camera)
     this->window->setView(this->mainview);
     target->draw(this->bg_interior); 
-    this->Tilemap->render(*target, this->mainview, this->MousePosGridI);
+    this->levels->render(*target, this->mainview, this->MousePosGridI, this->editorstatedata.shader); 
+   // this->Tilemap->render(*target, this->mainview, this->MousePosGridI);
 
-        
+   
     //Buttons Camera
     this->window->setView(this->window->getDefaultView());
     this->renderModes(*target);

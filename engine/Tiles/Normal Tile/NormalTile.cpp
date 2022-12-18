@@ -11,9 +11,11 @@
 
 
 NormalTile::NormalTile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, bool collision_enabled) : Tile(type, x, y, gridsize_f,texture, texturerect, collision_enabled)
-{
+{ 
 
 } 
+
+
 NormalTile::NormalTile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture,bool collision_enabled) : Tile(type, x, y, gridsize_f, texture,collision_enabled)
 {
 
@@ -35,21 +37,12 @@ const std::string NormalTile::asString() const
 {
     std::stringstream out;
     //std::cout << "pooping" << std::endl; 
-    out << std::hex << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->collison_enabled;
+    out << std::hex << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->collison_enabled; 
        
        
-       return out.str();
+      return out.str();
 }
 
-const TileData NormalTile::asData()
-{
-   // this->tiledata->collision = this->collison_enabled;
-    this->tiledata.texturerect = this->rect.getTextureRect();
-    this->tiledata.type = this->type;
-  
-    return this->tiledata;
-
-} 
 
 
 void NormalTile::savetoFile(std::ofstream& out) 
@@ -63,13 +56,12 @@ void NormalTile::savetoFile(std::ofstream& out)
   //re-write the toString function to export a hexidecimal value instead. 
   //it will be easier to read and write on different machines
 
-    out.write(reinterpret_cast<const char*>(&this->type), sizeof(this->type));
-    out.write(reinterpret_cast<const char*>(&this->rect.getTextureRect().left), sizeof(this->rect.getTextureRect().left));
-    out.write(reinterpret_cast<const char*>(&this->rect.getTextureRect().top), sizeof(this->rect.getTextureRect().top));
-    out.write(reinterpret_cast<const char*>(&this->collison_enabled), sizeof(this->collison_enabled));
+    out << std::hex << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->collison_enabled << " ";
 
 
 }
+
+
 
 void NormalTile::update(const float& dt)
 {
@@ -82,8 +74,13 @@ void NormalTile::render(sf::RenderTarget& target, sf::Shader* shader, sf::Vector
     if (shader)
     { 
         
-        shader->setUniform("lightPos", LightPosition); 
-        shader->setUniform("ambientData", sf::Glsl::Vec4(testcolor));
+      
+
+       shader->setUniform("lightPos", LightPosition);
+       // shader->setUniform("lightData", sf::Glsl::Vec4(testcolor2));
+    //    shader->setUniform("lightSize", sf::Vector2f(1.f, 10.f));
+       
+       // shader->setUniform("lightColour", sf::Glsl::Vec4(testcolor));
     
         target.draw(this->rect, shader);
     }

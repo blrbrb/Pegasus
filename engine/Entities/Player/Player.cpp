@@ -90,13 +90,14 @@ void Player::initsounds()
 { 
     if (!this->walking_sound.loadFromFile("Resources/Assets/Sounds/Player/walk_grass.wav")) 
     {
-        std::cout << "unable to load walk sound effect, player.cpp lin 87" << std::endl; 
+        //you are a moron, and you should be very ashamed of yourself you waste of seminal fluid
+        throw std::runtime_error("unable to load player sounds walk_grass.wav"); 
     }  
 
     this->soundcomponent->add_sound("WALK", 25.f, this->walking_sound); 
 }
     
-
+//FUCK THIS FUCK THIS ASS THIS ASS IS RETARDED. FUCK FUCK FUCK I HATE THIS. KILL. KILL. KILL. IDIOT FART. IDIOT FART DICKS 
 void Player::updateAnimation(const float& dt)
 {
     /*!
@@ -108,7 +109,9 @@ void Player::updateAnimation(const float& dt)
      */
 
     this->movementcomponets->update(dt);
-
+    //if there ever was a valid reason to shoot someone, it's this 
+    //stupid useless hanging pointer error right here. 
+    //FIX: (return an adress, not a pointer you fucking simpleton)
     if (this->movementcomponets->getStauts(IDLE))
     {
         this->animationcomponet->play("IDLE_BLINKING", dt);
@@ -171,10 +174,11 @@ void Player::render(sf::RenderTarget &target, sf::Shader* shader,const sf::Vecto
     { 
        
         
-      
-        shader->setUniform("lightPos", light); 
-        shader->setUniform("lightData", sf::Glsl::Vec4(testcolor2)); 
-        shader->setUniform("lightSize", sf::Vector2f(1.f, 10.f)); 
+       
+
+        shader->setUniform("lightPos", light);
+        shader->setUniform("lightData", sf::Glsl::Vec4(testcolor2));
+        shader->setUniform("lightSize", sf::Vector2f(1.f, 10.f));
         target.draw(this->sprite, shader);
         
        

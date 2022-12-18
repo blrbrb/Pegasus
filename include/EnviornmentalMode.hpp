@@ -24,6 +24,8 @@ private:
         
         //interface variables
           sf::Text cursortext;
+          sf::Sprite guisprite; 
+          sf::Texture guitexture;
           GUI::TextureSelector* texture_selector;
           sf::RectangleShape select_Rect;
           sf::RectangleShape sidebar;
@@ -37,7 +39,8 @@ private:
           bool collision;
           short type;
           int layer;
-    
+          short curr_type;
+          short object_type;
     //initalizer functions
     void initvariables();
     void inittext();
@@ -46,7 +49,7 @@ private:
     
 public:
     
-    EnviornmentalMode(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata);
+    EnviornmentalMode(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata, Levels* levels = nullptr);
     virtual ~EnviornmentalMode();
     
     //Functions

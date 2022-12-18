@@ -18,7 +18,8 @@
 #include "ObjectTile.hpp"
 
 
-//TO DO 
+
+//TO DO
 //create an object that dynamically and randomly creates a new tilemap using some kind of noise, then save it as a slmp, load it.
 
 
@@ -29,7 +30,7 @@ class NormalTile;
 class Entity;
 
 
-
+ enum Level_Types { OVERWORLD = 0, DUNGEON };
 
 
 
@@ -48,12 +49,12 @@ private:
   
    // tile_gridS tile_grid[]; 
     int layers; 
-
+    short level_type;
     sf::Vector2i gridsizeI; 
     sf::Vector2f grid_sizeF; 
     sf::Vector2u grid_sizeU;
     size_t texturefilesize; 
- 
+    
 
     std::string texture_file;
     sf::Vector2i MaxSizeWorldGrid;
@@ -62,16 +63,16 @@ private:
     //Defered Render stack thingy
     std::stack<Tile*> renderdefered;
     
+
     
     
     sf::RectangleShape physicsrect; 
    
     //TileMap vector
     std::vector< std::vector< std::vector< std::vector<Tile*> > > > Map;
-    //if the union doesn't work 
-   // std::vector< std::vector< std::vector< std::vector<std::pair<Tile*, Object*> > > > Map;
-    //std::vector< std::vector< std::vector< std::vector<Tile*> > > > Map;
-    
+
+    int level_index; 
+  
     
     sf::Font font; 
     sf::Texture tileTextureSheet;
@@ -79,12 +80,18 @@ private:
     std::map<std::string, sf::Texture> object_textures;
     std::map<std::string, sf::Vector2i> geometry;
 
+
+    //boost test 
+    boost::property_tree::ptree pt; 
+
+
+
     //Private Functions
     void clear();
     void initobjecthandler();
     void initgeometry(); 
     void init_object_textures();
-
+    void initvariables();
     
     //tile culling
     int FromX;
@@ -97,8 +104,25 @@ private:
     
 public:
     
-    TileMap(sf::Vector2f gridSize, int width, int height, std::string texture_file);
-    TileMap(const std::string map_file);    
+
+
+    /// <summary>
+    /// Default Tilemap constructor
+    /// </summary>
+    /// <param name="gridSize"></param>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    /// <param name="texture_file"></param>
+    TileMap(sf::Vector2f gridSize, int width, int height, std::string texture_file); 
+
+    /// <summary>
+    /// Load tilemapdata from file
+    /// </summary>
+    /// <param name="map_file"></param>
+    TileMap(const std::string map_file);     
+    /// <summary>
+    /// non_
+    /// </summary>
     TileMap(); 
     virtual ~TileMap();
     
@@ -110,46 +134,62 @@ public:
    
     
     //Acessors 
+
+    /// <summary>
+    /// Get a pointer to the tilemap texture
+    /// </summary>
+    /// <returns>sf::Texture*</returns>
     const sf::Texture* getTileSheet() const;
 
-  
-    /// TileEmpty
-    /// @brief Return wether or not a particular tile in the four dimensional vector is null
-    /// @param x the X-axis of the vector (width in tiles)
-    /// @param y the Y-axis of the vector (height in tiles)
-    /// @param z the Z-axis of the vector (depth)
-    ///@returns const bool wether or not a certian tile is empty
+ 
+    /// <summary>
+    ///  Return wether or not a particular tile in the four dimensional vector is null
+    /// </summary>
+    /// <param name="x">the X-postion(width in tiles)</param>
+    /// <param name="y">the Y-postion(height in tiles)</param>
+    /// <param name="z">the Z-position</param>
+    /// <returns>const bool</returns>
     const bool TileEmpty(const int x, const int y, const int z) const;
-    /// checktype
-    /// @brief Get the type of a particular tile in the four dimensional vector
-    /// @param x the X-axis of the vector (width in tiles)
-    /// @param y the Y-axis of the vector (height in tiles)
-    /// @param z the Z-axis of the vector (depth)
-    /// @param type to check for
-    ///@returns wether or not a certian tile is of the same type being checked for
+    /// <summary>
+    /// Get the type of a particular tile in the four dimensional vector
+    /// </summary>
+    /// <param name="x">the X-Position</param>
+    /// <param name="y">the Y-Position</param>
+    /// <param name="z">the Z-Position</param>
+    /// <param name="type">unsigned type of tile</param>
+    /// <returns>const bool</returns>
     const bool checktype(const int x, const int y, const int z, const int type) const;
-    /// getLayerSize
-    /// @brief get how many tiles are placed on the Z-axis (depth) of the tilemap vector in a certian spot.
-    /// @param x the X-axis of the vector (width in tiles)
-    /// @param y the Y-axisof the vector (height in tiles)
-    /// @param layer  of the Z-component
-    ///@returns const int how many tiles are placed on the Z-axis in a particular place
+ 
+    /// <summary>
+    ///  get how many tiles are placed on the Z-axis (depth) of the tilemap vector in a certian spot.
+    /// </summary>
+    /// <param name="x">the X-Position</param>
+    /// <param name="y">the Y-Position</param>
+    /// <param name="layer">the layer</param>
+    /// <returns>const int how many layers</returns>
     const int getLayerSize(const int x, const int y, const int layer) const;
-    /// getMaxSizeGrid
-    ///@brief Helper function to find the Maximum size of the map in tiles
-    ///@returns the Maximum size of the map in tiles
-    const sf::Vector2i& getMaxSizeGrid() const;
-    /// getMaxSize
-    ///@brief Get the Maximum size (in pixels) of the map
-    ///@returns the maximum size of the map
-    const sf::Vector2f getMaxSize() const; 
-    
-   const sf::Vector2f get_objectTile(); 
-
-
-   const sf::Texture* getGenerationSheet() const;
    
+    /// <summary>
+    /// Helper function. Get the Maximum size of the tilemap in tiles
+    /// </summary>
+    /// <returns>&sf::Vector2i the Maximum allowed size of the tilemap in tiles</returns>
+    const sf::Vector2i& getMaxSizeGrid() const;
+  
+    /// <summary>
+    /// Helper function. Get the Maximum size of the tilemap in float
+    /// </summary>
+    /// <returns>sf::Vector2f the maximum size of the tilemap in float</returns>
+    const sf::Vector2f getMaxSize() const; 
+
     
+   const sf::Vector2f get_objectTile();  
+
+
+   const sf::Texture* getGenerationSheet() const; 
+
+   const std::string getLevelType() const;
+   
+   int getLevelIndex();
     
    
     
@@ -165,11 +205,13 @@ public:
     void addTile(const int x, const int y, const int z, const sf::IntRect texture_rect, const int enemytype, const int enemyamount, const int timeToSpawn, const int MaxDistance);
     void addTile(const int x, const int y, const int z, float obX, float obY, const short type); 
     void addObject(const short type, const int x, const int y); 
-
+    void setLevelIndex(int index); 
+    void setType(short level_type); 
 
     void RemoveTile(const int x, const int y, const int z, const int type);
-    bool savetofile(const std::string filename);
-    bool loadfromfile(const std::string filename);
+    bool savetofile(const std::string filename, bool json=false);   
+   
+    bool loadfromfile(const std::string filename, bool json=false);
     void addGenerationTexture(const std::string texture_filename);
     
     //update functions

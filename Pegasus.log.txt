@@ -1,0 +1,2 @@
+[Main] state data is working 21:State.cpp
+[State::Menu] Creating EditorState

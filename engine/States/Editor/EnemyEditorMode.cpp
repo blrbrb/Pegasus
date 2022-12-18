@@ -9,7 +9,7 @@
 #include "EnemyEditorMode.hpp"
 
 
-EnemyEditorMode::EnemyEditorMode(StateData *statedata, TileMap *tilemap, EditorStateData *editorstatedata) : EditorModes(statedata, tilemap, editorstatedata)
+EnemyEditorMode::EnemyEditorMode(StateData *statedata, TileMap *tilemap, EditorStateData *editorstatedata, Levels* levels) : EditorModes(statedata, tilemap, editorstatedata, levels)
 {
     this->initvariables();
     this->inittext();
@@ -49,8 +49,14 @@ void EnemyEditorMode::updateInput(const float &dt)
                                 this->tilemap->addTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, 0, this->TextureRect, this->Enemytype, this->Enemyamount, this->spawn_timer, this->maxDistance);
                                 
                                std::cout << "Spawner Tile Added" << std::endl;
+                              
                                
                             }
+                              
+                           else 
+                           {
+                               this->tilemap->addTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, 0, this->TextureRect, this->Enemytype, this->Enemyamount, this->spawn_timer, this->maxDistance);
+                           }
 
                      
                  
@@ -303,6 +309,7 @@ void EnemyEditorMode::initvariables()
     this->spawn_timer = 60;
     this-> maxDistance = 1000.f;
     this->type = 1;
+    this->layer = 0; 
       
 }
 

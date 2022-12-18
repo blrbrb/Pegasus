@@ -24,7 +24,7 @@
 MainMenuState::MainMenuState(StateData* state_data)
 : State(state_data) {
     
-    std::cout << this->state_data; 
+   
         this->state_data = state_data;  
         this->initvariables();
         this->initFonts();
@@ -43,7 +43,7 @@ MainMenuState::~MainMenuState() {
     
      {
          delete it->second; 
-        // std::cout << " MainMenu State Buttons Deleted" << std::endl; 
+        // this->log<< " MainMenu State Buttons Deleted" << std::endl; 
          
      }
     
@@ -56,6 +56,8 @@ MainMenuState::~MainMenuState() {
 
 void MainMenuState::initvariables()
 {
+    this->name = "Menu"; 
+    this->state_ID = this->states->size(); 
     this->create_sound_component(); 
 }
 
@@ -63,7 +65,7 @@ void MainMenuState::initsounds()
 { 
     if (!this->click.loadFromFile("Resources/Assets/Sounds/UI/Confirm 1.wav")) 
     {
-        std::cout << "unable to load UI sounds in MainMenuState.cpp lin 65" << std::endl; 
+        this->log("Unable to load UI sounds", "State::Menu");
     }; 
 
     this->soundcomponent->add_sound("CONFIRM", 100.f, this->click); 
@@ -81,12 +83,12 @@ void MainMenuState::initkeybinds() {
     {
         std::string key = "";
         std::string key2 = ""; 
-       // std::cout << "Attempting to Read MenuState Keybinds" << std::endl; 
+       // this->log<< "Attempting to Read MenuState Keybinds" << std::endl; 
 
         while (ifs >> key >> key2)
         {
           // this->keybinds[key] = this->supportedkeys->at(key2);
-          // std::cout << key << " " << key2 << std::endl; 
+          // this->log<< key << " " << key2 << std::endl; 
         }
         
     } 
@@ -105,25 +107,25 @@ void MainMenuState::initGUI() {
 
   try {
 
-      this->buttons["NEW GAME"] = new GUI::Button(GUI::pixelpercentX(27.1, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(7.14, vm), GUI::pixelpercentY(44, vm), &this->font, "New Game", GUI::calcCharSize(vm), "Resources/GUI/Buttons/red_button01.png", "Resources/GUI/Buttons/red_button02.png", "Resources/GUI/Buttons/red_button00.png");
+      this->buttons["NEW GAME"] = new GUI::Button(GUI::pixelpercentX(27.1, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(7.14, vm), GUI::pixelpercentY(44, vm), &this->font, "New Game", GUI::calcCharSize(vm));
 
-      this->buttons["EXIT"] = new GUI::Button(GUI::pixelpercentX(27.1, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(35.7, vm), GUI::pixelpercentY(44, vm), &this->font, "Exit", GUI::calcCharSize(vm), "Resources/GUI/Buttons/red_button01.png", "Resources/GUI/Buttons/red_button02.png", "Resources/GUI/Buttons/red_button00.png");
+      this->buttons["EXIT"] = new GUI::Button(GUI::pixelpercentX(27.1, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(35.7, vm), GUI::pixelpercentY(44, vm), &this->font, "Exit", GUI::calcCharSize(vm));
 
-      this->buttons["EDITOR"] = new GUI::Button(GUI::pixelpercentX(27.1, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(35.7, vm), GUI::pixelpercentY(60, vm), &this->font, "Editor", GUI::calcCharSize(vm), "Resources/GUI/Buttons/red_button01.png", "Resources/GUI/Buttons/red_button02.png", "Resources/GUI/Buttons/red_button00.png");
-      this->buttons["SETTINGS"] = new GUI::Button(GUI::pixelpercentX(27.1, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(7.14, vm), GUI::pixelpercentY(60, vm), &this->font, "Settings", GUI::calcCharSize(vm), "Resources/GUI/Buttons/red_button01.png", "Resources/GUI/Buttons/red_button02.png", "Resources/GUI/Buttons/red_button00.png");
-
-      this->buttons["Info"] = new GUI::Button(GUI::pixelpercentX(3.5, vm), GUI::pixelpercentY(3.5, vm), GUI::pixelpercentX(64.2, vm), GUI::pixelpercentY(20, vm), &this->font, "Info", GUI::calcCharSize(vm), "Resources/GUI/Buttons/red_button06.png", "Resources/GUI/Buttons/red_button07.png", "Resources/GUI/Buttons/red_button06.png");
+      this->buttons["EDITOR"] = new GUI::Button(GUI::pixelpercentX(27.1, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(35.7, vm), GUI::pixelpercentY(60, vm), &this->font, "Editor", GUI::calcCharSize(vm));
+      this->buttons["SETTINGS"] = new GUI::Button(GUI::pixelpercentX(27.1, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(7.14, vm), GUI::pixelpercentY(60, vm), &this->font, "Settings", GUI::calcCharSize(vm));
+      this->buttons["CHARACTER_EDITOR"] = new GUI::Button(GUI::pixelpercentX(55.1, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(24.2, vm), GUI::pixelpercentY(76, vm), &this->font, "Character Editor", GUI::calcCharSize(vm));
+      this->buttons["Info"] = new GUI::Button(GUI::pixelpercentX(3.5, vm), GUI::pixelpercentY(3.5, vm), GUI::pixelpercentX(64.2, vm), GUI::pixelpercentY(20, vm), &this->font, "Info", GUI::calcCharSize(vm));
   } 
 
   catch (std::invalid_argument& e) 
   {
-      std::cout << e.what() << std::endl; 
+      //this->log("Unhandled exception: MainMenuState 120 " + std::string(e.what()), "State::Menu");
 
   
   }
    
     
-  //std::cout << this->buttons.size() << std::endl; 
+  //this->log<< this->buttons.size() << std::endl; 
 }
 
 void MainMenuState::resetGUI()
@@ -138,7 +140,7 @@ void MainMenuState::resetGUI()
        
         {
             delete it->second; 
-            //std::cout << "Buttons Deleted " << std::endl; 
+            //this->log<< "Buttons Deleted " << std::endl; 
             
         }
     this->buttons.clear();
@@ -159,15 +161,15 @@ void MainMenuState::initFonts() {
 
         if (!this->font.loadFromFile("Resources/Assets/Fonts/PressStart2P.ttf"))
         {
-            std::cout << "Font Not loading" << std::endl;
-
-            std::cout << "ERROR CODE 07: MainMenuState::initFonts COULD NOT LOAD FONT FROM FILE" << std::endl;
+          
+            this->log("Unable to load font from Resources/Assets/Fonts/*", "State::Menu");
+            this->log("Throwing runtime exception on line 164...", "State::Menu");
             throw std::runtime_error("ERROR unable to load font file MainMenuState lin 144");
         }
     }
         catch (std::runtime_error& e) {
             
-            std::cout << std::filesystem::current_path() << std::endl;
+           // this->log("looking for fonts in " + std::filesystem::current_path(), "State::Menu");
             // this->font.loadFromFile("Resources/PressStart2p.ttf")''
         }
     
@@ -254,12 +256,12 @@ void MainMenuState::renderbuttons(sf::RenderTarget& target)
 
 void MainMenuState::updatebuttons(const float& dt) {
     
-    //std::cout << "updating buttons" << std::endl; 
+    //this->log<< "updating buttons" << std::endl; 
     for (auto &it : this->buttons)
    
     {
         it.second->update(this->MousePosWindow);
-       // std::cout << it.second << std::endl; 
+       // this->log<< it.second << std::endl; 
         
     }
 
@@ -283,13 +285,19 @@ void MainMenuState::updatebuttons(const float& dt) {
     if (this->buttons["EDITOR"]->isPressed())
     {
         this->states->push(new EditorState(this->state_data)); 
-        //std::cout << "Creating EditorState... from Mainmenustate.cpp" << std::endl; 
+        this->log("Creating EditorState", "State::Menu");
         
     }
     if (this->buttons["SETTINGS"]->isPressed())
     {
         this->states->push(new SettingsState(this->state_data));
       
+    } 
+
+    if (this->buttons["SETTINGS"]->isPressed())
+    {
+        this->states->push(new SettingsState(this->state_data));
+
     }
    
     

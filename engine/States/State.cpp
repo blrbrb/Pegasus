@@ -12,14 +12,17 @@
 
 State::State(StateData* state_data)  {
     
+    this->initlog();
+
+   
+
     if (state_data != nullptr) {
         this->state_data = state_data;
-        std::cout << "state data is working" << std::endl; 
+        this->log("state data is working 21:State.cpp", "Main");
     } 
     else 
     {
-       
-        std::cout << "statedata is nullptr" << std::endl; 
+         this->log("the state data was nullptr...", "Main");
     }
     this->window = state_data->window; 
     this->supportedkeys = state_data->supportedkeys;
@@ -35,7 +38,7 @@ State::State(StateData* state_data)  {
 }
 
 State::~State() {
-    
+   
     
 }
 
@@ -52,8 +55,18 @@ const bool State::getkeytime()
     
     return false;
 }
+
+void State::log(std::string stat, std::string log_instance)
+{ 
+    utils::log_stream log1(log_instance, *this->outfile);
     
-    
+
+     log1(stat);
+
+   
+}
+
+  
 
 const bool & State::getquit()const
 {
@@ -118,6 +131,11 @@ void State::updatekeytime(const float& dt)
 
 }
 
+void State::initlog()
+{
+    this->outfile = new std::ofstream("Pegasus.log.txt"); 
+   
+}
 
 
 

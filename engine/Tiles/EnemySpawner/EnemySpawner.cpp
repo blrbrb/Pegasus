@@ -13,6 +13,7 @@ EnemySpawner::EnemySpawner(float x, float y, sf::Vector2f gridsize_f, sf::Textur
 {
     //Init variables
     this->Enemy_type = type;
+   
     this->Enemy_amount = amount;
     this->Enemy_counter = 0;
     this->timer = time_to_spawn;
@@ -38,8 +39,9 @@ void EnemySpawner::clear()
 
 void EnemySpawner::update(const float& dt)
 {
+    
     if (this->canSpawn())
-    this->Spawned = false;
+    this->Spawned = false; 
 }
 
 void EnemySpawner::render(sf::RenderTarget& target, sf::Shader* shader,sf::Vector2f LightPosition)
@@ -61,47 +63,30 @@ void EnemySpawner::render(sf::RenderTarget& target, sf::Shader* shader,sf::Vecto
 }
 
 
+
 const std::string EnemySpawner::asString() const 
 {
     std::stringstream ss;
-    std::cout << "writing an Enemy Spawaner Tile... " << std::endl; 
+
+    std::cout << std::hex << "timer " <<  this->timer << std::endl;
+   // std::cout << "writing an Enemy Spawaner Tile... " << std::endl; 
     ss << std::hex << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->Enemy_type
-        << " " << this->Enemy_amount << " " << this->timer << " " << this->maxDistance;
+       << " " << this->Enemy_amount << " " << this->timer << " " << this->maxDistance;
     
     //std::cout << ss.str() << std::endl;
-    
+   // boost::hex; 
+
     return ss.str();
     
 }
 
-const TileData EnemySpawner::asData()
-{
-    this->tiledata.collision = this->collison_enabled;
-    this->tiledata.texturerect = this->rect.getTextureRect();
-    this->tiledata.type = this->type;
-    this->tiledata.enemy_timer = &this->timer; 
-    this->tiledata.Enemy_amount =this->Enemy_amount; 
-    this->tiledata.maxDistance = this->maxDistance; 
-    this->tiledata.Enemy_type = this->Enemy_type; 
-
-    
-
-    return this->tiledata;
-
-}
 
 void EnemySpawner::savetoFile(std::ofstream& out)
 {
     
     //DEPRECIATED
-    out.write(reinterpret_cast<const char*>(&this->type), sizeof(this->type));
-    out.write(reinterpret_cast<const char*>(&this->rect.getTextureRect().left), sizeof(this->rect.getTextureRect().left));
-    out.write(reinterpret_cast<const char*>(&this->rect.getTextureRect().top), sizeof(this->rect.getTextureRect().top));
-    out.write(reinterpret_cast<const char*>(&this->collison_enabled), sizeof(this->collison_enabled));
-    out.write(reinterpret_cast<const char*>(&this->Enemy_type), sizeof(this->Enemy_type));
-    out.write(reinterpret_cast<const char*>(&this->Enemy_amount), sizeof(this->Enemy_amount));
-    out.write(reinterpret_cast<const char*>(&this->timer), sizeof(this->timer));
-    out.write(reinterpret_cast<const char*>(&this->maxDistance), sizeof(this->maxDistance));
+    out << std::hex << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->Enemy_type
+        << " " << this->Enemy_amount << " " << this->timer << " " << this->maxDistance << " "; 
 
 }
 
@@ -123,6 +108,21 @@ const bool &EnemySpawner::getSpawned() const
 const int & EnemySpawner::getEnemyCounter() const
 {
     return this->Enemy_counter;
+}
+
+const float& EnemySpawner::getMaxDistance() const
+{
+    return this->maxDistance; 
+}
+
+const int& EnemySpawner::getEnemyType() const
+{
+    return this->type;
+}
+
+const sf::Int32& EnemySpawner::getTime() const
+{
+    return this->timer; 
 }
 
 const bool EnemySpawner::canSpawn() const

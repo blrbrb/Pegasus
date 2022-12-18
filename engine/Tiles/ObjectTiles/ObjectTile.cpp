@@ -3,15 +3,13 @@
 
 ObjectTile::ObjectTile(float obX, float obY, sf::Vector2f gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, short object_type) : Tile(TileTypes::OBJECT, obX, obY, gridsize_f, texture, texturerect, false)
 {
-   
+    this->object_type = object_type;
+    std::cout << "object type in init " << this->object_type << std::endl;
     this->rect.setTexture(texture);
     this->create_animation_componet();
     this->animationcomponent = new AnimationComponet(this->rect, texture);
     this->initAnimations();
-    this->object_type = ObjectTypes::LANTERN;
     this->type = TileTypes::OBJECT; 
-    
-    
    this->rect.setTextureRect(sf::IntRect(0, 0, 9, 16));
    this->rect.setPosition(obX, obY); 
 
@@ -36,17 +34,7 @@ const std::string ObjectTile::asString() const
     return out.str(); 
 }
 
-const TileData ObjectTile::asData() { 
-    this->tiledata.collision = this->collison_enabled; 
-    this->tiledata.obX = this->rect.getPosition().x; 
-    this->tiledata.obY = this->rect.getPosition().y; 
-    this->tiledata.texturerect = this->rect.getTextureRect(); 
-    this->tiledata.type = this->type; 
-    this->tiledata.object_type = this->object_type; 
 
-    return this->tiledata; 
-  
-}
 
 const sf::Texture* ObjectTile::getTexture() const
 {
@@ -94,14 +82,7 @@ void ObjectTile::update(const float& dt)
 }
 void ObjectTile::savetoFile(std::ofstream& out)
 {
-    //DEPRECIATED
-    out.write(reinterpret_cast<const char*>(&this->type), sizeof(this->type));
-    out.write(reinterpret_cast<const char*>(&this->rect.getTextureRect().left), sizeof(this->rect.getTextureRect().left));
-    out.write(reinterpret_cast<const char*>(&this->rect.getTextureRect().top), sizeof(this->rect.getTextureRect().top));
-    out.write(reinterpret_cast<const char*>(&this->collison_enabled), sizeof(this->collison_enabled));  
-    out.write(reinterpret_cast<const char*>(&this->object_type), sizeof(this->object_type));
-    out.write(reinterpret_cast<const char*>(&this->rect.getPosition().x), sizeof(float));
-    out.write(reinterpret_cast<const char*>(&this->rect.getPosition().y), sizeof(float));
+    out << std::hex << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->object_type << " " << std::hexfloat << this->rect.getPosition().x << " " << std::hexfloat << this->rect.getPosition().y << " ";
     
 
 
@@ -116,6 +97,7 @@ void ObjectTile::initAnimations()
 }
 
 
+
 void ObjectTile::create_animation_componet()
 {
     
@@ -123,3 +105,4 @@ void ObjectTile::create_animation_componet()
 
 
 }
+

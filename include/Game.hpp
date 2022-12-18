@@ -38,14 +38,11 @@ public:
     
     
     
-    
-    
 private:
     
     ///All of the mappable keyboard keys for user input.
     std::map<std::string, int> supportedkeys;
     
-
     sf::RenderWindow* window;
     sf::Event event;
     //float gridsize; 
@@ -62,7 +59,7 @@ private:
     ///The State Mechanism, stored in a stack of "State" objects
     std::stack<State*> states;
     StateData state_data;
-    GraphicsSettings gfxsettings;
+    GraphicsSettings* gfxsettings;
 
     //init functions
     void load();
@@ -73,6 +70,7 @@ private:
     void initVariables();
     void initGraphicsSettings();
     void initstatedata();
+    void initWindowIcon(); 
     
 };
 

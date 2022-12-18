@@ -54,7 +54,7 @@ private:
     
 public:
     
-    DefaultMode(StateData* statedata,TileMap* tilemap, EditorStateData* editorstatedata);
+    DefaultMode(StateData* statedata,TileMap* tilemap, EditorStateData* editorstatedata, Levels* levels = nullptr);
     virtual ~DefaultMode();
     
     //Functions

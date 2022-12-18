@@ -10,7 +10,7 @@
 #define EditorModes_hpp
 #include "State.hpp"
 #include "TileMap.hpp"
-
+#include "Levels.h"
 
 class State;
 class StateData;
@@ -35,7 +35,10 @@ public:
     sf::Vector2f* mousePosView;
     sf::Vector2i* mouseposGridI; 
     sf::Vector2f* mouseposGridF; 
-    sf::Font* font;
+    ImVec4 selection_color;
+    sf::Font* font; 
+    sf::Shader* shader;
+
     
 };
 
@@ -46,13 +49,15 @@ class EditorModes
 protected:
     
     TileMap* tilemap;
+    Levels* levels; 
     StateData* statedata;
     EditorStateData* editorstatedata;
-
+    std::string curr_level;
+    ImGuiIO io;
     
 public:
     
-    EditorModes(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata);
+    EditorModes(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata, Levels* levels = nullptr);
     virtual ~EditorModes();
     
     const bool getkeytime();

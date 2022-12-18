@@ -31,7 +31,7 @@ GameState::GameState(StateData* state_data)
     }
     catch (std::exception& e)
     {
-        std::cout << e.what() << std::endl; 
+      
         std::cerr << e.what() << std::endl;  
 
 
@@ -68,7 +68,8 @@ GameState::~GameState()
 
 void GameState::initvariables()
 { 
-    
+    this->name = "Game"; 
+    this->state_ID = this->states->size(); 
     this->shadertime = 0.f; 
     this->create_sound_component(); 
 }
@@ -84,7 +85,7 @@ void GameState::initdialougesystem()
 
 void GameState::initdeferedrender() {
      
-    std::cout << "creating a new render texture with the size" << " " << this->state_data->gfxsettings->resolution.width << std::endl; 
+    this->log("creating a new render texture with the size " + this->state_data->gfxsettings->resolution.width + 'x' + this->state_data->gfxsettings->resolution.height, "State::Game");
     if(!this->rendertexture.create(this->state_data->gfxsettings->resolution.width,this->state_data->gfxsettings->resolution.height))
     {
         throw std::exception("unable to create rendertextrue GameState Line 78"); 
@@ -118,9 +119,10 @@ void GameState::initworldbounds()
 void GameState::initshaders()
 {
     const sf::Color testcolor = sf::Color(250, 250, 250, 100);
+   
     if(!this->core_shader.loadFromFile("Data/Shader/vertex_shader.vert", "Data/Shader/fragment_shader.frag"))
     { 
-        std::cout << "unable to load core shaders in gamestate. Line 116" << std::endl; 
+        this->log("unable to load core shaders", "State::Game");
         throw std::exception("ERROR Unable to load shaders Gamestate line 71");
         
     } 
@@ -128,15 +130,15 @@ void GameState::initshaders()
     sf::Vector2f resolution = sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height);
     
     this->core_shader.setUniform("resolution", resolution);
-    this->core_shader.setUniform("ambientData", sf::Glsl::Vec4(testcolor));
-    
+   // this->core_shader.setUniform("ambientData", sf::Glsl::Vec4(testcolor));
+
 }
 
 
 void GameState::initview()
 {
     
-    this->view.setSize(sf::Vector2f(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 4.F, static_cast<float>(this->state_data->gfxsettings->resolution.height) / 4.f));
+    this->view.setSize(sf::Vector2f(this->state_data->gfxsettings->resolution.width / 2, this->state_data->gfxsettings->resolution.height / 2));
 
     this->view.setCenter(sf::Vector2f(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 2.f,static_cast<float>(this->state_data->gfxsettings->resolution.height) / 2.f));
 
@@ -154,11 +156,11 @@ void GameState::initkeybinds() {
     {
         std::string key = "";
         std::string key2 = "";
-        //std::cout << "GAmestate Keybinds exist";
+        //this->log << "GAmestate Keybinds exist";
         while (ifs >> key >> key2)
         {
             this->keybinds[key] = this->supportedkeys->at(key2);
-           //std::cout << key << " " << key2;
+           //this->log << key << " " << key2;
         }
     }
     else {
@@ -184,14 +186,14 @@ void GameState::inittextures()
     
     if (!this->textures["PLAYER_SHEET"].loadFromFile("Resources/Assets/Entity/PlayerSheets/character_sheet4.png"))
     {
-        std::cout << "ERROR Could not load Player Sheet texture GameState lin 168" << std::endl;
+        this->log("unable to load default player spritesheet", "State::Game");
        
         throw std::exception("ERROR Could not load Player Sheet texture GameState lin 168");
     }
     
     if (!this->textures["ENEMY_SHEET"].loadFromFile("Resources/Assets/Entity/EnemySheets/Blrb.png"))
     {
-        std::cout << "ERROR Could Not load Enemy Sheet textures GameState lin 171" << std::endl;
+        this->log("unable to load default enemy spritesheet", "State::Game");
         
         throw std::exception("ERROR Could Not load Enemy Sheet textures GameState lin 175");
     } 
@@ -203,7 +205,7 @@ void GameState::initfonts()
 {
     if (!this->font.loadFromFile("Resources/Assets/Fonts/PressStart2P.ttf"))
        {
-           std::cout << "ERROR Could not load font from font file" << std::endl;
+           this->log("unable to load default font", "State::Game"); 
            throw std::exception("ERROR Could not load font from font file GameState lin 185");                           
        }
 }
@@ -240,7 +242,7 @@ void GameState::inittilemap()
 {
     this->Tilemap = new TileMap(*this->state_data->gridsize, 100, 100, "Resources/Assets/Tiles/sheet.png");
   
-    this->Tilemap->loadfromfile("Data/TileMap/text.dat"); 
+    this->Tilemap->loadfromfile("Data/TileMap/Map.dat"); 
 
    
 }
@@ -378,7 +380,7 @@ void GameState::updateShaders(const float& dt)
     {
         this->initvariables(); 
     }
-   // std::cout << shadertime << std::endl; 
+   // this->log << shadertime << std::endl; 
     this->core_shader.setUniform("time", sf::Vector2f(shadertime, 0.f));
    
 }
@@ -406,27 +408,27 @@ void GameState::updatePlayerInput(const float& dt)
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_RIGHT"))))
     {
         this->player->move(dt, 1.f, 0.f);
-       // std::cout << "RIGHT" << std::endl;
+       // this->log << "RIGHT" << std::endl;
     }
     
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT"))) )
     {
         
         this->player->move(dt, -1.f, 0.f);
-        //std::cout << "LEFT" << std::endl;
+        //this->log << "LEFT" << std::endl;
     }
     
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_UP"))))
     {
         this->player->move(dt, 0.f, -1.f);
-        //std::cout << "UP" << std::endl;
+        //this->log << "UP" << std::endl;
     }
     
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN"))))
     {
         
         this->player->move(dt, 0.f, 1.f);
-        //std::cout << "DOWN" << std::endl;
+        //this->log << "DOWN" << std::endl;
        
 
 
@@ -454,7 +456,7 @@ void GameState::render(sf::RenderTarget* target) {
     
     this->rendertexture.clear();
 
-      
+   
     
     this->rendertexture.setView(this->view); 
    
@@ -573,13 +575,13 @@ const bool GameState::savegame() const
 
     if (out.is_open())
     {
-        //
+        
 
     }
 
     else
     {
-        std::cout << "ERROR CODE GAMESTATE:579|| SAVE || COULD NOT SAVE" << std::endl;
+      
 
         throw std::runtime_error("ERROR CODE GAMESTATE:579 || GAMESTATE::SAVE || COULD NOT SAVE");
 
@@ -614,8 +616,7 @@ void GameState::updateEncounter(Enemy* enemy, const int index, const float & dt)
     
     if (enemy->isDead()) 
     {
-        std::cout << "the enemy has been defeated" << std::endl;
-      // this->states->pop();
+        std::cout << "Farted" << std::endl;
     }   
 }
 
@@ -629,31 +630,32 @@ void GameState::initenemysystem()
 
 void GameState::handletilemap()
 {
-    std::cout << "Searching for useable custom TileMap data..." << std::endl;
+  //  this->log << "" << std::endl;
     std::string custom_tilemap_path = "";
 
     for (auto& p : std::filesystem::recursive_directory_iterator("Data/TileMap/"))
     {
         if (p.path().extension() == ".slmp") {
-            std::cout << p.path().stem().string() << std::endl;
-            std::cout << "custom TileMap data found!" << std::endl;
+            this->log("searcing for tilemap files in " + p.path().stem().string(), "State::Game");
+            this->log("tilemap found", "State::Game");
             custom_tilemap_path = p.path().string();
             break;
         }
     }
-    std::cout << custom_tilemap_path << std::endl;
+   
     try {
         this->Tilemap->loadfromfile(custom_tilemap_path);
     } 
 
     catch (std::runtime_error& e) 
     {
-        std::cout << e.what() << std::endl; 
+       
         std::cerr << e.what() << std::endl; 
     
     
     }
-    std::cout << "Custom TileMap data found!" << std::endl;
+
+    this->log("tilemap loaded successfully ", "State::Game"); 
 
 }
 
@@ -673,21 +675,22 @@ void GameState::handlekeybinds()
 void GameState::handlefonts() 
 {
 
-        std::cout << "Searching for useable custom font files..." << std::endl;   
+       
         std::string custom_font_path = "";
 
         for (auto & p : std::filesystem::recursive_directory_iterator("Resources/Assets/Fonts"))
         {
             if (p.path().extension() == ".ttf") {
-                std::cout << p.path().stem().string() << std::endl;
-                std::cout << "custom font files found!" << std::endl;
+                this->log("searcing for font files in " + p.path().stem().string(), "State::Game");
+                this->log("font found", "State::Game");
                 custom_font_path = p.path().string();
                 break;
             }
         }
-        std::cout << custom_font_path << std::endl;
+      
+        this->log("loading font from " + custom_font_path, "State::Game");
         this->font.loadFromFile(custom_font_path); 
-        std::cout << "Custom Font Files Loaded!" << std::endl; 
+        this->log("font loaded successfuly", "State::Game");
        
 }
 

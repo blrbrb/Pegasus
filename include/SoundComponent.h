@@ -16,12 +16,12 @@ public:
                 @returns a constant boolean value representing wether or not the animation has finished playing
      */
     
-    const bool& play(const std::string& key, const float& dt, const float& speed); 
+    const bool play(const std::string& key, const float& dt, const float& speed); 
     const bool stop(const std::string& key);
     void update(const float& dt);
 
     //Accessors
-    const bool& getDone(const std::string key);
+    const bool getDone(const std::string key);
 
 
 
