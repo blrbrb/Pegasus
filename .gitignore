@@ -46,7 +46,7 @@
 *.app
 
 #Library Dependencies 
-./Imgui 
-./packages
-./include/boost
-./include/Imgui
+Imgui/ 
+packages/
+include/boost/
+include/Imgui/
