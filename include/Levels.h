@@ -1,8 +1,11 @@
 #ifndef Levels_hpp
 #define Levels_hpp 
 
+
 #include "TileMap.hpp"
-#include "SoundComponent.h"
+
+
+class TileMap; 
 
 //type definitions for the levels storage container 
 typedef boost::bimaps::bimap<std::string, TileMap*> Map;
@@ -63,7 +66,6 @@ private:
 	sf::Vector2f gridSize;
 	int width;
 	int height;
-	SoundComponent* soundcomponent;   
 	std::string texture_file;
 
 	

@@ -28,6 +28,8 @@ GraphicsSettings::GraphicsSettings()
     this->antialias_level = 0;
     this->framerate_limit = 0; 
     std::cout << this->windowSettings.depthBits << std::endl;
+    this->windowSettings.majorVersion = 4;
+    this->windowSettings.minorVersion = 6; 
 
     //Make sure to only push valid video modes. 
     for (auto& videomode : sf::VideoMode::getFullscreenModes())
@@ -37,8 +39,9 @@ GraphicsSettings::GraphicsSettings()
             this->Videomodes.push_back(videomode); 
         }
     }
-   
-    std::cout << "video resolution depth is " << this->Videomodes.at(2).bitsPerPixel << " bits per pixel" << std::endl;
+    LOG(INFO) << "creating graphics settings properties";
+    LOG(INFO) << "Current Window Resolution is " << this->resolution.width << 'x' << this->resolution.height;
+    LOG(INFO) << "video resolution depth is " << this->Videomodes.at(2).bitsPerPixel << " bits per pixel";
     pt.put("window.title", this->title);
     pt.put("window.resolution.width", this->resolution.width);
     pt.put("window.resolution.height", this->resolution.height);
@@ -57,7 +60,9 @@ GraphicsSettings::GraphicsSettings()
   
 
 
-    boost::property_tree::json_parser::write_json("Config/Window.cfg", pt);
+    //boost::property_tree::json_parser::write_json("Config/Window.cfg", pt);
+
+    LOG(INFO) << "done creating graphics settings info"; 
     //this->Videomodes = sf::VideoMode::
            
 }
@@ -80,8 +85,8 @@ void GraphicsSettings::savetofile(const std::string path)
 
 
 void GraphicsSettings::loadfromfile(const std::string path)
-       {
-           
+{
+             LOG(INFO) << "reading graphics configuration file " << path; 
            //Make sure to actually initalize the property tree so It's not a nullptr when you try and save dumdum
            boost::property_tree::json_parser::read_json(path, this->pt);
 

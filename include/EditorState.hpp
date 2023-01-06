@@ -16,8 +16,7 @@
 #include "EditorModes.hpp"
 #include "DefaultMode.hpp" 
 #include "EnemyEditorMode.hpp" 
-#include "EnviornmentalMode.hpp"
-#include "LevelManagerMode.hpp" 
+#include "EnviornmentalMode.hpp" 
 #include "ShaderEditorMode.h"
 
 
@@ -30,7 +29,6 @@ class EnemyEditorMode;
 class DefaultMode;
 class PauseMenu;
 class EditorStateData; 
-class LevelManagerMode; 
 class ShaderEditorMode; 
 
 
@@ -56,6 +54,7 @@ class EditorState : public State
         void updateGUI(const float& dt);
         void updateModes(const float& dt);
         void updatepausemenubuttons(); 
+        void updateshaders(const float& dt);
         void updateImGui(); 
         void TextInput();  
         
@@ -63,8 +62,8 @@ class EditorState : public State
         void renderbuttons(sf::RenderTarget& target);
         void renderGUI(sf::RenderTarget& target);
         void renderModes(sf::RenderTarget& target);
-        void render(sf::RenderTarget* target = nullptr);   
-
+        void render(sf::RenderTarget* target);   
+        
        
 
    
@@ -86,6 +85,7 @@ private:
         void initmodes(); 
         void initlevels(); 
         bool initshader();
+        void initrendersprite();
         //Exception Handler Functions 
         void handlefonts(); 
 
@@ -134,8 +134,14 @@ private:
        sf::RectangleShape bg; 
         //sf::ConvexShape bg; 
        sf::RectangleShape bg_interior; 
+       sf::FloatRect view_default_reset;
+       sf::Sprite rendersprite; 
+       sf::RenderTexture rendertexture;
        sf::Shader core_shader;
-    
+       AnimationComponent* animations; 
+       sf::Sprite loading_sprite; 
+       sf::Texture loading_texture; 
+       bool buffering;
 };
     
 

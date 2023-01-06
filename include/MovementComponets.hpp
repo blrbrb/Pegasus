@@ -123,6 +123,8 @@ public:
      const float& getMaxVelocity() const;
     ///Fetch the acceleration of the entity
      const float& getAcceleration() const;
+
+     const float& getDecceleration() const;
     ///@brief getStatus
     ///@discussion  Fetch wether or not the entity is moving in a particular direction
     ///@param state the direction to check

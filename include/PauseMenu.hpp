@@ -10,6 +10,7 @@
 #define PauseMenu_hpp
 
 #include "GUI.hpp"
+#include <AudioComponent.h>
 
 
 
@@ -21,23 +22,24 @@ private:
     
     sf::RectangleShape background;
     sf::RectangleShape container; 
-   
-
+    float adjusted_volume; 
+    
+    Sound::MusicPlayer& music_player;
     sf::Font& font;
     sf::Text menutext;
     
     std::map<std::string, GUI::Button*> buttons;
+
+   
     
   
-    
-    
 public:
     
     
     /// Construct a new PauseMenu
     /// @param vm The VideoMode the PauseMenu will be rendered to
     /// @param font for elements in the PauseMenu to use 
-     PauseMenu(sf::VideoMode& vm, sf::Font& font);
+     PauseMenu(sf::VideoMode& vm, sf::Font& font, Sound::MusicPlayer& music_player);
      virtual ~PauseMenu();
     
     

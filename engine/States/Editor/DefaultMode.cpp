@@ -69,7 +69,7 @@ void DefaultMode::updateInput(const float& dt)
                                 }
                                 else
                                 {
-                                    std::cout << "Tile is already assigned to space, disable layer locking to place more than one tile on a spot" << std::endl;
+                                   LOG(INFO) << "editor tried to place more than one tile on a locked layer";
                                 }
                               
                           }
@@ -112,7 +112,7 @@ void DefaultMode::updateInput(const float& dt)
                 
                 else if(this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer) == -1)
                     {
-                        std::cout << "Invalid Tile Space" << std::endl;
+                        LOG(INFO) << "editor tried to place tile on invalid tile Space";
                     }  
             }
             //else set the selection rect to the texture the user's mouse is on in the texture selector
@@ -159,7 +159,7 @@ void DefaultMode::updateInput(const float& dt)
                               }
                               else
                               {
-                                  std::cout << "Tile is already assigned to space, disable layer locking to place more than one tile on a spot" << std::endl;
+                                 LOG(INFO) << "editor tried to place more than one tile on a locked layer";
                               }
                             
                         }

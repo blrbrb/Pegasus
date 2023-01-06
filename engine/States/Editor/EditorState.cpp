@@ -10,6 +10,7 @@
 #include "EnemyEditorMode.hpp"
 #include "EnviornmentalMode.hpp"
 #include "DefaultMode.hpp" 
+#include "loading_icon.h"
 #include "GUI.hpp"
 
 EditorState::EditorState(StateData* state_data)
@@ -26,6 +27,7 @@ EditorState::EditorState(StateData* state_data)
     this->inittilemap();
     this->initlevels();
     this->initbg(); 
+    this->initrendersprite();
     this->initGUI();
     this->initmodes();
     this->activeMode = EDITOR_MODES::DEFAULT_MODE;
@@ -89,6 +91,12 @@ void EditorState::initview()
     
     this->mainview.setCenter(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 2.f,
                              static_cast<float>(this->state_data->gfxsettings->resolution.height) / 2.f);
+    sf::Vector2f Screen_Left(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 4.f, static_cast<float>(this->state_data->gfxsettings->resolution.height) / 4.f);
+    sf::Vector2f Screen_Right(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 2.f,
+        static_cast<float>(this->state_data->gfxsettings->resolution.height) / 2.f);
+
+    this->view_default_reset = sf::FloatRect(Screen_Left.x, Screen_Left.y, Screen_Right.x, Screen_Right.y);
+      
 }
 
 
@@ -97,12 +105,12 @@ void EditorState::initpausemenu()
     
      const sf::VideoMode& vm = this->state_data->gfxsettings->resolution;
     
-    this->pMenu = new PauseMenu(this->state_data->gfxsettings->resolution, this->font);
+    this->pMenu = new PauseMenu(this->state_data->gfxsettings->resolution, this->font, *this->state_data->music);
     
-    this->pMenu->addbutton("Editor_Pause_Quit_Button", GUI::calcCharSize(vm), "Quit", GUI::pixelpercentX(12.f, vm), GUI::pixelpercentY(6.f, vm), 150.f);
-    this->pMenu->addbutton("Editor_Pause_Save_Button", GUI::calcCharSize(vm), "Save", GUI::pixelpercentX(12.f, vm), GUI::pixelpercentY(6.f, vm), 400.f);
-    this->pMenu->addbutton("Editor_Pause_Load_Button", GUI::calcCharSize(vm), "Load", GUI::pixelpercentX(12.f, vm), GUI::pixelpercentY(6.f, vm), 550.f);
-    
+    this->pMenu->addbutton("Editor_Pause_Quit_Button", GUI::calcCharSize(vm), "Quit", GUI::pixelpercentX(33.f, vm), GUI::pixelpercentY(15.f, vm), GUI::pixelpercentY(10.f, vm));
+    this->pMenu->addbutton("Editor_Pause_Save_Button", GUI::calcCharSize(vm), "Save", GUI::pixelpercentX(33.f, vm), GUI::pixelpercentY(15.f, vm), GUI::pixelpercentY(38.2f, vm));
+    this->pMenu->addbutton("Editor_Pause_Load_Button", GUI::calcCharSize(vm), "Load", GUI::pixelpercentX(33.f, vm), GUI::pixelpercentY(15.f, vm), GUI::pixelpercentY(61.8f, vm));
+   
 }
 
 void EditorState::updatepausemenubuttons()
@@ -150,6 +158,11 @@ void EditorState::updatepausemenubuttons()
         
 }
 
+void EditorState::updateshaders(const float& dt)
+{
+    this->core_shader.setUniform("lightPos", this->MousePosView);
+}
+
 void EditorState::updateImGui()
 { 
    
@@ -183,7 +196,7 @@ void EditorState::initkeybinds()
     
     if (!ifs.is_open()) 
     {
-        std::cout << "Editor State Keybinds Do Not Exist" << std::endl; 
+        LOG(WARNING) << "Editor State Keybinds Do Not Exist";
     }
     ifs.close();
 }
@@ -194,7 +207,7 @@ void EditorState::initmodes()
     this->modes.push_back(new DefaultMode(this->state_data, this->levels->getCurrent(), &this->editorstatedata, this->levels));
     this->modes.push_back(new EnemyEditorMode(this->state_data, this->Tilemap, &this->editorstatedata, this->levels));
     this->modes.push_back(new EnviornmentalMode(this->state_data, this->Tilemap, &this->editorstatedata, this->levels));
-    this->modes.push_back(new LevelManagerMode(this->state_data, this->Tilemap, &this->editorstatedata, this->levels)); 
+    //this->modes.push_back(new LevelManagerMode(this->state_data, this->Tilemap, &this->editorstatedata, this->levels)); 
     this->modes.push_back(new ShaderEditorMode(this->state_data, this->levels->getCurrent(), &this->editorstatedata, this->levels));
     
     this->activeMode = EDITOR_MODES::DEFAULT_MODE;
@@ -212,21 +225,20 @@ void EditorState::initlevels()
 void EditorState::handlefonts()
 {
 
-    std::cout << "Searching for useable custom font files..." << std::endl;
+    LOG(INFO) << "attemping to handle exception";
     std::string custom_font_path = "";
 
     for (auto& p : std::filesystem::recursive_directory_iterator("Resources/Assets/Fonts"))
     {
         if (p.path().extension() == ".ttf") {
-            std::cout << p.path().stem().string() << std::endl;
-            std::cout << "custom font files found!" << std::endl;
+           
             custom_font_path = p.path().string();
             break;
         }
     }
     std::cout << custom_font_path << std::endl;
     this->font.loadFromFile(custom_font_path);
-    std::cout << "Custom Font Files Loaded!" << std::endl;
+    std::cout << "Sucessfully loaded fonts";
 
 }
 
@@ -239,10 +251,13 @@ void EditorState::initsidebar()
 
 void EditorState::initGUI()
 {
-
-  
-    
-
+    sf::Image image;
+    //this->loading_texture.loadFromImage(header_to_image("loading"));
+    image.create(LOADING_ICON.width, LOADING_ICON.height, LOADING_ICON.data);
+    this->loading_texture.loadFromImage(image);
+    this->loading_sprite.setTexture(this->loading_texture); 
+    this->loading_sprite.setScale(sf::Vector2f(10.f, 10.f));
+    this->buffering = false;
 }
 
 void EditorState::initbg()
@@ -273,7 +288,31 @@ bool EditorState::initshader()
     return true;
     sf::Vector2f resolution = sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height);
     this->core_shader.setUniform("resolution", resolution);
-    this->core_shader.setUniform("LightPos",this->editorstatedata.mousePosView);
+    
+   /// this->core_shader.setUniform("LightPos",this->editorstatedata.mousePosView);
+}
+
+void EditorState::initrendersprite()
+{
+    if (!this->rendertexture.create(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height))
+    {
+        LOG(FATAL) << "failed to create rendertexture at " << this->state_data->gfxsettings->resolution.width << "x" << this->state_data->gfxsettings->resolution.height;
+        throw std::exception("unable to create rendertextrue GameState Line 78");
+
+    }
+
+    this->rendersprite.setTexture(this->rendertexture.getTexture());
+
+    this->rendersprite.setTextureRect(
+        sf::IntRect(
+            0,
+            0,
+            this->state_data->gfxsettings->resolution.width,
+            this->state_data->gfxsettings->resolution.height
+        ));
+
+
+
 }
 
 void EditorState::initFonts() {
@@ -322,8 +361,9 @@ void EditorState::initeditorstatedata()
 void EditorState::update(const float& dt) {
     
    
- 
+   
     this->updateMousePosition(&this->mainview);
+    this->updateshaders(dt);
     this->updatekeytime(dt);
     this->updateEditorinput(dt);
     
@@ -511,162 +551,294 @@ void EditorState::updateEditorinput(const float& dt)
 
 void EditorState::updateGUI(const float& dt)
 {
-    static char str0[128] = "New_Map.cfg";   
-    static char str1[128] = "New Area"; 
-    static int switchTabs; 
+    static char str0[128] = "New_Map.cfg";
+    static char str1[128] = "New Area";
+    static int switchTabs;
     static bool p_open = NULL;
-
-    ImGui::ShowDemoWindow(); 
-
-    ImGui::Begin("Map Editor",&p_open, ImGuiWindowFlags_NoMove);
-     //is there any way to set the window flags from within this loop? 
-    //that would be pretty poggers, I think
+    static bool save; 
+    static bool save_as; 
+    static bool view; 
+    static bool file; 
+    static bool edit; 
+    static bool load; 
+    ImGui::ShowDemoWindow();
 
    
-   // if (ImGui::Button(view_is_local ? "Local###ViewMode" : "Global###ViewMode"))
-    
-    if (ImGui::Button("Save Map", sf::Vector2f(100.f, 25.f)))
-    {
-       
-      
-        //if the path is not EXACTLY fucking correct, god help you. Make sure that it follows a /../../.. format from the working dir.
-        while (this->levels->saveLevel(this->curr_level, GUI::convertToString(str0, this->str_size))) 
+    ImGui::Begin("Map Editor", &p_open, ImGuiWindowFlags_MenuBar);
+    //is there any way to set the window flags from within this loop? 
+   //that would be pretty poggers, I think
+
+
+  // if (ImGui::Button(view_is_local ? "Local###ViewMode" : "Global###ViewMode"))
+    if (ImGui::BeginMenuBar()) {
+
+        if (ImGui::BeginMenu("File"))
         {
-            ImGui::Button("Saving...", sf::Vector2f(100.f, 25.f));
-        
-        };
+            ImGui::MenuItem("Save", NULL, &save);
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+            {
+                ImGui::BeginTooltip();
+                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                ImGui::TextUnformatted("Save the current map");
+                ImGui::PopTextWrapPos();
+                ImGui::EndTooltip();
+            }
+            ImGui::MenuItem("Save As", NULL, &save_as);
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+            {
+                ImGui::BeginTooltip();
+                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                ImGui::TextUnformatted("Save the current map to a new file");
+                ImGui::PopTextWrapPos();
+                ImGui::EndTooltip();
+            }
+            ImGui::MenuItem("Open", NULL, &load);
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+            {
+                ImGui::BeginTooltip();
+                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                ImGui::TextUnformatted("Open a recently saved map file");
+                ImGui::PopTextWrapPos();
+                ImGui::EndTooltip();
+            }
+             ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Edit"))
+        {
+            ImGui::EndMenu();
+
+        }
+        if (ImGui::BeginMenu("View"))
+        {
+            if (ImGui::MenuItem("Zoom In") && this->getkeytime()) 
+            {
+                this->mainview.zoom(0.5);
+            }
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+            {
+                ImGui::BeginTooltip();
+                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                ImGui::TextUnformatted("Zoom In");
+                ImGui::PopTextWrapPos();
+                ImGui::EndTooltip();
+            }
+            if (ImGui::MenuItem("Reset View") && this->getkeytime())
+            {
+               
+                this->mainview.reset(this->view_default_reset);
+                
+
+            }
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+            {
+                ImGui::BeginTooltip();
+                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                ImGui::TextUnformatted("Set the view back to it's default position");
+                ImGui::PopTextWrapPos();
+                ImGui::EndTooltip();
+            }
+
+            if (ImGui::MenuItem("Zoom In") && this->getkeytime())
+            {
+                this->mainview.zoom(0.5);
+            }
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+            {
+                ImGui::BeginTooltip();
+                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                ImGui::TextUnformatted("Zoom In");
+                ImGui::PopTextWrapPos();
+                ImGui::EndTooltip();
+            }
+           
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+            {
+                ImGui::BeginTooltip();
+                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                ImGui::TextUnformatted("Zoom Out");
+                ImGui::PopTextWrapPos();
+                ImGui::EndTooltip();
+            }
+            ImGui::EndMenu();
+        }
       
-    } 
-    if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
-    {
-        ImGui::BeginTooltip(); 
-        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-        ImGui::TextUnformatted("Save the current map"); 
-        ImGui::PopTextWrapPos();
-        ImGui::EndTooltip();
-    } 
-   
-
-    ImGui::SameLine(0.0, 8.0f);
-    if (ImGui::Button("Load Saved Map", sf::Vector2f(125.f, 25.f)))
-    {
-        this->levels->loadLevel(this->curr_level, "Data/TileMap/" + GUI::convertToString(str0, this->str_size)); 
-        
     }
-    ImGui::SameLine(0.0, 8.f);
-    ImGui::InputText("New File",str0,IM_ARRAYSIZE(str0));
-    if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
-    {
-        ImGui::BeginTooltip();
-        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-        ImGui::TextUnformatted("Leave default text to save to an existing file, or save to a new file");
-        ImGui::PopTextWrapPos();
-        ImGui::EndTooltip();
-    }
-    ImGui::SameLine(); 
-   
-    ImGui::Separator(); 
+    ImGui::EndMenuBar();
+        ImGui::SameLine(0.0, 8.0f);
+        if (ImGui::Button("Load Saved Map", sf::Vector2f(125.f, 25.f)))
+        {
+            LOG(INFO) << "attempting to load tilemap data from " << "Data/TileMap/" + GUI::convertToString(str0, this->str_size);
+            this->levels->loadLevel(this->curr_level, "Data/TileMap/" + GUI::convertToString(str0, this->str_size));
 
-   // ImGui::ShowDemoWindow(); 
-    //ImGui::SameLine(0.0, 2.0f);
-   
-    if (ImGui::Button("Tiles", sf::Vector2f(50.f, 0.f))) {
-        switchTabs = 0;
-       
-    }
-    if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
-    {
-        ImGui::BeginTooltip();
-        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-        ImGui::TextUnformatted("Enter the Default TileMap Editor");
-        ImGui::PopTextWrapPos();
-        ImGui::EndTooltip();
-    }
-    ImGui::SameLine(0.0, 2.0f);
-    if (ImGui::Button("Enemies", sf::Vector2f(100.0f, 0.0f))) {
-        switchTabs = 1;
-    }
-    if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
-    {
-        ImGui::BeginTooltip();
-        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-        ImGui::TextUnformatted("Place Enemy Spawner Tiles");
-        ImGui::PopTextWrapPos();
-        ImGui::EndTooltip();
-    }
-    ImGui::SameLine(0.0, 2.0f);
-    if (ImGui::Button("Enviornmental Tiles", sf::Vector2f(150.0f, 0.0f))) {
-        switchTabs = 2;
-    }
-    if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
-    {
-        ImGui::BeginTooltip();
-        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-        ImGui::TextUnformatted("Place objects / enviornment tiles");
-        ImGui::PopTextWrapPos();
-        ImGui::EndTooltip();
-    }
-    if (ImGui::Button("Level Manager", sf::Vector2f(150.0f, 0.0f))) {
-        switchTabs = 3;
-    } 
-    if (ImGui::Button("Shader Editor", sf::Vector2f(100.f, 0.0f))) 
-    {
-        switchTabs = 4; 
-        std::cout << "switching to shader editor mode" << std::endl;
-    }
+        }
+        ImGui::SameLine(0.0, 8.f);
+        ImGui::InputText("New File", str0, IM_ARRAYSIZE(str0));
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+        {
+            ImGui::BeginTooltip();
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+            ImGui::TextUnformatted("Leave default text to save to an existing file, or save to a new file");
+            ImGui::PopTextWrapPos();
+            ImGui::EndTooltip();
+        }
+        ImGui::SameLine();
 
-            
+        ImGui::Separator();
 
-
-   
-    switch (switchTabs) {
-    case 0:
-      
-        this->activeMode = 0; 
-  
-       
-        break;   
-    case 1:
-        
-        this->activeMode = 1;
-       
-        break;
-    case 2:
-       
-        this->activeMode = 2; 
-      
-        break;
-
-    case 3: 
-        this->activeMode = 3; 
-       
-        break;
-
-    case 4: 
-        this->activeMode = 4; 
-        break; 
-
-    default:
-        break;
-    }
-   
-    std::stringstream cursor_text;
-    cursor_text << "MouseX: " << this->MousePosView.x << "\n"
-        << "MouseY:" << this->MousePosView.y;
-    std::string text = cursor_text.str();  
-
-    ImGui::Separator();  
-
-    ImGui::Text(text.c_str()); 
-
-
-   this->str_size = sizeof(str0) / sizeof(char);
-  
+        // ImGui::ShowDemoWindow(); 
+        // 
+         //ImGui::SameLine(0.0, 2.0f);
 
  
-   ImGui::End(); 
+        if (save) {
+                
+            if (this->levels->saveLevel(this->curr_level, GUI::convertToString(str0, this->str_size)))
+            {
 
-}
+                      
+
+            }
+                
+            
+            
+        } 
+
+        if (save_as) 
+        {
+            if(ImGui::BeginChild("Save As", sf::Vector2f(this->state_data->gfxsettings->resolution.width / 4, this->state_data->gfxsettings->resolution.height / 4)))
+            {
+                ImGui::InputText("New File", str0, IM_ARRAYSIZE(str0));
+                if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+                {
+                    ImGui::BeginTooltip();
+                    ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                    ImGui::TextUnformatted("Leave default text to save to New_Map.cfg, or save to a new file");
+                    ImGui::PopTextWrapPos();
+                    ImGui::EndTooltip();
+                } 
+                
+                ImGui::Text("Maps can be saved in one of two formats, json like objects, or raw data");
+                if (ImGui::Button("Save", sf::Vector2f(125.f, 25.f))) 
+                {
+                
+                    this->levels->saveLevel(this->curr_level, GUI::convertToString(str0, this->str_size));
+                    save_as = false; 
+                
+                }
+              
+
+                ImGui::EndChild();
+
+            }
+        
+        
+        } 
+
+        if (load) 
+        {
+            this->Tilemap->loadfromfile("Data/TileMap/New_Map.cfg", true);
+            load = false;
+        }
+            if (ImGui::Button("Tiles", sf::Vector2f(50.f, 0.f))) {
+                switchTabs = 0;
+
+            }
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+            {
+                ImGui::BeginTooltip();
+                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                ImGui::TextUnformatted("Enter the Default TileMap Editor");
+                ImGui::PopTextWrapPos();
+                ImGui::EndTooltip();
+            }
+            ImGui::SameLine(0.0, 2.0f);
+            if (ImGui::Button("Enemies", sf::Vector2f(100.0f, 0.0f))) {
+                switchTabs = 1;
+            }
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+            {
+                ImGui::BeginTooltip();
+                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                ImGui::TextUnformatted("Place Enemy Spawner Tiles");
+                ImGui::PopTextWrapPos();
+                ImGui::EndTooltip();
+            }
+            ImGui::SameLine(0.0, 2.0f);
+            if (ImGui::Button("Enviornmental Tiles", sf::Vector2f(150.0f, 0.0f))) {
+                switchTabs = 2;
+            }
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+            {
+                ImGui::BeginTooltip();
+                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                ImGui::TextUnformatted("Place objects / enviornment tiles");
+                ImGui::PopTextWrapPos();
+                ImGui::EndTooltip();
+            }
+            ImGui::SameLine(0.0, 2.0f);
+            if (ImGui::Button("Level Manager", sf::Vector2f(150.0f, 0.0f))) {
+                switchTabs = 3;
+            }
+            ImGui::SameLine(0.0, 2.0f);
+            if (ImGui::Button("Shader Editor", sf::Vector2f(100.f, 0.0f)))
+            {
+                switchTabs = 4;
+                std::cout << "switching to shader editor mode" << std::endl;
+            }
+
+
+        
+           
+          
+       
+        switch (switchTabs) {
+        case 0:
+
+            this->activeMode = 0;
+
+
+            break;
+        case 1:
+
+            this->activeMode = 1;
+
+            break;
+        case 2:
+
+            this->activeMode = 2;
+
+            break;
+
+        case 3:
+            this->activeMode = 3;
+
+            break;
+
+        case 4:
+            this->activeMode = 4;
+            break;
+
+        default:
+            break;
+        }
+
+        std::stringstream cursor_text;
+        cursor_text << "MouseX: " << this->MousePosView.x << "\n"
+            << "MouseY:" << this->MousePosView.y;
+        std::string text = cursor_text.str();
+
+        ImGui::Separator();
+
+        ImGui::Text(text.c_str());
+
+
+        this->str_size = sizeof(str0) / sizeof(char);
+
+
+
+        ImGui::End();
+
+    }
 
 
 /*Render Functions*/
@@ -677,17 +849,21 @@ void EditorState::render(sf::RenderTarget* target)
         target = this->window;
     target->draw(this->bg);     
 
+    this->rendertexture.clear();
 
-   
+    this->rendertexture.setView(this->mainview);
+    
     //Tilemap Camera (same as game camera)
     this->window->setView(this->mainview);
     target->draw(this->bg_interior); 
-    this->levels->render(*target, this->mainview, this->MousePosGridI, this->editorstatedata.shader); 
+    this->levels->render(this->rendertexture, this->mainview, this->MousePosGridI, &this->core_shader); 
    // this->Tilemap->render(*target, this->mainview, this->MousePosGridI);
 
-   
+    this->rendertexture.setView(this->rendertexture.getDefaultView()); 
     //Buttons Camera
     this->window->setView(this->window->getDefaultView());
+    this->rendertexture.display(); 
+    target->draw(this->rendersprite);
     this->renderModes(*target);
     //this->renderbuttons(*target);
     
@@ -700,11 +876,17 @@ void EditorState::render(sf::RenderTarget* target)
            this->pMenu->render(*target);
        }   
 
-
+    if (this->buffering) 
+    {
+        this->window->setView(this->window->getDefaultView());
+        target->draw(this->loading_sprite); 
+    }
     
    
     
 }
+
+
 
 void EditorState::renderGUI(sf::RenderTarget &target)
 {

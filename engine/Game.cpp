@@ -7,15 +7,18 @@
 // 
 #include "stdafx.h"
 #include "Game.hpp"
-#include "../stdafx.h"
+
+
+INITIALIZE_EASYLOGGINGPP
 
 Game::Game() {
-    
-    std::cout << "init game" << std::endl; 
+    this->initlog(); 
+    std::cout << std::filesystem::current_path().string() << std::endl;
     this->initVariables();
     this->initGraphicsSettings();
     this->initwindow();
     this->initkeys();
+    this->initJoySticks();
     this->initstatedata();
     this->initstates(); 
     
@@ -32,7 +35,7 @@ Game::~Game() {
     {
        delete this->states.top();
         this->states.pop(); 
-        std::cout << "deleting..." << " " << states.size() << " " << "in Game.cpp" << std::endl;
+         LOG(INFO) << "deleting..." << " " << states.size() << " " << "in Game.cpp";
     } 
     
 
@@ -56,6 +59,8 @@ void Game::initkeys() {
  
  
   */
+    LOG(INFO) << "creating keybinds "; 
+    
    std::ifstream ifs("Init/Supported_Keys.ini");
 
    if (ifs.is_open())
@@ -79,11 +84,45 @@ void Game::initkeys() {
     
 }
 
+bool Game::initJoySticks()
+{
+   
+    if (this->joystick.isConnected(0)) 
+    {
+        LOG(INFO) << "a joystick has been connected"; 
+        return true;
+    }
+    else
+    return false;
+}
+
 void Game::initstates() { 
     
 
     this->states.push(new MainMenuState(&this->state_data)); 
     
+}
+
+void Game::initlog()
+{
+    el::Configurations defaultConf;
+    //defaultConf.setToDefault(); 
+   // el::ConfigurationType::
+   // defaultConf.parseFromText("*GLOBAL:\n FORMAT =  \n FILENAME = Pegasus.log\n ENABLED = true\nTO_FILE = true\nTO_STANDARD_OUTPUT = true\nSUBSECOND_PRECISION = 6\nPERFORMANCE_TRACKING = true\nMAX_LOG_FILE_SIZE = 16777216\nLOG_FLUSH_THRESHOLD = 300");
+     //el::Loggers::reconfigureLogger("Pegasus", defaultConf);
+    // el::Configureation
+    defaultConf.setGlobally(el::ConfigurationType::Filename, "Pegasus.log");
+   // defualtConf.set
+    defaultConf.setGlobally(el::ConfigurationType::Format, "%datetime %thread_name %msg");
+   
+   // defaultConf.set(el::ConfigurationType::)
+    //defaultConf.set(el::Level::Info,
+     //   el::ConfigurationType::Format, "%datetime %level %msg");
+
+    //defaultConf.setGlobally(el::ConfigurationType::Filename, "Pegasus.log"); 
+    el::Loggers::reconfigureLogger("Pegasus", defaultConf);
+    el::Loggers::reconfigureAllLoggers(defaultConf);
+    el::Helpers::setThreadName("main"); 
 }
 
 
@@ -111,16 +150,16 @@ void Game::initwindow() {
 
     if (this->gfxsettings->fullscreen) {
         //it might be a good idea to assign the hanging window pointer a value, and then use the newer .create method
-        this->window = new sf::RenderWindow(); 
+       // this->window = new sf::RenderWindow(); 
         this->window = new sf::RenderWindow(this->gfxsettings->resolution, this->gfxsettings->title, sf::Style::Fullscreen, this->gfxsettings->windowSettings);
     }
 
 
     else
-        this->window = new sf::RenderWindow(); 
-        assert(this->gfxsettings->resolution.isValid());
+        this->window = new sf::RenderWindow(this->gfxsettings->resolution, this->gfxsettings->title, sf::Style::Titlebar, this->gfxsettings->windowSettings);
+     //   assert(this->gfxsettings->resolution.isValid());
   
-        this->window->create(this->gfxsettings->resolution, this->gfxsettings->title, sf::Style::Titlebar, this->gfxsettings->windowSettings);
+       // this->window->create(this->gfxsettings->resolution, this->gfxsettings->title, sf::Style::Titlebar, this->gfxsettings->windowSettings);
  
         
    this->window->setFramerateLimit(this->gfxsettings->framerate_limit);
@@ -129,58 +168,67 @@ void Game::initwindow() {
  
 
     sf::RenderWindow& window = *this->window;   
-  
- 
+    assert(window.isOpen()); 
+    window.setActive(true);
+    
     //ImGui::CreateContext();
     //ImGui::ShowDemoWindow();
     if (ImGui::SFML::Init(window)) 
     {
       // this->states.top()->log("ImGui has properly been initalized", "Main");
-        std::cout << "initalized imgui" << std::endl;
-    }
+       LOG(INFO)<< "initalized imgui";
+    } 
 
     ///ImGui::StyleColorsDark();
    // ImGui::SetCurrentContext()
     //ImGui_ImplGlfw_InitForOpenGL(this->window, true);
-    
+    this->initWindowIcon(); 
 }
 
 void Game::initstatedata()
 {
+   
+   
     this->state_data.window = this->window;
     this->state_data.gfxsettings = this->gfxsettings; 
     this->state_data.supportedkeys = &this->supportedkeys;
     this->state_data.states = &this->states;
     this->state_data.gridsize = &this->gridsize; 
-   
-
-
+    this->state_data.music = new Sound::MusicPlayer(); 
+ 
     if (this->state_data.window == NULL) 
     {
-        std::cout << "Unable to initalize Window info into State data" << std::endl; 
+        LOG(INFO) << "Unable to initalize Window info into State data";
     }
 
     if (this->state_data.gfxsettings == NULL) 
     {
-        std::cout << "Unable to initalize Graphics Settings into State Data" << std::endl; 
+        LOG(INFO) << "Unable to initalize Graphics Settings into State Data" << std::endl;
 
     }
     if (this->state_data.supportedkeys == NULL)
     {
-        std::cout << "Unable to initalize Keys into State Data" << std::endl; 
+       LOG(INFO) << "Unable to initalize Keys into State Data";
 
     }
     if (this->state_data.states == NULL)
     {
-        std::cout << "Unable to initalize States into State Data" << std::endl;
+        LOG(INFO) << "Unable to initalize States into State Data";
     }
     if (this->state_data.gridsize == NULL)
     {
-        std::cout << "Unable to initalize gridsize into Statedata" << std::endl;
+        LOG(INFO) << "Unable to initalize gridsize into Statedata";
     }
 
     
 }
+
+void Game::initWindowIcon()
+{
+   
+    this->window->setIcon(icon.width, icon.height, icon.data);
+}
+
 
 
 
@@ -189,7 +237,27 @@ void Game::initstatedata()
 void Game::resizewindow()
 {
 
+
     
+}
+
+void Game::setfullscreen()
+{
+
+
+
+
+
+}
+
+void Game::log(std::string stat)
+{
+    
+   
+
+
+
+
 }
 
 
@@ -199,8 +267,6 @@ void Game::load()
     
        
 }
-
-
 
 void Game::Update()
 {
@@ -215,11 +281,16 @@ void Game::Update()
 
                 if (this->states.top()->getquit())
                 {
+                    LOG(INFO) << "Size of deque: " << this->states.size(); 
+                   
+                    LOG(INFO) << "destroying state ";     
+                    
                     this->states.top()->endstate();
                    
+                   // delete this->states.top();
                     delete this->states.top();
-                    
-                    this->states.pop();
+                     this->states.pop();
+                     LOG(INFO) << "top of deque: " << this->states.size();
                
                 }
             }
@@ -243,7 +314,7 @@ void Game::UpdateEvents() {
         if (this->event.type == sf::Event::Closed) {
             if (!this->states.empty()) 
             {
-                this->states.top()->log("destroying window...", "Main");
+                LOG(INFO) << "destroying window...";
                 this->window->close();
             }
         }      
@@ -257,16 +328,21 @@ void Game::UpdateEvents() {
 void Game::render() {
  
     this->window->clear(sf::Color::Black); 
-   
+    this->window->pushGLStates();
+    
     if (!this->states.empty())
      
        
-
-
+     
+        
          this->states.top()->render(); 
+
+         
         
     ImGui::SFML::Render(*this->window);
   
+    this->window->popGLStates();
+
    this->window->display();  
                                                        
     
@@ -304,26 +380,15 @@ void Game::running() {
 void Game::endapplication()
 {
     if(this->states.size() > 0)
-    this->states.top()->log("Ending the application...", "Main"); 
+    LOG(INFO) << "Ending the application..."; 
 }
-
 
 void Game::initVariables()
 {
     this->window = NULL;
-    this-> dt = 0.f;
+    this->dt = 0.f;
 
     this->gridsize = sf::Vector2f(32.f, 24.f);
-    //This is the size of the stolen ponytown assets 
-    //I am a shameless pirate.qweqweqweqeqweqweqweqweqeqweqwe
-    //this->GridSizeIrr = asdasdasdasdasdasdasdsad
 
-    
+
 }
-
-
-
-
-
-
-

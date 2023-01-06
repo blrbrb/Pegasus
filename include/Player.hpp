@@ -11,7 +11,8 @@
 #include "Entity.hpp"
 #include "Inventory.hpp"
 #include "Item.hpp" 
-
+#include <Candle/LightSource.hpp>
+#include <Candle/RadialLight.hpp>
 
 class Entity; 
 
@@ -19,52 +20,99 @@ class Player : public Entity
 {
 private:
     
-    //initalizer functions
+    
     void initvariables();
     void initcomponets();
     void initanimations(); 
     void initsounds(); 
     void initinventory(); 
+    void initlight();
 
-    int& level; 
+    
     sf::Color default_color; 
-    
+    candle::RadialLight player_ambient; 
+    candle::EdgeVector edges;
     Inventory* inventory;
+    spotlight* render_light; 
     
-    //Variables 
-    sf::SoundBuffer  walking_sound; 
+     
+    std::vector<sf::SoundBuffer> sounds; 
 
-    //does the entity rendersprite need 
+   
  
 
 public:
 
-    Player(float x, float y, sf::Texture& texturesheet, int level = 0);
+    /// <summary>
+    /// Default Player constructor. Overrides Entity() inherits abstracts
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="texturesheet"></param>
+    /// <param name="level"></param>
+    Player(float x, float y, sf::Texture& texturesheet);
+   
     virtual ~Player();
     
+    /// <summary>
+    /// Load Player data from file, Entity info is constructed from saved data
+    /// </summary>
+    /// <param name="save_file"></param>
+    Player(const std::string save_file, sf::Texture& texturesheet); 
+
     //Accessors
-    ///Retrieve a pointer to the Player's status component through Entity
+
+    /// <summary>
+    /// Fetch a pointer to the Player's Staus Component.
+    /// </summary>
+    /// <returns>StatusComponent*</returns>
+    /// <remarks><seealso cref="StatusComponent"/></remarks>
+    /// <remarks><seealso cref="Entity"/></remarks>
     StatusComponet* getStatusComponet();
-    ///Retrieve a pointer to the Player's Inventory
+    /// <summary>
+    /// Fetch a pointer to the Player's Inventory 
+    /// </summary>
+    /// <returns>Inventory*</returns>
     Inventory* getInventory();
+
+
     const std::string  InfoString() const; 
                                                                                
+    void saveToFile(const std::string filename);
+    void loadFromFile(const std::string filename); 
    
     
-    ///  Update the Player
-    /// @param dt Delta-Time
-    /// @param MousePosView sf::Vector2f, the mouse's position relative to the view
+     /// <summary>
+     /// Update the player (Calls all other Player class update functions)
+     /// </summary>
+     /// <param name="dt"></param>
+     /// <param name="MousePosView"></param>
      void update(const float& dt, sf::Vector2f& MousePosView);
+
+
+
+     void updateLighting(const float& dt); 
     
-    /// Update the Player's animation component
-    /// @param dt Delta-Time
+     /// <summary>
+     /// Update the Player's animation
+     /// </summary>
+     /// <param name="dt"></param>
      void updateAnimation(const float& dt);
+   
     
-    /// Render the entity to either an OpenGL object, or an sf::RenderTarget
-    /// @param target the intended target to render to
+     /// <summary>
+     /// Render the Player's sprite to the active context
+     /// </summary>
+     /// <param name="target"></param>
+     /// <param name="shader"></param>
+     /// <param name="light"></param>
+     /// <param name="render_hitbox"></param>
      void render(sf::RenderTarget& target,sf::Shader* shader = nullptr,const sf::Vector2f light = sf::Vector2f(), const bool render_hitbox = false);
 
     
+
+
+
 };
 
 #endif /* Player_hpp */

@@ -30,18 +30,20 @@ SkillComponent::~SkillComponent()
 
 const int SkillComponent::getSkill(const int skill) const
 {
-    if(skills.empty() || skill < 0 || skill > this->skills.size())
+    if (skills.empty() || skill < 0 || skill > this->skills.size()) {
+        LOG(WARNING) << "Attempting to add attribute points to a property that does not exist";
         throw std::runtime_error("ERROR CODE SkillComponet:42 || Skill does not exist. Cannot gain Exp");
+    }
     else
         return this->skills[skill].getlevel();
 }
 
 const void SkillComponent::gainExp(const int skill, const int exp)
 {
-    if(skills.empty() || skill < 0 || skill > this->skills.size())
-        std::cout << ("ERROR CODE SkillComponet:42 || Skill does not exist. Cannot gain Exp") << std::endl;
+    if (skills.empty() || skill < 0 || skill > this->skills.size()) {
+        LOG(WARNING) << "Attempting to add expierence to a property that does not exist";
         throw std::runtime_error("ERROR CODE SkillComponet:42 || Skill does not exist. Cannot gain Exp");
-       
+    }
     if(skills.empty() == true)
         return this->skills[skill].gainexp(exp);
 

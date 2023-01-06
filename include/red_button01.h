@@ -1,4 +1,7 @@
 #pragma once 
+#ifndef RED_BUTTON01_h
+#define RED_BUTTON01_h
+
 #include <SFML/Config.hpp>
 
 
@@ -1485,4 +1488,5 @@ static const struct {
   "N\021\377\252N\021\377\252N\021\377\252N\021\377\252N\021\377\252N\021\377\252"
   "N\021\377\252N\021\377\250K\017\337\251L\016\177\000\000\000\000\000\000\000\000",
 };
-
+#endif 
+//RED_BUTTON01_h

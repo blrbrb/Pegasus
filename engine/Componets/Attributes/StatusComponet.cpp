@@ -7,7 +7,6 @@
 //
 #include "stdafx.h"
 #include "StatusComponet.hpp"
-#include <iostream>
 
 
 ///me secret leveling formular
@@ -18,7 +17,9 @@
 //
 StatusComponet::StatusComponet(int level)
 {
-    //init leveling variables
+    //init leveling variables 
+
+    LOG(INFO) << "initalizing entity properties"; 
     this->level = level;
     this->exp = 0;                                      
     this->expNextlvl =static_cast<int>((50 / 3) * (pow(this->level + 1, 3) - 6 * pow(this->level + 1, 2) + ((this->level + 1) * 17) -12));
@@ -53,6 +54,7 @@ StatusComponet::StatusComponet(int level)
     this->UpdateLevel();
     this->UpdateStats(true);
     
+    LOG(INFO) << "done" << std::endl;
     //init money
     
     
@@ -125,7 +127,6 @@ void StatusComponet::createstats()
 }
 
 
-
 void StatusComponet::UpdateLevel()
 {
     
@@ -163,7 +164,7 @@ const bool StatusComponet::isdead() const
   
     if (this->hp <= 0)
     {
-        std::cout << "dead" << std::endl;
+        LOG(INFO) << "An entity's HP property has reached 0"; 
         return true;
     }
     //return this->hp <= 0;

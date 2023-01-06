@@ -14,6 +14,7 @@
 #define MainMenuState_hpp
 
 #include "GameState.hpp" 
+#include "Scene.h"
 #include "EditorState.hpp"
 #include "GUI.hpp"
 #include "SettingsState.hpp" 
@@ -32,7 +33,7 @@ class MainMenuState : public State
         void updateInput(const float& dt);
         void update(const float& dt);
         void updatebuttons(const float& dt);
-           
+        void reconfigure_log();
         //Render Functions
         void renderbuttons(sf::RenderTarget& target);
     
@@ -47,8 +48,8 @@ private:
         void resetGUI(); 
         void initbackground();
         void initvariables();
-        void initsounds(); 
-         
+        void setmusic();
+       
         //Private &variables
         sf::Font font;
         sf::RectangleShape background;

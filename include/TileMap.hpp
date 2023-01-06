@@ -54,6 +54,7 @@ private:
     sf::Vector2f grid_sizeF; 
     sf::Vector2u grid_sizeU;
     size_t texturefilesize; 
+   
     
 
     std::string texture_file;
@@ -92,6 +93,8 @@ private:
     void initgeometry(); 
     void init_object_textures();
     void initvariables();
+    void initloggingthread(); 
+
     
     //tile culling
     int FromX;
@@ -222,18 +225,9 @@ public:
 
     //testing functions 
     void randomGeneration();
-    Tile* genTile(int x, int y, int z);
-
-   
-
-   // const bool good_geometry(sf::Vector2i texture_coords, std::string geometry_key) const;
-   // const bool good_geometry(sf::Vector2i texture_coords) const;
-
+    Tile* genTile(int x, int y, int z); 
     
-    
-    
-    
-};// this->Map[x][y][z].push_back(tile_gridS(new ObjectTile(x, y, ), nullptr);
+};
 
 
 

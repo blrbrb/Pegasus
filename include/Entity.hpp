@@ -13,8 +13,9 @@
 #include "AnimationComponet.hpp"
 #include "StatusComponet.hpp"
 #include "SkillComponent.hpp"
-#include "SoundComponent.h"
+#include "AudioComponent.h"
 #include "Item.hpp"
+#include <boost/property_tree/ptree_fwd.hpp>
 
 
 class HitboxComponent;
@@ -36,14 +37,26 @@ public:
     StatusComponet* attributes;
     /// The Skill Component 
     SkillComponent* skillcomponent;
+    //Speaker attached to the entity to play sounds, etc
+    Sound::Speaker* speaker;
     // The Sound Component
-    SoundComponent* soundcomponent; 
+
     ///The entity's sprite
     sf::Sprite sprite;
-   
+
+    ///Sprites for visual effects, deffered rendering, body parts etc 
+    std::map<std::string, sf::Sprite*> sprites; 
     ///the texture used to generate the entity's sprite
     sf::Texture* texture;
-    
+
+  
+   
+
+
+    sf::Sound sound; 
+
+    boost::property_tree::ptree* pt;
+
     //Constructor et Destructor
     Entity();
     virtual ~Entity();
@@ -52,12 +65,21 @@ public:
     virtual void setposition(const float x, const float y); 
         //texture and transformations
     void settexture(sf::Texture& texture); 
+    void setLightMapTexture(sf::Texture& texture);
     void rotate(float angle);
     void setorigin(sf::Vector2f origin); 
     void setColor(sf::Color color); 
     void setscale(float scale_x, float scale_y); 
 
-      
+    
+    template<typename T>
+    inline void set_property(const std::string property_name, T value) 
+    {
+        this->pt->put(property_name, value);
+    
+    }
+   
+    
     
     //Accessors
     virtual const sf::Vector2f& getPosition() const;
@@ -69,7 +91,7 @@ public:
     virtual const float getDistance(const Entity& entity) const;
     virtual const sf::Texture* getTexture() const;   
     virtual const sf::Color& getcolor() const;
-
+    
 
 
     //Functions
@@ -109,7 +131,9 @@ public:
     /// @param texturesheet A texturesheet to split into an animation
     void create_animation_componet(sf::Texture& texturesheet);
 
-    void create_sound_component(); 
+    void create_speaker(sf::SoundBuffer& buffer); 
+
+   
     
     /// Generate the entity's hitbox
     /// @param sprite The sprite used to represent the entity on screen
@@ -127,17 +151,23 @@ public:
     void create_skill_component();
        
     
+    //Modifiers 
+    virtual void setRotation(float rot); 
+
+    virtual void setScale(float scale_x, float scale_y); 
+
    
     
 private:
     void initvariables();
    
     int vert_count;
-  
+   
     
 protected:
+
     bool using_vertices;
-   
+  
   
     
 };
@@ -145,3 +175,4 @@ protected:
 
 
 #endif /* Entity_hpp */
+

@@ -1,4 +1,7 @@
 #pragma once 
+#ifndef RED_BUTTON02_h
+#define RED_BUTTON02_h
+
 #include <SFML/Config.hpp> 
 
 
@@ -1359,3 +1362,5 @@ static const struct {
   "\315]\022\377\315]\022\377\315]\022\377\313[\020\337\311Y\015_\000\000\000\000\000\000\000\000",
 };
 
+#endif 
+//RED_BUTTON02_h

@@ -98,16 +98,24 @@ Entity::~Entity() {
 void Entity::initvariables()
 {
     this->texture = NULL;
+   
     this->hitbox = NULL;
     this->attributes = NULL;
     this->movementcomponets = NULL;
     this->skillcomponent = NULL;
+
 }
 
 void Entity::settexture(sf::Texture& texture)
 {
     this->texture = &texture;
     this->sprite.setTexture(texture);
+    
+}
+
+void Entity::setLightMapTexture(sf::Texture& texture)
+{
+     
     
 }
 
@@ -134,6 +142,7 @@ void Entity::setscale(float scale_x, float scale_y)
 
 
 
+
 void Entity::createmovementcomponet(const float maxVelocity, const float Acceleration, const float Deceleration)
 {
     
@@ -149,10 +158,9 @@ void Entity::create_animation_componet(sf::Texture& texturesheet)
     
 }
 
-void Entity::create_sound_component()
+void Entity::create_speaker(sf::SoundBuffer& buffer)
 {
-    this->soundcomponent = new SoundComponent(); 
-
+    this->speaker = new Sound::Speaker(this->sound, buffer);
 }
 
 
@@ -190,6 +198,8 @@ void Entity::create_attribute_componet(const unsigned level)
 }
 
 
+
+
 void Entity::create_hitbox_componet(sf::Sprite& sprite, float offset_x, float offset_y, float width, float height)
 {
 
@@ -224,6 +234,7 @@ const sf::Vector2i Entity::getGridPosition(const int gridSizeI) const
         @return const sf::Vector2i      The position of the entity relative to the grid
      
      */
+   
     if(this->hitbox)
         return sf::Vector2i(static_cast<int>(this->hitbox->getPosition().x) / gridSizeI, static_cast<int>(this->hitbox->getPosition().y) / gridSizeI);
     
@@ -278,6 +289,18 @@ void Entity::stopVelocityY()
 void Entity::create_skill_component()
 {
     this->skillcomponent = new SkillComponent(); 
+}
+
+void Entity::setRotation(float rot)
+{
+    this->sprite.setRotation(rot); 
+}
+
+void Entity::setScale(float scale_x, float scale_y)
+{
+    this->sprite.setScale(sf::Vector2f(scale_x, scale_y)); 
+
+  
 }
 
 

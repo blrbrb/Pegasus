@@ -59,7 +59,7 @@ private:
            // this->text.setFont(this->Textbox->font)
             this->text.setString(text);
             //this->text.setPosition(x, y);
-            this->text.setColor(sf::Color::White); 
+            this->text.setFillColor(sf::Color::White); 
             this->text.setCharacterSize(24); 
             
 

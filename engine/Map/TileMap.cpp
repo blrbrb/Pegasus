@@ -24,6 +24,7 @@ void TileMap::clear()
     //symmetry orgasim
     if(!this->Map.empty())
     {
+        LOG(INFO) << "Destroying Map Data..."; 
         for (int x=0; x < this->Map.size(); x++ )
              {
                  for (int y=0; y < this->Map[x].size(); y++ )
@@ -43,7 +44,7 @@ void TileMap::clear()
              }
         this->Map.clear();
         
-        std::cout << "Map Local Memory Size: " << " " << this->Map.size();
+        LOG(INFO) << "Map object cleared, current memory size (bytes)" << " " << this->Map.size();
     }
 }
 
@@ -72,7 +73,7 @@ void TileMap::init_object_textures()
     std::cout << "the stupid fucking texture is being initalized " << std::endl;
     if (!this->object_textures["LANTERN"].loadFromFile("Resources/Assets/Entity/Objects/lantern.png"))
     {
-        std::cout << "ERROR Could not load lantern object texture ObjectTile.cpp lin 40" << std::endl;
+        LOG(FATAL) << "Unable to load object texture" << std::endl;
 
     }
 
@@ -85,6 +86,13 @@ void TileMap::initvariables()
     this->initgeometry(); 
     this->init_object_textures();
 }
+
+void TileMap::initloggingthread()
+{
+    el::Helpers::setThreadName("%TileMap");
+}
+
+
 
 
 
@@ -440,7 +448,8 @@ const sf::Texture* TileMap::getTileSheet() const
 
 bool TileMap::savetofile(const std::string filename, bool json)
 {
-
+    assert(json); 
+    std::cout << json << std::endl;
     /*!
       @brief  Saves a vector of tiles as a string of integers to a document.
 
@@ -514,7 +523,7 @@ bool TileMap::savetofile(const std::string filename, bool json)
                          tiles_node.put(std::to_string(index) + ".texture_rect.left", this->Map[x][y][z][k]->gettexturerect().left);
                           
 
-                          std::cout << "Object Type: " <<  this->Map[x][y][z][k]->gettype() << std::endl;
+                          //std::cout << "Object Type: " <<  this->Map[x][y][z][k]->gettype() << std::endl;
 
                           
                           if (this->Map[x][y][z][k]->gettype() == TileTypes::OBJECT)
@@ -638,7 +647,8 @@ bool TileMap::savetofile(const std::string filename, bool json)
         else
         {
             std::cout << "ERROR CODE TILEMAP:392 || TILEMAP::SAVETOFILE || COULD NOT SAVE" << std::endl;
-
+            LOG(WARNING) << "Unable to save raw data to tilemap file";
+            LOG(FATAL) << "Throwing runtime exception on line 647...";
             throw std::runtime_error("ERROR CODE TILEMAP:392 || TILEMAP::SAVETOFILE || COULD NOT SAVE");
 
             return false;
@@ -670,7 +680,7 @@ bool TileMap::savetofile(const std::string filename, bool json)
 
 bool TileMap::loadfromfile(const std::string filename, bool json)
 {
-    assert(json);
+   
     if (json)
     {
        // this->grid_sizeF.x = this->pt.get<float>("Map.Config.GridsizeI.x");
@@ -692,7 +702,7 @@ bool TileMap::loadfromfile(const std::string filename, bool json)
         this->texture_file = this->pt.get<std::string>("Map.Config.texture"); 
       
 
-
+       // std::cout << gridsizeI.x << " " << gridsizeI.y << " current gridsie"
 
 
         this->clear();
@@ -722,11 +732,11 @@ bool TileMap::loadfromfile(const std::string filename, bool json)
         {
            
             total++;
-             std::cout << "Tile NO:" << tile.first << std::endl;
+            // std::cout << "Tile NO:" << tile.first << std::endl;
             //std::cout << "Tile data " <<  tile.second.data()<< std::endl;
-             std::cout << "position x " << tile.second.get<int>("x") << std::endl;    
-             std::cout << "position y " << tile.second.get<int>("y") << std::endl;
-             std::cout << "position z " << tile.second.get<int>("z") << std::endl;
+            // std::cout << "position x " << tile.second.get<int>("x") << std::endl;    
+            // std::cout << "position y " << tile.second.get<int>("y") << std::endl;
+             //std::cout << "position z " << tile.second.get<int>("z") << std::endl;
             
              //if the tile is an object tile (2), call the object tile constructor 
             if(tile.second.get<unsigned>("type") == TileTypes::OBJECT)
@@ -743,15 +753,16 @@ bool TileMap::loadfromfile(const std::string filename, bool json)
 
 
             else
-            std::cout << "pushing back new normal tile at postion " << tile.second.get<int>("x") << tile.second.get<int>("y") << tile.second.get<int>("z") << std::endl; 
+           // std::cout << "pushing back new normal tile at postion " << tile.second.get<int>("x") << tile.second.get<int>("y") << tile.second.get<int>("z") << std::endl; 
              this->Map[tile.second.get<int>("x")][tile.second.get<int>("y")][tile.second.get<int>("z")].push_back(new NormalTile(TileTypes::NORMAL, tile.second.get<int>("x"), tile.second.get<int>("y"), this->grid_sizeF, this->tileTextureSheet, sf::IntRect(tile.second.get<unsigned>("texture_rect.left"), tile.second.get<unsigned>("texture_rect.top"), this->gridsizeI.x, this->gridsizeI.y), tile.second.get<bool>("collision")));
  
         }
-        std::cout << "total tiles: " << total << std::endl;
+       // std::cout << "total tiles: " << total << std::endl;
 
         if (!this->tileTextureSheet.loadFromFile(texture_file))
         {
-            std::cout << "ERROR CODE TILEMAP:458 || LOADFROMFILE || Reason: UNABLE_TO_OPEN_FILE" << std::endl;
+           // LOG(WARNING) << "Unable to read data from texture file '" << texture_file << "'";
+            //LOG(FATAL) << "Throwing runtime exception on line 761...";
 
             throw std::runtime_error("ERROR CODE TILEMAP:458 || LOADFROMFILE || Reason: UNABLE_TO_OPEN_FILE");
         }
@@ -847,7 +858,8 @@ bool TileMap::loadfromfile(const std::string filename, bool json)
 
             if (!this->tileTextureSheet.loadFromFile(texture_file))
             {
-                std::cout << "ERROR CODE TILEMAP:458 || LOADFROMFILE || Reason: UNABLE_TO_OPEN_FILE" << std::endl;
+                LOG(WARNING) << "Unable to read data from texture file '" << texture_file << "'";
+                //LOG(FATAL) << "Throwing runtime exception on line  858...";
 
                 throw std::runtime_error("ERROR CODE TILEMAP:458 || LOADFROMFILE || Reason: UNABLE_TO_OPEN_FILE");
             }
@@ -936,7 +948,7 @@ void TileMap::addGenerationTexture(const std::string texture_filename)
 { 
     if (!this->tilegenerationSheet.loadFromFile(texture_filename)) 
     {
-        std::cout << "tilemap.cpp unable to load procedural generation tile textures" << std::endl; 
+        LOG(WARNING) << "unable to load procedural generation tile textures" << std::endl;
 
     }
 }
@@ -1032,6 +1044,7 @@ const sf::Vector2f TileMap::getMaxSize() const
    @return sf::Vector2f the maximum size of the tilemap as a vector of two floaing points
     @see Tilemap::getMaxSizeGrid()
    */
+   // LOG(INFO) << "Max Tilemap world size " << this->MaxSizeWorld_F.x; 
     return this->MaxSizeWorld_F;
 }
 
@@ -1192,7 +1205,7 @@ void TileMap::updateTiles(Entity *entity, const float &dt, EnemySystem& enemysys
 {
     this->layer = 0;
     
-    this->FromX = entity->getGridPosition(this->gridsizeI.x).x -27;
+    this->FromX = entity->getGridPosition(this->gridsizeI.x).x -2;
     
         if(this->FromX < 0)
             this->FromX = 0;

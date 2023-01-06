@@ -18,7 +18,7 @@
 #include "DialougeSystem.hpp"
 
 
-class Enemy;
+
 class State;
 class GameStateData;
 
@@ -51,10 +51,12 @@ public:
     //Accessors
     ///turn based battle accessor. Returns wether or not the player, or enemy has taken a turn
     bool getturn();
+
     const bool getEventtime();
     
     //render functions
     void render(sf::RenderTarget* target = NULL);
+    
     void renderBattleGUI(sf::RenderTarget& target);
     void renderBackground(sf::RenderTarget& target);
  

@@ -18,16 +18,17 @@ private:
     sf::Sound Levelsound;
     bool attacked;
     void initsounds(); 
- 
+  
 public:
     
+   
         //Leveling 
       int level;
       int exp;
       int expNextlvl;
       int attributepts;
       
-
+    
       //Time Variables 
       int Magic_Charge; 
       int stamina; 

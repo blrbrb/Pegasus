@@ -32,7 +32,9 @@ public:
     
     //Accessors
     const sf::FloatRect getGlobalBounds() const;
+    const sf::Vector2f getSize() const;
     const sf::Vector2f& getPosition() const;
+    const sf::Vector2f& getOffset() const;
     const sf::FloatRect& getNextPosition(const sf::Vector2f& velocity); 
     
     

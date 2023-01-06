@@ -163,6 +163,10 @@ public:
     ///Change, or set the Button's unique ID
     void setID(const short unsigned ID);
 
+    void resize(sf::Vector2f newsize);
+    void reposition(sf::Vector2f newposition);
+    void recalc_CharSize(unsigned newsize); 
+
     void load_from_header();
     
 
@@ -382,6 +386,12 @@ private:
 
 };
 }
+
+
+
+
+
+
 
 
 

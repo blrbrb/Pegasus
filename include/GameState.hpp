@@ -10,6 +10,7 @@ engineFramework
  @version 0.06.0.0
 */
 
+#pragma once 
 #ifndef GameState_hpp
 #define GameState_hpp
 #include "State.hpp"
@@ -19,13 +20,16 @@ engineFramework
 #include "EnemySystem.hpp"
 #include "DialougeSystem.hpp"
 #include "BattleState.hpp"
+#include "AudioComponent.h"
+
+
 
 
 
 
 enum GAME_MODES {DEFAULT_GAME= 0, BATTLE};
 
-class Enemy;
+class State; 
 class Blrb;
 class PauseMenu;
 class Player;
@@ -46,10 +50,10 @@ public:
 
 
 /// The Main GameState, containing the main gameplay elements
-class GameState : public State {
+class GameState : public State { 
 
 
-public:
+    public:
     
     GameState(StateData* state_data);
     virtual ~GameState();
@@ -92,6 +96,7 @@ public:
     void updatetilemap(const float& dt);
     ///Render all of the Gamestate elements
     void render(sf::RenderTarget* target);
+
     
     void updateDialouge(const float& dt); 
     
@@ -102,14 +107,16 @@ public:
     //Modifiers 
     const bool savegame() const;
     
-private:
+    private:
     
     //View and Camera
     sf::View view;
     float cameraspeed;
     class BattleState* battleState;
-    
-  
+    //sf::Color debug; 
+    float debug1;
+    sf::Color debug;
+    ImVec4 selection_color_Imgui;
     
     Player* player;
     PlayerGUI* playerGUI;
@@ -160,7 +167,8 @@ private:
     void initvariables();
     void initdialougesystem();
     void initworldbounds(); 
-    void initsounds(); 
+ 
+    
 
 
     //Exception handler Functions 
@@ -168,9 +176,6 @@ private:
     void handleshader(); 
     void handlekeybinds(); 
     void handlefonts(); 
-  
-  
-
     
 };
 #endif /* GameState_hpp */

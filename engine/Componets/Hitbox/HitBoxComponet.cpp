@@ -87,6 +87,11 @@ const sf::FloatRect HitBoxComponet::getGlobalBounds() const
     
 }
 
+const sf::Vector2f HitBoxComponet::getSize() const
+{
+    return this->hitbox.getSize();
+}
+
 const sf::FloatRect& HitBoxComponet::getNextPosition(const sf::Vector2f &velocity)
 {
     
@@ -100,6 +105,11 @@ const sf::FloatRect& HitBoxComponet::getNextPosition(const sf::Vector2f &velocit
 const sf::Vector2f& HitBoxComponet::getPosition() const
 {
     return this->hitbox.getPosition();
+}
+
+const sf::Vector2f& HitBoxComponet::getOffset() const
+{
+    return sf::Vector2f(this->offsetX, this->offsetY); 
 }
 
 

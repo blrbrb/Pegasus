@@ -27,11 +27,9 @@ protected:
     sf::Sprite rect;
     short type;
     short object_type;
-
-
-
-
-
+    
+   
+  
 public:
    
     Tile();
@@ -51,7 +49,7 @@ public:
     virtual const sf::Vector2i getTextureCoords() const;
     virtual const short& getObject_type() const;
     virtual void savetoFile(std::ofstream& out) = 0; 
-   
+    
     
     //Functions
     virtual void update(const float& dt) =0;

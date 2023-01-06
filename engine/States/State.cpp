@@ -12,17 +12,18 @@
 
 State::State(StateData* state_data)  {
     
-    this->initlog();
+   
+   
 
    
 
     if (state_data != nullptr) {
         this->state_data = state_data;
-        this->log("state data is working 21:State.cpp", "Main");
+        std::cout << "state data working as normal" << std::endl; 
     } 
     else 
     {
-         this->log("the state data was nullptr...", "Main");
+        LOG(WARNING) << "the state data was nullptr..."; 
     }
     this->window = state_data->window; 
     this->supportedkeys = state_data->supportedkeys;
@@ -32,7 +33,7 @@ State::State(StateData* state_data)  {
     this->keytime = 0.f; 
     this->keytime_MAX = 2.3f;
     this->gridsize = *state_data->gridsize;  
-  
+   
    
      
 }
@@ -58,10 +59,7 @@ const bool State::getkeytime()
 
 void State::log(std::string stat, std::string log_instance)
 { 
-    utils::log_stream log1(log_instance, *this->outfile);
-    
-
-     log1(stat);
+   
 
    
 }
@@ -77,8 +75,9 @@ const bool & State::getquit()const
 }
 
 void State::endstate()
-{
-   
+{   
+    
+    LOG(INFO) << &this->quit;
     this->quit = true;
     
     
@@ -131,10 +130,10 @@ void State::updatekeytime(const float& dt)
 
 }
 
-void State::initlog()
+void State::initfiles()
 {
-    this->outfile = new std::ofstream("Pegasus.log.txt"); 
-   
+
+
 }
 
 
@@ -153,11 +152,4 @@ void State::Unpause_State()
     this->paused = false; 
     
 }
-
-void State::create_sound_component()
-{
-    this->soundcomponent = new SoundComponent(); 
-
-}
-
 

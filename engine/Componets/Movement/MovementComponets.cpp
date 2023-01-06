@@ -282,6 +282,11 @@ const float & MovementComponets::getAcceleration() const
     return this->Acceleration;
 }
 
+const float& MovementComponets::getDecceleration() const
+{
+    return this->Deceleration;
+}
+
 const bool MovementComponets::getmovetime()
 {
     if (this->movement_time >= this->movement_timeMax)

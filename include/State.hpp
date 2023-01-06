@@ -9,7 +9,8 @@
 #ifndef State_hpp
 #define State_hpp
 #include "Player.hpp"
-#include "GraphicsSettings.hpp"  
+#include "GraphicsSettings.hpp" 
+#include "AudioComponent.h"
 
 
 class Player;
@@ -26,7 +27,10 @@ class StateData
  
 public:
     
-    StateData() {};
+    StateData() 
+    {
+        
+    };
     
    ///The size of each individual tile in a grid. If The Tiles are square and have a uniform size 
     //float gridsize;  
@@ -39,10 +43,11 @@ public:
     ///States
     std::stack<State*>* states;
     ///User-defined graphics settings
-    GraphicsSettings* gfxsettings;  
-    //the sounds 
-   
-   
+    GraphicsSettings* gfxsettings;
+
+    Sound::MusicPlayer* music;
+    //the sounds and music 
+  
     
     
 };
@@ -65,7 +70,7 @@ class State {
     bool quit;
     ///Has the State been Paused?
     bool paused;
-
+    //char shadow = *((&quit >> 3) + _asan_runtime_assigned_offset
     
     //Acessors
     /// Retrieve wether or not the user has requested to end the Application
@@ -87,7 +92,7 @@ class State {
     void Unpause_State();
     //Write to the Log file
 
-    void create_sound_component(); 
+
 
 
     //Pure Virtual/Template Update functions
@@ -96,6 +101,7 @@ class State {
     virtual void update(const float& dt) = 0;
     virtual void render(sf::RenderTarget* target = NULL) = 0;
     virtual void updatekeytime(const float& dt);  
+    
     
 
 protected:
@@ -108,8 +114,9 @@ protected:
     sf::RenderWindow* window;
     //float gridsize;
     sf::Vector2f gridsize; 
+    //std::ostream outfile; 
     StateData* state_data; 
-    SoundComponent* soundcomponent;
+   
     ///The cursor's position relative to the screen
     sf::Vector2i MousePosScreen;
     /// The cursor's position relative to the window
@@ -125,8 +132,10 @@ protected:
     std::map<std::string, int>* supportedkeys;
     /// Keys with a user-supplied map
     std::map<std::string, int> keybinds;
-    //Logging file 
-    std::ofstream* outfile;
+
+   
+  
+   
 
 
     virtual void initkeybinds() = 0; 
@@ -134,7 +143,10 @@ protected:
     float keytime;
     float keytime_MAX;
     
-    void initlog(); 
+    virtual void initfiles();
+
+    
+   
     //State mechanism
     std::stack<State*>* states; 
     

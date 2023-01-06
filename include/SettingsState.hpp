@@ -10,6 +10,8 @@
 #define SettingsState_hpp
 #include "State.hpp"
 #include "GUI.hpp"
+#include "icon.h"
+
 
 /// Class with methods that allow the user to change basic settings 
 class SettingsState : public State
@@ -37,6 +39,8 @@ private:
     //Gui variables 
     const char* items[120];
     const char* current_item; 
+     bool open;
+    float music_volume;
     std::string selection_temp; 
     //const char* current_item;
     
@@ -58,6 +62,7 @@ public:
     void renderGUI(sf::RenderTarget& target);
     void updateevents();
     void render(sf::RenderTarget* target = nullptr);
+  
     
 };
 

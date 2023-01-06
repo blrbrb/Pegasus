@@ -30,6 +30,7 @@ void EnemySystem::SpawnEnemy(const short type, const float x, const float y, Ene
     switch (type)
     {
         case EnemyTypes::BLRB:
+            LOG(INFO) << "Spawning new enemy type:" << type << "at " << "X:" << x << "Y:" << y;
             this->ActiveEnemies.push_back(new Blrb(x, y, this->textures["ENEMY_SHEET"], enemy_spawner_tile));
             enemy_spawner_tile.increaseEnemyCounter();
             

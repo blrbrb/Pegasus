@@ -87,7 +87,7 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
     ///const sf::Uint8* test = reinterpret_cast<sf::Uint8*>(red_button00_data);
   
   
-
+    el::Helpers::setThreadName("GUI");
      
     this->ButtonState = IDLE_BUTTON;
     this->ID = ID; 
@@ -110,19 +110,19 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
        
         if (!this->idle.loadFromFile(idle_texture))
         {
-            std::cout << "unable to initalize custom button [IDLE_BUTTON] texture " << idle_texture << " . Falling back on default button [IDLE_BUTTON] texture" << std::endl;
+            LOG(WARNING) << "unable to initalize custom button [IDLE_BUTTON] texture " << idle_texture << " . Falling back on default button [IDLE_BUTTON] texture" << std::endl;
             this->load_from_header();
         }
 
         if (!this->clicked.loadFromFile(active_texture))
         {
 
-            std::cout << "unable to initalize custom button [PRESSED] texture " << active_texture << " . Falling back on default button [PRESSED] texture" << std::endl;
+            LOG(WARNING) << "unable to initalize custom button [PRESSED] texture " << active_texture << " . Falling back on default button [PRESSED] texture" << std::endl;
             this->load_from_header();
         }
         if (!this->hover_texture.loadFromFile(hover_texture))
         {
-            std::cout << "unable to initalize custom button [HOVER] texture " << hover_texture << " . Falling back on default button [HOVER] texture" << std::endl;
+            LOG(WARNING) << "unable to initalize custom button [HOVER] texture " << hover_texture << " . Falling back on default button [HOVER] texture" << std::endl;
             this->load_from_header();
         }
 
@@ -131,7 +131,7 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
     {
         std::cerr << e.exception::what() << std::endl;
         std::cout << e.what() << std::endl;
-        std::cout << "GUI::BUTTON(float x, float y, float width, float height, sf::Font *font, std::string text, unsigned int" << std::endl << "character_size, const std::string idle_texture, const std::string active_texture, const std::string" << std::endl << "hover_texture, short unsigned ID)" << std::endl;
+        LOG(FATAL) << "GUI::BUTTON(float x, float y, float width, float height, sf::Font *font, std::string text, unsigned int" << std::endl << "character_size, const std::string idle_texture, const std::string active_texture, const std::string" << std::endl << "hover_texture, short unsigned ID)" << std::endl;
     }
     
     this->rectangle.setTexture(&idle);
@@ -142,7 +142,7 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
 GUI::Button::Button(float x, float y, float width, float height, const std::string idle_texture, const std::string active_texture, const std::string hover_texture, short unsigned ID)
 {
   
-    
+    el::Helpers::setThreadName("GUI");
     /*!
     
     @brief Simplified Constructor for the GUI Button Element.
@@ -168,7 +168,7 @@ GUI::Button::Button(float x, float y, float width, float height, const std::stri
     {
         if (!this->idle.loadFromFile(idle_texture))
         {
-            std::cout << "unable to initalize custom button [IDLE_BUTTON] texture " << idle_texture << " . Falling back on default button [IDLE_BUTTON] texture" <<  std::endl;
+            LOG(WARNING) << "unable to initalize custom button [IDLE_BUTTON] texture " << idle_texture << " . Falling back on default button [IDLE_BUTTON] texture";
             this->load_from_header(); 
 
         }
@@ -176,12 +176,12 @@ GUI::Button::Button(float x, float y, float width, float height, const std::stri
         if(!this->clicked.loadFromFile( active_texture))
         {
             
-            std::cout << "unable to initalize custom button [PRESSED] texture " << active_texture << " . Falling back on default button [PRESSED] texture" << std::endl;
+            LOG(WARNING) << "unable to initalize custom button [PRESSED] texture " << active_texture << " . Falling back on default button [PRESSED] texture";
             this->load_from_header();
         }
         if(!this->hover_texture.loadFromFile(hover_texture))
         {
-            std::cout << "unable to initalize custom button [HOVER] texture " << hover_texture << " . Falling back on default button [HOVER] texture" << std::endl;
+            LOG(WARNING) << "unable to initalize custom button [HOVER] texture " << hover_texture << " . Falling back on default button [HOVER] texture";
             this->load_from_header();
         }
            
@@ -362,6 +362,20 @@ void GUI::Button::setText(const std::string text)
     this->text.setString(text);
     
     
+}
+
+void GUI::Button::resize(sf::Vector2f newsize)
+{
+    this->rectangle.setSize(newsize);
+}
+
+void GUI::Button::reposition(sf::Vector2f newposition)
+{
+    this->rectangle.setPosition(newposition);
+}
+
+void GUI::Button::recalc_CharSize(unsigned newsize)
+{
 }
 
 void GUI::Button::load_from_header()
@@ -1037,3 +1051,10 @@ GUI::EditorStateGUI::EditorStateGUI()
 GUI::EditorStateGUI::~EditorStateGUI()
 {
 }
+
+
+
+
+
+
+

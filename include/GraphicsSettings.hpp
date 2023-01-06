@@ -30,6 +30,8 @@ class GraphicsSettings
           unsigned depth; 
           unsigned antialias_level; 
           unsigned stencil_depth; 
+          unsigned major_OpenGL_version; 
+          unsigned minor_OpenGL_version;
           unsigned ppi; 
 
 
