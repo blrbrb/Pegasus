@@ -137,7 +137,15 @@ private:
         //*End Functions*
 
         //*Accessors*
-
+        //There needs to be a much much more efficent way to access all of these private class values. 
+        //fuckin return a struct that contains all of the animation data in a single object or something man idk 
+        ///The player's controllable character should resemble as closely as possible the framewidth inbetween movements to appear like friendship is magic 
+        //don't fuck around with the float timer please. 
+        //that means you, kenneth. 
+        
+        
+      
+                                                                                                                                                                                                                                             
         const bool& getDone() const
         {
             return this->done;
@@ -210,16 +218,22 @@ private:
         
         //*End Accessors*
     };
-
+    
+    
+    ///Why are we using an external library for the animation container? We could make a pretty decent one with std::map? 
+    //is there an issue with the unordered nature of the maps? Would vectors be a better use case here? 
     typedef boost::bimaps::bimap<std::string, Animation*> animations;
     typedef boost::bimaps::bimap<std::string, Animation*>::value_type animation;
     typedef boost::bimaps::bimap<std::string, Animation*>::left_map::iterator name;
-    typedef boost::bimaps::bimap<std::string, Animation*>::right_map::iterator data;
+    typedef boost::bimaps::bimap<std::string, Animation*>::right_map::iterator data; 
+    
+    ///
     sf::Sprite& sprite;
     sf::Texture& texturesheet;
    
 
     animations Animations;
+    ///i.e right here, the names of the animations are being indexed. See Pony.xml, where they aren't stored with a string name at all
     std::vector<std::string> names;
     Animation* lastAnimation;
     Animation* priorityAnimation;
@@ -258,11 +272,15 @@ public:
      const int& getWidth(int index);
      const int& getHeight(int index);
 
+    
+       
      const int& getStartRectLeft(int index);
      const int& getStartRectTop(int index);
      const int& getStartRectWidth(int index);
      const int& getStartRectHeight(int index);
      const float& getTimer(int index);
+    
+     ///@params index the iterator used to access a specific animation in the map. 
      const int& getEndRectLeft(int index);
      const int& getEndRectTop(int index);
      const int& getEndRectWidth(int index);
