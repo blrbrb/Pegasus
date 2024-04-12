@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/src/include",
+                "~/usr/include",
+                "~/usr/local/include",
+                "${workspaceFolder}/src/Imgui"
+            ],
+            "defines": ["BOOST_STATIC=1"],
+            "cStandard": "c17",
+            "cppStandard": "gnu++20",
+            "intelliSenseMode": "linux-gcc-x64",
+            "browse": {
+                "path": [
+                    "~/usr/local/include",
+                    "src/include",
+                    "~/usr/include",
+                    "~/usr/local/include", 
+                    "~/usr/local/lib",
+                    "src/Imgui"
+                ]
+            }
+        }
+    ],
+    "version": 4
+}

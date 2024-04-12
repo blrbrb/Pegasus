@@ -1,8 +1,0 @@
-C:\Users\elire\source\repos\Pegasus\x64\Debug\Pegasus .vcxproj.CopyComplete
-C:\Users\elire\source\repos\Pegasus\x64\Debug\Pegasus .exe
-C:\Users\elire\source\repos\Pegasus\x64\Debug\freetyped.dll
-C:\Users\elire\source\repos\Pegasus\x64\Debug\zlibd1.dll
-C:\Users\elire\source\repos\Pegasus\x64\Debug\bz2d.dll
-C:\Users\elire\source\repos\Pegasus\x64\Debug\libpng16d.dll
-C:\Users\elire\source\repos\Pegasus\x64\Debug\brotlidec.dll
-C:\Users\elire\source\repos\Pegasus\x64\Debug\brotlicommon.dll

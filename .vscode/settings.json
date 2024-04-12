@@ -1,0 +1,12 @@
+{
+    "cmake.configureOnOpen": true,
+    "C_Cpp.default.compilerPath": "/usr/bin/g++",
+    "makefile.makefilePath": "/home/eli/Documents/source/repos/Pegasus/Makefile",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/eli/Documents/source/repos/Pegasus",
+            "binaryPath": "/home/eli/Documents/source/repos/Pegasus/Pegasus",
+            "binaryArgs": []
+        }
+    ]
+}

@@ -1,0 +1,109 @@
+{
+    "options": {"env": {
+        "PegasusHome": "$(pwd)", 
+        "PegasusEngine": "${workspaceFolder}/engine", 
+        "PegasusInclude": "${workspaceFolder}/include", 
+        "PegasusImgui": "${workspaceFolder}/Imgui"
+    }},
+    
+    "tasks": [
+        {
+            
+            "type": "cppbuild",
+            "label": "C/C++: g++ build active file",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-g",
+                "-w",
+                "-Wreturn-local-addr",
+                "${workspaceFolder}/Imgui/imgui-SFML.cpp",
+                "${fileDirname}//**.cpp", 
+                "${workspaceFolder}/engine/States/State.cpp",
+                "${workspaceFolder}/engine/States/MainMenuState.cpp",
+                "${workspaceFolder}/engine/States/GameState/GameState.cpp",
+                "${workspaceFolder}/engine/States/Editor/EditorState.cpp",
+                "${workspaceFolder}/engine/States/Editor/EditorModes.cpp",
+                "${workspaceFolder}/engine/States/Editor/DefaultMode.cpp",
+                "${workspaceFolder}/engine/States/Editor/EnemyEditorMode.cpp",
+                "${workspaceFolder}/engine/States/Editor/EnviornmentalMode.cpp",
+                "${workspaceFolder}/engine/States/Editor/ShaderEditorMode.cpp",
+                "${workspaceFolder}/engine/States/Editor/CharacterEditorState.cpp",
+                "${workspaceFolder}/engine/States/PauseMenu/PauseMenu.cpp",
+                "${workspaceFolder}/engine/States/Settings/SettingsState.cpp",
+                "${workspaceFolder}/engine/Componets/GUI/GUI.cpp",
+                "${workspaceFolder}/engine/Componets/GUI/CharacterTab.cpp",
+                "${workspaceFolder}/engine/Componets/GUI/BattleGUI.cpp",
+                "${workspaceFolder}/engine/Componets/GUI/PlayerGUI.cpp",
+                "${workspaceFolder}/engine/Componets/GUI/PlayerGUITabs.cpp",
+                "${workspaceFolder}/engine/Componets/GUI/Tab.cpp",
+                "${workspaceFolder}/engine/Componets/GUI/GraphicsSettings.cpp",
+                "${workspaceFolder}/engine/Componets/inventory/Inventory.cpp",
+                "${workspaceFolder}/engine/Componets/Movement/MovementComponets.cpp",
+                "${workspaceFolder}/engine/Componets/Skill/SkillComponent.cpp",
+                "${workspaceFolder}/engine/Componets/Hitbox/hitboxcomponet.cpp",
+                "${workspaceFolder}/engine/Entities/Entity.cpp",
+                "${workspaceFolder}/engine/Entities/Player/Player.cpp",
+                "${workspaceFolder}/engine/Entities/Enemy/Blrb/Blrb.cpp", 
+                "${workspaceFolder}/engine/Componets/Animation/animationComponet.cpp",
+                "${workspaceFolder}/engine/Componets/Attributes/StatusComponet.cpp",
+                "${workspaceFolder}/engine/Componets/dialog/DialougeSystem.cpp",
+                "${workspaceFolder}/engine/Entities/Enemy/Blerb/Blerb.cpp",
+                "${workspaceFolder}/engine/Entities/Enemy/Enemy.cpp", 
+                "${workspaceFolder}/engine/Componets/Candle/Color.cpp",
+                "${workspaceFolder}/engine/Componets/Candle/Constants.cpp",
+                "${workspaceFolder}/engine/Componets/Candle/DirectedLight.cpp",
+                "${workspaceFolder}/engine/Componets/Candle/LightingArea.cpp",
+                "${workspaceFolder}/engine/Componets/Candle/LightSource.cpp",
+                "${workspaceFolder}/engine/imgui_draw.cpp",
+                "${workspaceFolder}/engine/imgui_tables.cpp",
+                "${workspaceFolder}/engine/imgui_widgets.cpp",
+                "${workspaceFolder}/engine/Imgui/imgui-SMFL.cpp",
+                "${workspaceFolder}/engine/Imgui/imgui_impl_opengl2.cpp",
+                "${workspaceFolder}/engine/Componets/Candle/Polygon.cpp",
+                "${workspaceFolder}/engine/Componets/Candle/RadialLight.cpp",
+                "${workspaceFolder}/engine/Componets/Candle/VertexArray.cpp",
+                "${workspaceFolder}/engine/Entities/Enemy/EnemySystem/EnemySystem.cpp",
+                "${workspaceFolder}/engine/Map/TileMap.cpp",
+                "${workspaceFolder}/engine/Map/Level.cpp",
+                "${workspaceFolder}/engine/Map/Levels.cpp",
+                "${workspaceFolder}/engine/Tiles/Normal/NormalTile.cpp",
+                "${workspaceFolder}/engine/Tiles/Object/ObjectTile.cpp",
+                "${workspaceFolder}/engine/Tiles/Tile.cpp",
+                "${workspaceFolder}/engine/Tiles/EnemySpawner/EnemySpawner.cpp",
+
+
+                
+                //"${fileDirname}\\**.h",
+                "-o",
+                "Pegasus",
+                "-I",
+                "${workspaceFolder}/include", 
+                "-I",
+                "${workspaceFolder}/Imgui","-fpermissive",
+                "-I", 
+                "/usr/./local/include/SFML",
+                "-I/usr/local/lib/SFML/lsfml-system",
+                "-I/usr/local/lib/SFML/llsfml-audio", 
+                "-I/usr/local/lib/SFML/llsfml-graphics", 
+                "-I/usr/local/lib/SFML/llsfml-window", 
+                "lglut",
+                "-LGLU",
+                "-lGL"
+
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            
+            "detail": "Task generated by Debugger."
+        }
+    ],
+    "version": "2.0.0"
+}
