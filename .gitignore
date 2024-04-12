@@ -1,8 +1,10 @@
 # Prerequisites
 *.d
 
-#visual studio caches 
-/.vs 
+#raw object files 
+**/.o 
+
+
 
 #Application Resources 
 **/.png
@@ -17,7 +19,7 @@
 # Compiled Object files
 **/.slo
 **/.lo
-**/.o
+**/*.o
 **/.obj
 
 # Precompiled Headers
