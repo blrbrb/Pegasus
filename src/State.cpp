@@ -10,7 +10,7 @@
 #include "include/State.hpp"
 
 
-State::State(StateData* state_data)  {
+State::State(StateData* state_data) :state_ID(0)  {
     
 
     if (state_data != nullptr) {
@@ -22,31 +22,30 @@ State::State(StateData* state_data)  {
         //LOG(WARNING) << "the state data was nullptr..."; 
     }
     this->window = state_data->window; 
-    this->supportedkeys = state_data->supportedkeys;
+    this->supportedKeys = state_data->supportedKeys;
     this->states = state_data->states;
     this->quit = false;
     this->paused = false;
-    this->keytime = 0.f; 
-    this->keytime_MAX = 2.3f;
-    this->gridsize = *state_data->gridsize;  
+    this->keyTime = 0.f;
+    this->keyTimeMax = 2.3f;
+    this->gridSize = *state_data->gridSize;
    
    
      
 }
 
 State::~State() {
-   
-    
+    delete this->state_data;
 }
 
 
-const bool State::getkeytime()
+bool State::getKeyTime()
 {
   
     
-    if (this->keytime >= this->keytime_MAX)
+    if (this->keyTime >= this->keyTimeMax)
     {
-        this->keytime = 0.f;
+        this->keyTime = 0.f;
         return true;
     }
     
@@ -62,7 +61,7 @@ void State::log(std::string stat, std::string log_instance)
 
   
 
-const bool & State::getquit()const
+const bool & State::getQuit()const
 {
    
     
@@ -70,7 +69,7 @@ const bool & State::getquit()const
     
 }
 
-void State::endstate()
+void State::endState()
 {   
     
     //LOG(INFO) << &this->quit;
@@ -100,13 +99,13 @@ void State::updateMousePosition(sf::View* view)
     
     this->MousePosView = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window));  
 
-    if(this->state_data->gridsize->y) 
-        this->MousePosGridI = sf::Vector2i(static_cast<int>(this->MousePosView.x) / static_cast<int>(this->gridsize.x),
-            static_cast<int>(this->MousePosView.y) / static_cast<int>(this->gridsize.y)); 
+    if(this->state_data->gridSize->y)
+        this->MousePosGridI = sf::Vector2i(static_cast<int>(this->MousePosView.x) / static_cast<int>(this->gridSize.x),
+            static_cast<int>(this->MousePosView.y) / static_cast<int>(this->gridSize.y));
 
 
-    this->MousePosGridF = sf::Vector2f(this->MousePosView.x / static_cast<int>(this->gridsize.x),
-        this->MousePosView.y / static_cast<int>(this->gridsize.y));
+    this->MousePosGridF = sf::Vector2f(this->MousePosView.x / static_cast<int>(this->gridSize.x),
+        this->MousePosView.y / static_cast<int>(this->gridSize.y));
     
     /*else 
     this->MousePosGrid = sf::Vector2i(static_cast<int>(this->MousePosView.x) / static_cast<int>(this->gridSize.x),
@@ -116,17 +115,17 @@ void State::updateMousePosition(sf::View* view)
     this->window->setView(this->window->getDefaultView());
 }
 
-void State::updatekeytime(const float& dt)
+void State::updateKeyTime(const float& dt)
 {
  
-    if (this->keytime < this->keytime_MAX)
+    if (this->keyTime < this->keyTimeMax)
     {
-        this->keytime += 10.f * dt;
+        this->keyTime += 10.f * dt;
     }
 
 }
 
-void State::initfiles()
+void State::initFiles()
 {
 
 
@@ -134,14 +133,14 @@ void State::initfiles()
 
 
 
-void State::Pause_State()
+void State::pause()
 {
    
     this->paused = true;
 }
 
 
-void State::Unpause_State()
+void State::unpause()
 {
     
   

@@ -71,7 +71,7 @@ void EditorState::initButtons()
 
 void EditorState::inittilemap()
 {
-    this->Tilemap = new TileMap(this->gridsize, 100, 100, "Resources/Assets/Tiles/sheet.png");
+    this->Tilemap = new TileMap(this->gridSize, 100, 100, "Resources/Assets/Tiles/sheet.png");
     this->Tilemap->addGenerationTexture("Resources/Assets/Tiles/sheet.png"); 
 }
 
@@ -110,7 +110,7 @@ void EditorState::updatepausemenubuttons()
     //Quit: Back to Main
     if(this->pMenu->isButtonPressed("Editor_Pause_Quit_Button"))
     {
-        this->endstate();
+        this->endState();
     }
 
     
@@ -120,8 +120,8 @@ void EditorState::updatepausemenubuttons()
         //handle TileMap saving errors
         try
         {
-           
-            this->Tilemap->savetofile("Data/TileMap/text.dat");
+
+            this->Tilemap->saveToFile("Data/TileMap/text.dat");
         }
         
         catch (std::runtime_error& e)
@@ -137,7 +137,7 @@ void EditorState::updatepausemenubuttons()
     {
         try
         {
-            this->Tilemap->loadfromfile("Data/TileMap/text.dat");
+            this->Tilemap->loadFromFile("Data/TileMap/text.dat");
         }
         
         catch (std::runtime_error& e)
@@ -171,10 +171,10 @@ void EditorState::initkeybinds()
          {
              std::string key = "";
              std::string key2 = "";
-             //std::cout << "editorstate keybinds exist" << std::endl; 
+             //std::cout << "editorstate keyBinds exist" << std::endl;
              while (ifs >> key >> key2)
              {
-                 this->keybinds[key] = this->supportedkeys->at(key2);
+                 this->keyBinds[key] = this->supportedKeys->at(key2);
                 // std::cout << key << key2 << std::endl; 
                 
  
@@ -206,7 +206,7 @@ void EditorState::initmodes()
 
 void EditorState::initlevels()
 {
-    this->levels = new Levels(*this->state_data->gridsize); 
+    this->levels = new Levels(*this->state_data->gridSize);
     this->levels->add_level("Map"); 
     this->curr_level = "Map";
     this->levels->set_current_level(this->curr_level); 
@@ -330,9 +330,9 @@ void EditorState::initbackground()
 void EditorState::initeditorstatedata()
 {
     //this->editorstatedata.view = &this->view;
-    this->editorstatedata.keybinds = &this->keybinds;
-    this->editorstatedata.keytime = &this->keytime;
-    this->editorstatedata.ketyimeMax = &this->keytime_MAX;
+    this->editorstatedata.keybinds = &this->keyBinds;
+    this->editorstatedata.keytime = &this->keyTime;
+    this->editorstatedata.ketyimeMax = &this->keyTimeMax;
 
     this->editorstatedata.mouseposGridI = &this->MousePosGridI;
     this->editorstatedata.mousePosView = &this->MousePosView;
@@ -355,7 +355,7 @@ void EditorState::update(const float& dt) {
    
     this->updateMousePosition(&this->mainview);
     this->updateshaders(dt);
-    this->updatekeytime(dt);
+    this->updateKeyTime(dt);
     this->updateEditorinput(dt);
     
    
@@ -386,30 +386,30 @@ void EditorState::updateInput(const float& dt) {
 
 
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_CAMERA_RIGHT"))))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("MOVE_CAMERA_RIGHT"))))
     {
         this->mainview.move(this->cameraspeed * dt, 0.f);
-       // this->Tilemap->savetofile("text.slmp");
+       // this->Tilemap->saveToFile("text.slmp");
         //std::cout << "camera right" << std::endl;
       //  std::cout << "Map Saved" << std::endl;
     }
     
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_CAMERA_LEFT"))))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("MOVE_CAMERA_LEFT"))))
     {
         this->mainview.move(-this->cameraspeed * dt, 0.f);
     }
     
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_CAMERA_UP"))))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("MOVE_CAMERA_UP"))))
     {
         this->mainview.move(0.f, -this->cameraspeed * dt);
     }
     
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_CAMERA_DOWN"))))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("MOVE_CAMERA_DOWN"))))
     {
         this->mainview.move(0.f, this->cameraspeed * dt);
     }
     
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::L) && this->getkeytime())
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::L) && this->getKeyTime())
     {
         if(this->levels->getCurrent()->lock_layer)
        this->Tilemap->lock_layer = false;
@@ -453,7 +453,7 @@ void EditorState::updateInput(const float& dt) {
         this->mainview.zoom(1.01);
     }
     
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P) && this->getkeytime())
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P) && this->getKeyTime())
     {
         this->mainview.zoom(0.5);
     }
@@ -475,7 +475,7 @@ void EditorState::updateInput(const float& dt) {
       
     //dec the current editor mode
     
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num2) && this->getkeytime())
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num2) && this->getKeyTime())
        {
            if (this->activeMode < this->modes.size() - 1)
            {
@@ -526,13 +526,13 @@ void EditorState::updateevents()
 void EditorState::updateEditorinput(const float& dt)
 {
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("CLOSE"))) && this->getkeytime())
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("CLOSE"))) && this->getKeyTime())
     {
         if (!this->paused)
-            this->Pause_State();
+            this->pause();
 
         else
-            this->Unpause_State();
+            this->unpause();
     }
     
     
@@ -601,7 +601,7 @@ void EditorState::updateGUI(const float& dt)
         }
         if (ImGui::BeginMenu("View"))
         {
-            if (ImGui::MenuItem("Zoom In") && this->getkeytime()) 
+            if (ImGui::MenuItem("Zoom In") && this->getKeyTime())
             {
                 this->mainview.zoom(0.5);
             }
@@ -613,7 +613,7 @@ void EditorState::updateGUI(const float& dt)
                 ImGui::PopTextWrapPos();
                 ImGui::EndTooltip();
             }
-            if (ImGui::MenuItem("Reset View") && this->getkeytime())
+            if (ImGui::MenuItem("Reset View") && this->getKeyTime())
             {
                
                 this->mainview.reset(this->view_default_reset);
@@ -629,7 +629,7 @@ void EditorState::updateGUI(const float& dt)
                 ImGui::EndTooltip();
             }
 
-            if (ImGui::MenuItem("Zoom In") && this->getkeytime())
+            if (ImGui::MenuItem("Zoom In") && this->getKeyTime())
             {
                 this->mainview.zoom(0.5);
             }
@@ -727,7 +727,7 @@ void EditorState::updateGUI(const float& dt)
 
         if (load) 
         {
-            this->Tilemap->loadfromfile("Data/TileMap/New_Map.cfg", true);
+            this->Tilemap->loadFromFile("Data/TileMap/New_Map.cfg", true);
             load = false;
         }
             if (ImGui::Button("Tiles", sf::Vector2f(50.f, 0.f))) {

@@ -13,9 +13,17 @@
 #include "GUI.hpp"
 
 
-enum TileTypes {DEFAULT=0, UNPASSABLE, OBJECT, SPAWNER, LIGHT, NORMAL};
-static const char * EnumStrings[] = { "Default", "Unpassable", "Object", "Spawner", "Light", "Stop", "YOU FOOL", "NO" }; 
+//enum TileTypes {DEFAULT=0, UNPASSABLE, OBJECT, SPAWNER, LIGHT, NORMAL};
+static const char * EnumStrings[] = { "Default", "Unpassable", "Object", "Spawner", "Light", "Stop", "YOU FOOL", "NO" };
 
+ enum TileTypes : int {
+    DEFAULT=0,
+    UNPASSABLE,
+    OBJECT,
+    SPAWNER,
+    LIGHT,
+    NORMAL
+};
 
 class Tile
 {
@@ -33,35 +41,29 @@ protected:
 public:
    
     Tile();
-    Tile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, bool collision_enabled = false );
-    Tile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture,bool collision_enabled = false);
+    Tile(short type, float x, float y, sf::Vector2f gridsizeF, sf::Texture& texture, const sf::IntRect& textureRect, bool collisionEnabled = false );
+    Tile(short type, float x, float y, sf::Vector2f gridsizeF, sf::Texture& texture, bool collision_enabled = false);
     virtual ~Tile();
     
     //Accessors
-    virtual const std::string asString() const =0; 
+    virtual const std::string asString() const =0;
     virtual const short& gettype() const;
-    virtual const sf::Vector2f& getposition() const;
+    virtual const sf::Vector2f& getPosition() const;
     virtual const bool& getCollision() const;
     virtual const bool intersects(const sf::FloatRect bounds) const;
     virtual const sf::FloatRect getGlobalBounds() const;
     virtual const sf::Vector2f getCenter() const;
-    virtual const sf::IntRect gettexturerect() const;
+    virtual const sf::IntRect getTextureRect() const;
     virtual const sf::Vector2i getTextureCoords() const;
-    virtual const short& getObject_type() const;
-    virtual void savetoFile(std::ofstream& out) = 0; 
-    
+    virtual const short& getObjectType() const;
+    virtual void savetoFile(std::ofstream& out) = 0;
+
     
     //Functions
     virtual void update(const float& dt) =0;
-    virtual void render(sf::RenderTarget & target, sf::Shader* shader = NULL, sf::Vector2f LightPosition = sf::Vector2f())=0;
+    virtual void render(sf::RenderTarget & target, sf::Shader* shader = nullptr, sf::Vector2f LightPosition = sf::Vector2f())=0;
    
     bool collison_enabled;
-
-    //Modifiers 
-
-
-    //Data 
-    
 };
 
 

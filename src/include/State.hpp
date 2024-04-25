@@ -28,26 +28,22 @@ class GraphicsSettings;
 class State;
 
 
-
 /// Class that passes important global data between states while the application is running.
 class StateData
 {
     
 public:
     
-    StateData() 
-    {
-        
-    };
+    StateData()= default;
     
    ///The size of each individual tile in a grid. If The Tiles are square and have a uniform size 
     //float gridSize;
     // 
-    sf::Vector2f* gridsize; 
+    sf::Vector2f* gridSize;
     ///Pointer to the RenderWindow
     sf::RenderWindow* window;
     ///Acessable keys
-    std::map<std::string, int>* supportedkeys;
+    std::map<std::string, int>* supportedKeys;
     ///States
     std::stack<State*>* states;
     ///User-defined graphics settings
@@ -65,7 +61,7 @@ class State {
 
     public:
   
-    State(StateData* state_data);
+    explicit State(StateData* state_data);
     
     virtual ~State();
 
@@ -81,33 +77,32 @@ class State {
     
     //Acessors
     /// Retrieve wether or not the user has requested to end the Application
-    const bool& getquit() const;
+    [[nodiscard]] const bool& getQuit() const;
     /// Retrieve wether or not the minimum allowed time between individual keystrokes has passed
-    const bool getkeytime();
-    
-    //this has gotta be a virtual method for some reason, or the compiler will shit itself very hard.
+     bool getKeyTime();
+
      virtual void log(std::string stat, std::string log_instance);
     
     
     //Modifiers
     ///End the State, and return to either the main menu; or a previous state.
     /// @discussion NOTE: if there is no previou state, or if this function is accessed from the main menu you will get a  bad acess error
-    void endstate();
+    void endState();
     ///Pause the State
-    void Pause_State();
+    void pause();
     /// Un-Pause the state
-    void Unpause_State();
+    void unpause();
     //Write to the Log file
 
 
 
 
     //Pure Virtual/Template Update functions
-    virtual void updateMousePosition(sf::View* view = NULL); 
+    virtual void updateMousePosition(sf::View* view = nullptr);
     virtual void updateInput(const float& dt) = 0;
     virtual void update(const float& dt) = 0;
-    virtual void render(sf::RenderTarget* target = NULL) = 0;
-    virtual void updatekeytime(const float& dt);  
+    virtual void render(sf::RenderTarget* target = nullptr) = 0;
+    virtual void updateKeyTime(const float& dt);
     
     
 
@@ -120,7 +115,7 @@ protected:
     unsigned state_ID; 
     sf::RenderWindow* window;
     //float gridSize;
-    sf::Vector2f gridsize; 
+    sf::Vector2f gridSize;
     //std::ostream outfile; 
     StateData* state_data; 
    
@@ -136,34 +131,24 @@ protected:
     //@brief The cursor's position relative to the tile grid. Stored in a Vector of Two Floats (x, y)
     sf::Vector2f MousePosGridF; 
      /// All useable keyboard keys
-    std::map<std::string, int>* supportedkeys;
+    std::map<std::string, int>* supportedKeys;
     /// Keys with a user-supplied map
-    std::map<std::string, int> keybinds;
-
-   
-  
-   
+    std::map<std::string, int> keyBinds;
 
 
     virtual void initkeybinds() = 0; 
   
-    float keytime;
-    float keytime_MAX;
+    float keyTime;
+    float keyTimeMax;
     
-    virtual void initfiles();
+    virtual void initFiles();
 
-    
-   
     //State mechanism
     std::stack<State*>* states; 
     
     ///Texture Asset storage. Saved as a Map container and can be retrieved with a string
     std::map<std::string,sf::Texture> textures;
-   
-  
-  
-    
-  
+
 };
 
 #endif /* State_hpp */

@@ -31,7 +31,7 @@ void CharacterTab::update()
     if (!this->hidden)
     {
 
-        this->CharacterInfo.setString(this->player.InfoString()); 
+        this->CharacterInfo.setString(this->player.toString());
     
     }
 }

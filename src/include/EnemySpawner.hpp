@@ -40,8 +40,8 @@ public:
     void add_object(short type, sf::Vector2f& object_position); 
     
     //Accessors
-    const std::string asString() const;
-    void savetoFile(std::ofstream& out);
+    const std::string asString() const override;
+    void savetoFile(std::ofstream& out) override;
   
     const bool& getSpawned() const;
     const int& getEnemyAmount() const;

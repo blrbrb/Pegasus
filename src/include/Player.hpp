@@ -26,17 +26,17 @@ private:
     
     
     void initVariables();
-    void initcomponets();
-    void initanimations(); 
-    void initsounds(); 
-    void initinventory(); 
-    void initlight();
+    void initComponents();
+    void initAnimations();
+    void initSounds();
+    void initInventory();
+    void initLight();
 
     
     sf::Color default_color; 
     candle::RadialLight player_ambient; 
     candle::EdgeVector edges;
-    Inventory* inventory;
+    Inventory* inventory{};
     //spotlight* render_light; 
     
      
@@ -52,9 +52,9 @@ public:
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
-    /// <param name="texturesheet"></param>
+    /// <param name="textureSheet"></param>
     /// <param name="level"></param>
-    Player(float x, float y, sf::Texture& texturesheet);
+    Player(float x, float y, sf::Texture& textureSheet);
    
     virtual ~Player();
     
@@ -62,7 +62,7 @@ public:
     /// Load Player data from file, Entity info is constructed from saved data
     /// </summary>
     /// <param name="save_file"></param>
-    Player(const std::string save_file, sf::Texture& texturesheet); 
+    Player(const std::string& save_file, sf::Texture& textureSheet);
 
     //Accessors
 
@@ -72,7 +72,7 @@ public:
     /// <returns>StatusComponent*</returns>
     /// <remarks><seealso cref="StatusComponent"/></remarks>
     /// <remarks><seealso cref="Entity"/></remarks>
-    StatusComponet* getStatusComponet();
+    StatusComponet* getStatusComponent();
     /// <summary>
     /// Fetch a pointer to the Player's Inventory 
     /// </summary>
@@ -80,10 +80,10 @@ public:
     Inventory* getInventory();
 
 
-    const std::string  InfoString() const; 
+    const std::string& toString() const;
                                                                                
-    void saveToFile(const std::string filename);
-    void loadFromFile(const std::string filename); 
+    void saveToFile(const std::string& filename);
+    void loadFromFile(const std::string& filename);
    
     
      /// <summary>
@@ -111,7 +111,7 @@ public:
      /// <param name="shader"></param>
      /// <param name="light"></param>
      /// <param name="render_hitbox"></param>
-     void render(sf::RenderTarget& target,sf::Shader* shader = nullptr,const sf::Vector2f light = sf::Vector2f(), const bool render_hitbox = false);
+     void render(sf::RenderTarget& target,sf::Shader* shader = nullptr,const sf::Vector2f& light = sf::Vector2f(), const bool render_hitbox = false);
 
     
 

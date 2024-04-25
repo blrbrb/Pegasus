@@ -58,7 +58,7 @@ void Game::initKeys() {
  
  
   */
-   // LOG(INFO) << "creating keybinds "; 
+   // LOG(INFO) << "creating keyBinds ";
     
    std::ifstream ifs("Init/Supported_Keys.ini");
 
@@ -106,9 +106,9 @@ void Game::initStates() {
 
 void Game::initGraphicsSettings() {
     
-    this->gfxsettings = new GraphicsSettings();  
+    this->gfxsettings = new GraphicsSettings();
 
-    this->gfxsettings->loadfromfile("Config/Window.cfg");
+    this->gfxsettings->loadFromFile("Config/Window.cfg");
     
   
 }
@@ -168,9 +168,9 @@ void Game::initStateData()
 {
     this->state_data.window = this->window;
     this->state_data.gfxsettings = this->gfxsettings; 
-    this->state_data.supportedkeys = &this->supported_keys;
+    this->state_data.supportedKeys = &this->supported_keys;
     this->state_data.states = &this->states;
-    this->state_data.gridsize = &this->gridSize;
+    this->state_data.gridSize = &this->gridSize;
     
     if (this->state_data.window == nullptr)
     {
@@ -182,7 +182,7 @@ void Game::initStateData()
         //LOG(INFO) << "Unable to initalize Graphics Settings into State Data" << std::endl;
 
     }
-    if (this->state_data.supportedkeys == nullptr)
+    if (this->state_data.supportedKeys == nullptr)
     {
       // LOG(INFO) << "Unable to initalize Keys into State Data";
 
@@ -191,7 +191,7 @@ void Game::initStateData()
     {
         //LOG(INFO) << "Unable to initalize States into State Data";
     }
-    if (this->state_data.gridsize == nullptr)
+    if (this->state_data.gridSize == nullptr)
     {
       //  LOG(INFO) << "Unable to initalize gridSize into Statedata";
     }
@@ -255,13 +255,13 @@ void Game::Update()
             {
                 this->states.top()->update(this->dt);
 
-                if (this->states.top()->getquit())
+                if (this->states.top()->getQuit())
                 {
                    // LOG(INFO) << "Size of deque: " << this->states.size(); 
                    
                     //LOG(INFO) << "destroying state ";     
-                    
-                    this->states.top()->endstate();
+
+                    this->states.top()->endState();
                    
                    // delete this->states.top();
                     delete this->states.top();

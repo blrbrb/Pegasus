@@ -187,7 +187,7 @@ void EnemyEditorMode::updateGUI(const float& dt)
     ImGui::Begin("Map Editor");
     //set the selection rectangle position
 
-    this->select_Rect.setPosition(this->editorstatedata->mouseposGridI->x * this->statedata->gridsize->x, this->editorstatedata->mouseposGridI->y * this->statedata->gridsize->y);
+    this->select_Rect.setPosition(this->editorstatedata->mouseposGridI->x * this->statedata->gridSize->x, this->editorstatedata->mouseposGridI->y * this->statedata->gridSize->y);
 
 
     this->enemy_texture.loadFromFile("Resources/GUI/Icons/Blrb_Icon.png"); 
@@ -293,7 +293,7 @@ void EnemyEditorMode::initGUI()
     
        
         //config the selection rectangle
-        this->select_Rect.setSize(sf::Vector2f(statedata->gridsize->x, statedata->gridsize->y));
+        this->select_Rect.setSize(sf::Vector2f(statedata->gridSize->x, statedata->gridSize->y));
         this->select_Rect.setFillColor(sf::Color::White);
     
     

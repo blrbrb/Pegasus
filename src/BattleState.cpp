@@ -125,7 +125,7 @@ void BattleState::updatePauseMenu()
 {
         if(this->pMenu->isButtonPressed("Pause_Quit_Button"))
         {
-            this->endstate();
+            this->endState();
         }
 }
 
@@ -200,8 +200,8 @@ void BattleState::updateEnemies(const float& dt)
     
     if(this->PlayerTurn == false)
     {
-        
-        this->player->getStatusComponet()->loseHP(this->enemy->attributes->strength);
+
+        this->player->getStatusComponent()->loseHP(this->enemy->attributes->strength);
         
         if(!this->PlayerTurn)
             this->PlayerTurn = true;

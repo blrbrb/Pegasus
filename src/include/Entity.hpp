@@ -107,7 +107,7 @@ public:
     
     virtual void update(const float& dt, sf::Vector2f& MousePosView) = 0;
     
-    virtual void render(sf::RenderTarget& target, sf::Shader* shader, const sf::Vector2f light, const bool render_hitbox) = 0;
+    virtual void render(sf::RenderTarget& target, sf::Shader* shader, const sf::Vector2f &light, const bool render_hitbox) = 0;
     
     ///  Bring the Entity to a complete stop
     virtual void stopVelocity();
@@ -129,7 +129,7 @@ public:
     void addPhysicsComponent(const float maxVelocity, const float Acceleration, const float Deceleration);
     
     /// Generate the animation component for the entity
-    /// @param texturesheet A texturesheet to split into an animation
+    /// @param texturesheet A textureSheet to split into an animation
     void addAnimationComponent(sf::Texture& texturesheet);
 
 

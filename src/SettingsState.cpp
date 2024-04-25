@@ -49,7 +49,7 @@ void SettingsState::initkeybinds() {
 
         while (ifs >> key >> key2)
         {
-            this->keybinds[key] = this->supportedkeys->at(key2);
+            this->keyBinds[key] = this->supportedKeys->at(key2);
         }
     }
 
@@ -267,7 +267,7 @@ void SettingsState::updateGUI(const float& dt) {
             ///changes are applied. The graphics settings are saved, and then the window is recreated. 
          
             this->state_data->gfxsettings->vsync = &vertical_sync;
-            this->state_data->gfxsettings->savetofile("Init/Window.cfg");
+            this->state_data->gfxsettings->saveToFile("Config/Window.cfg");
             if (vertical_sync)
             {
 
@@ -291,8 +291,8 @@ void SettingsState::updateGUI(const float& dt) {
 
         if(ImGui::Button("Exit"))
         {
-           
-            this->endstate();
+
+            this->endState();
             //LOG(INFO) << "Main"
         
         }

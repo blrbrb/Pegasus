@@ -81,7 +81,7 @@ void MainMenuState::initkeybinds() {
 
         while (ifs >> key >> key2)
         {
-          // this->keybinds[key] = this->supported_keys->at(key2);
+          // this->keyBinds[key] = this->supported_keys->at(key2);
           // this->log<< key << " " << key2 << std::endl; 
         }
         
@@ -273,7 +273,7 @@ void MainMenuState::updatebuttons(const float& dt) {
     //Exit the game
     if(this->buttons["EXIT"]->isPressed())
     {
-        this->endstate();
+        this->endState();
         
     }
     

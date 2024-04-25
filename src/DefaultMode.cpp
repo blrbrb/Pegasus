@@ -5,7 +5,7 @@
 //  Created by Eli Reynolds on 3/3/20.
 //  Copyright © 2020 Eli Reynolds. Apache License .
 //
-#
+#include "include/Tile.hpp"
 #include "include/DefaultMode.hpp"
 
 
@@ -296,7 +296,7 @@ void DefaultMode::updateGUI(const float& dt)
 
     ImGui::Begin("Map Editor", NULL, ImGuiWindowFlags_NoMove);
     this->texture_selector->update(*this->editorstatedata->mousePosWindow, dt);
-    this->texturesample.setTextureRect(sf::IntRect(static_cast<int>(this->statedata->gridsize->x), static_cast<int>(this->statedata->gridsize->y), 0, 0));
+    this->texturesample.setTextureRect(sf::IntRect(static_cast<int>(this->statedata->gridSize->x), static_cast<int>(this->statedata->gridSize->y), 0, 0));
 
     if (!this->texture_selector->getActive())
     {
@@ -304,7 +304,7 @@ void DefaultMode::updateGUI(const float& dt)
 
         this->select_Rect.setTextureRect(this->TextureRect);
         this->texturesample.setTextureRect(this->TextureRect); 
-        this->select_Rect.setPosition(this->editorstatedata->mouseposGridI->x * this->statedata->gridsize->x, this->editorstatedata->mouseposGridI->y * this->statedata->gridsize->y);
+        this->select_Rect.setPosition(this->editorstatedata->mouseposGridI->x * this->statedata->gridSize->x, this->editorstatedata->mouseposGridI->y * this->statedata->gridSize->y);
 
     }
    // this->texturesample.setTexture(*this->select_Rect.getTexture());
@@ -449,7 +449,7 @@ void DefaultMode::initGUI()
    // this->select_Rect.setOrigin(sf::Vector2f(this->select_Rect.getGlobalBounds().width / 2.f / this->statedata->gridSize - static_cast<float>(this->editorstatedata->mouseposGrid->x), this->select_Rect.getGlobalBounds().height / 2.f / this->statedata->gridSize - static_cast<float>(this->editorstatedata->mouseposGrid->y)));
     
   //  sf::IntRect fart = this->texture_selector->getTextureRect(); 
-    this->select_Rect.setSize(sf::Vector2f(statedata->gridsize->x, statedata->gridsize->y));
+    this->select_Rect.setSize(sf::Vector2f(statedata->gridSize->x, statedata->gridSize->y));
     this->select_Rect.setTexture(tilemap->getTileSheet());
  
     //this->texturesample.setSize(sf::Vector2f(64, 64));
@@ -460,7 +460,7 @@ void DefaultMode::initGUI()
     //this->texturesample.setPosition(GUI::pixelpercentX(100, vm), GUI::pixelpercentY(20, vm));
    
    //this->texture_selector = new GUI::TextureSelector(); 
-   this->texture_selector = new GUI::TextureSelector(100.f, 20.f, 798.f, 798.f, *this->statedata->gridsize, this->tilemap->getTileSheet(), *this->editorstatedata->font, "X");
+   this->texture_selector = new GUI::TextureSelector(100.f, 20.f, 798.f, 798.f, *this->statedata->gridSize, this->tilemap->getTileSheet(), *this->editorstatedata->font, "X");
      
 }
 
@@ -490,7 +490,7 @@ void DefaultMode::initgrid()
                  }
        
                     this->grid.push_back(sf::RectangleShape());
-                    this->grid.at(x).setSize(sf::Vector2f(this->statedata->gridsize->x, this->statedata->gridsize->y));
+                    this->grid.at(x).setSize(sf::Vector2f(this->statedata->gridSize->x, this->statedata->gridSize->y));
                     this->grid.at(x).setFillColor(sf::Color::Transparent);
                     this->grid.at(x).setOutlineColor(sf::Color::White);
                     this->grid.at(x).setOutlineThickness(0.1f);

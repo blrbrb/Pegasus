@@ -176,8 +176,8 @@ TileMap::TileMap(const std::string map_file)
       this->FromY = 0;
       this->layer = 0;
 
-      this->init_object_textures(); 
-     this->loadfromfile(map_file);
+      this->init_object_textures();
+    this->loadFromFile(map_file);
      
       
      
@@ -274,7 +274,7 @@ void TileMap::render(sf::RenderTarget& target, const sf::View& view, const sf::V
 
                         }
                        
-                        target.mapCoordsToPixel(this->Map[x][y][this->layer][k]->getposition(), view);
+                        target.mapCoordsToPixel(this->Map[x][y][this->layer][k]->getPosition(), view);
                         this->Map[x][y][this->layer][k]->render(target, shader, PlayerPosition);
                         //std::string tile_info = this->Map[x][y][this->layer][k].tile->asString(); 
                        // std::cout << tile_info << std::endl;
@@ -292,7 +292,7 @@ void TileMap::render(sf::RenderTarget& target, const sf::View& view, const sf::V
 
                         }
 
-                        target.mapCoordsToPixel(this->Map[x][y][this->layer][k]->getposition(), view);
+                        target.mapCoordsToPixel(this->Map[x][y][this->layer][k]->getPosition(), view);
                         this->Map[x][y][this->layer][k]->render(target);
 
                         //this->renderObjects(target);
@@ -305,7 +305,7 @@ void TileMap::render(sf::RenderTarget& target, const sf::View& view, const sf::V
                     {
                         if (this->Map[x][y][this->layer][k]->getCollision())
                         {
-                            this->physicsrect.setPosition(this->Map[x][y][this->layer][k]->getposition());
+                            this->physicsrect.setPosition(this->Map[x][y][this->layer][k]->getPosition());
                             target.draw(this->physicsrect);
                         }
 
@@ -315,7 +315,7 @@ void TileMap::render(sf::RenderTarget& target, const sf::View& view, const sf::V
 
                     if (this->Map[x][y][this->layer][k]->gettype() == TileTypes::SPAWNER)
                     {
-                        this->physicsrect.setPosition(this->Map[x][y][this->layer][k]->getposition());
+                        this->physicsrect.setPosition(this->Map[x][y][this->layer][k]->getPosition());
                         this->physicsrect.setFillColor(sf::Color(50, 20, 10, 100));
                         this->physicsrect.setFillColor(sf::Color::Red);
                         this->physicsrect.setOutlineThickness(1.f);
@@ -446,7 +446,7 @@ const sf::Texture* TileMap::getTileSheet() const
 
 
 
-bool TileMap::savetofile(const std::string filename, bool json)
+bool TileMap::saveToFile(const std::string filename, bool json)
 {
     //assert(json); 
     std::cout << json << std::endl;
@@ -512,15 +512,19 @@ bool TileMap::savetofile(const std::string filename, bool json)
                          tiles_node.put(std::to_string(index) + ".y", y);
                          tiles_node.put(std::to_string(index) + ".z", z);
                        
-                         tiles_node.put(std::to_string(index) + ".xFloat", this->Map[x][y][z][k]->getposition().x);
-                         tiles_node.put(std::to_string(index) + ".yFloat", this->Map[x][y][z][k]->getposition().y);
+                         tiles_node.put(std::to_string(index) + ".xFloat", this->Map[x][y][z][k]->getPosition().x);
+                         tiles_node.put(std::to_string(index) + ".yFloat", this->Map[x][y][z][k]->getPosition().y);
 
-                         tiles_node.put(std::to_string(index) + ".texture_rect.top", this->Map[x][y][z][k]->gettexturerect().top);
-                         tiles_node.put(std::to_string(index) + ".texture_rect.width", this->Map[x][y][z][k]->gettexturerect().width);
-                         tiles_node.put(std::to_string(index) + ".texture_rect.height", this->Map[x][y][z][k]->gettexturerect().height);
+                         tiles_node.put(std::to_string(index) + ".texture_rect.top",
+                                        this->Map[x][y][z][k]->getTextureRect().top);
+                         tiles_node.put(std::to_string(index) + ".texture_rect.width",
+                                        this->Map[x][y][z][k]->getTextureRect().width);
+                         tiles_node.put(std::to_string(index) + ".texture_rect.height",
+                                        this->Map[x][y][z][k]->getTextureRect().height);
                          tiles_node.put(std::to_string(index) + ".type", this->Map[x][y][z][k]->gettype());
                          tiles_node.put(std::to_string(index) + ".collision", this->Map[x][y][z][k]->getCollision());
-                         tiles_node.put(std::to_string(index) + ".texture_rect.left", this->Map[x][y][z][k]->gettexturerect().left);
+                         tiles_node.put(std::to_string(index) + ".texture_rect.left",
+                                        this->Map[x][y][z][k]->getTextureRect().left);
                           
 
                           //std::cout << "Object Type: " <<  this->Map[x][y][z][k]->gettype() << std::endl;
@@ -529,7 +533,8 @@ bool TileMap::savetofile(const std::string filename, bool json)
                           if (this->Map[x][y][z][k]->gettype() == TileTypes::OBJECT)
                           {
                              
-                              tiles_node.put(std::to_string(index) + ".object_type", this->Map[x][y][z][k]->getObject_type());
+                              tiles_node.put(std::to_string(index) + ".object_type",
+                                             this->Map[x][y][z][k]->getObjectType());
                              
                           }
 
@@ -678,7 +683,7 @@ bool TileMap::savetofile(const std::string filename, bool json)
 
 
 
-bool TileMap::loadfromfile(const std::string filename, bool json)
+bool TileMap::loadFromFile(const std::string filename, bool json)
 {
    
     if (json)
@@ -1176,25 +1181,25 @@ void TileMap::updateWorldBoundsCollision(Entity *entity, const float &dt)
     //World Bounds
     if(entity->getPosition().x < 0.f )
     {
-        entity->setposition(0.f, entity->getPosition().y);
+        entity->setPosition(0.f, entity->getPosition().y);
         entity->stopVelocityX(); 
         std::cout << "Hitting Upper world bound" << std::endl; 
     }
     else if (entity->getPosition().x + entity->getGlobalBounds().width > this->MaxSizeWorld_F.x)
     {
-        entity->setposition(this->MaxSizeWorld_F.x - entity->getGlobalBounds().width, entity->getPosition().y);
+        entity->setPosition(this->MaxSizeWorld_F.x - entity->getGlobalBounds().width, entity->getPosition().y);
         entity->stopVelocityX(); 
         std::cout << "Hitting Upper left world bound" << std::endl; 
     }
     if (entity->getPosition().y < 0.f)
     {
-        entity->setposition(entity->getPosition().x, 0.f);
+        entity->setPosition(entity->getPosition().x, 0.f);
         entity->stopVelocityY(); 
         std::cout << "hitting left world bound" << std::endl; 
     }
     else if (entity->getPosition().y + entity->getGlobalBounds().height > this->MaxSizeWorld_F.y)
     {
-        entity->setposition(entity->getPosition().x, this->MaxSizeWorld_F.y - entity->getGlobalBounds().height);
+        entity->setPosition(entity->getPosition().x, this->MaxSizeWorld_F.y - entity->getGlobalBounds().height);
         entity->stopVelocityY(); 
         std::cout << "hitting right world boundary" << std::endl;
     }
@@ -1352,7 +1357,7 @@ void TileMap::updateTileCollision(Entity *entity, const float &dt)
                    )
                {
                    entity->stopVelocityY();
-                   entity->setposition(playerBounds.left, wallBounds.top - playerBounds.height); 
+                   entity->setPosition(playerBounds.left, wallBounds.top - playerBounds.height);
                    
                }
 
@@ -1364,7 +1369,7 @@ void TileMap::updateTileCollision(Entity *entity, const float &dt)
                    )
                {
                    entity->stopVelocityY();
-                   entity->setposition(playerBounds.left, wallBounds.top + wallBounds.height);
+                   entity->setPosition(playerBounds.left, wallBounds.top + wallBounds.height);
                   
                }
 
@@ -1376,7 +1381,7 @@ void TileMap::updateTileCollision(Entity *entity, const float &dt)
                    )
                {
                    entity->stopVelocityX();
-                   entity->setposition(wallBounds.left - playerBounds.width, playerBounds.top);
+                   entity->setPosition(wallBounds.left - playerBounds.width, playerBounds.top);
                    
                }
 
@@ -1388,7 +1393,7 @@ void TileMap::updateTileCollision(Entity *entity, const float &dt)
                    )
                {
                    entity->stopVelocityX();
-                   entity->setposition(wallBounds.left + wallBounds.width, playerBounds.top); 
+                   entity->setPosition(wallBounds.left + wallBounds.width, playerBounds.top);
                    
                }
             

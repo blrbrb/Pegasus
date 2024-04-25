@@ -8,37 +8,32 @@
 #
 #include "include/Player.hpp"
 
-Player::Player(float x, float y, sf::Texture& texturesheet)
+Player::Player(float x, float y, sf::Texture& textureSheet)
 {
-    
-        
-    this->initcomponets();
-    this->initinventory(); 
-    this->setposition(x, y);
-    this->addAnimationComponent(texturesheet);
 
-    this->initanimations(); 
+
+    this->initComponents();
+    this->initInventory();
+    this->setPosition(x, y);
+    this->addAnimationComponent(textureSheet);
+
+    this->initAnimations();
     this->animationcomponet->getName(1);
-    this->initsounds(); 
-    this->initlight();
+    this->initSounds();
+    this->initLight();
     //this->sprite.setScale(2, 2);
     this->default_color = this->sprite.getColor();
     
 }
 
-Player::~Player()
-{
-    
-   
-    
-}
+Player::~Player() = default;
 
-Player::Player(const std::string save_file, sf::Texture& texturesheet)
+Player::Player(const std::string& save_file, sf::Texture& textureSheet)
 {
-    this->setposition(10.f, 10.f);
-    this->addAnimationComponent(texturesheet);
+    this->setPosition(10.f, 10.f);
+    this->addAnimationComponent(textureSheet);
     this->loadFromFile(save_file);
-    this->initlight();
+    this->initLight();
    
 }
 
@@ -48,7 +43,7 @@ Player::Player(const std::string save_file, sf::Texture& texturesheet)
 
 //initalizer functions
 
-void Player::initcomponets()
+void Player::initComponents()
 {
     this->addPhysicsComponent(100.f, 20000.f, 200.f);
     this->addHitboxComponent(this->sprite, 0, 0, 52.f, 42.f);
@@ -57,12 +52,12 @@ void Player::initcomponets()
     this->addAttributeComponent(1);
 }
 
-void Player::initinventory()
+void Player::initInventory()
 {
    this->inventory = new Inventory(100);
 }
 
-void Player::initlight()
+void Player::initLight()
 {
     this->player_ambient.setRange(50.f); 
     this->player_ambient.setIntensity(0.2);
@@ -78,7 +73,7 @@ void Player::initVariables()
     //this->attacking = false; 
 }
 
-void Player::initanimations()
+void Player::initAnimations()
 {
  
     this->animationcomponet->add_animation("IDLE_BLINKING", 4.f, 0, 2, 15, 2, 62, 74); //first row, second* sprite across *iterator starts from unsigned 0
@@ -93,7 +88,7 @@ void Player::initanimations()
     
 }
 
-void Player::initsounds()
+void Player::initSounds()
 { 
    
 }
@@ -177,7 +172,7 @@ void Player::updateLighting(const float& dt)
 
 
 
-void Player::render(sf::RenderTarget &target, sf::Shader* shader,const sf::Vector2f light, const bool render_hitbox)
+void Player::render(sf::RenderTarget &target, sf::Shader* shader,const sf::Vector2f& light, const bool render_hitbox)
 {
    
     const sf::Color testcolor2 = sf::Color(250, 250, 250, 250);
@@ -205,14 +200,10 @@ void Player::render(sf::RenderTarget &target, sf::Shader* shader,const sf::Vecto
     }
 
 
-    if (this->using_vertices) 
-    {
-       // target.draw(this->verticies); 
-    }
    
 }
 
-StatusComponet *Player::getStatusComponet()
+StatusComponet *Player::getStatusComponent()
 {
     return this->attributes;
 }
@@ -224,7 +215,7 @@ Inventory* Player::getInventory()
 }
 
 
-const std::string Player::InfoString() const
+const std::string& Player::toString() const
 {
     std::stringstream ss; 
     
@@ -238,15 +229,15 @@ const std::string Player::InfoString() const
 
 }
 
-void Player::saveToFile(const std::string filename)
+void Player::saveToFile(const std::string& filename)
 {
     this->pt = new boost::property_tree::ptree; 
     ///int
-    this->set_property<int>("pony.hp", this->getStatusComponet()->hpMax);
+    this->set_property<int>("pony.hp", this->getStatusComponent()->hpMax);
     ///int
-    this->set_property<int>("pony.level", this->getStatusComponet()->level);
+    this->set_property<int>("pony.level", this->getStatusComponent()->level);
     ///int
-    this->set_property<int>("pony.exp", this->getStatusComponet()->exp);
+    this->set_property<int>("pony.exp", this->getStatusComponent()->exp);
     ///const float
     this->set_property<float>("pony.physics.a", this->physicsComponents->getAcceleration());
     ///const float
@@ -280,7 +271,7 @@ void Player::saveToFile(const std::string filename)
     boost::property_tree::json_parser::write_json(filename, *pt);
 }
 
-void Player::loadFromFile(const std::string filename)
+void Player::loadFromFile(const std::string& filename)
 {
     this->pt = new boost::property_tree::ptree;
     boost::property_tree::json_parser::read_json(filename, *this->pt);
@@ -290,14 +281,14 @@ void Player::loadFromFile(const std::string filename)
     this->addHitboxComponent(this->sprite, this->pt->get<float>("pony.hitbox.offset.x"),
                              this->pt->get<float>("pony.hitbox.offset.y"), this->pt->get<float>("pony.hitbox.width"),
                              this->pt->get<float>("pony.hitbox.height"));
-    this->create_skill_component();
+    this->addSkillComponent();
     this->addAttributeComponent(this->pt->get<int>("pony.level"));
-    this->initinventory();
+    this->initInventory();
    
 
     for (boost::property_tree::ptree::value_type& animation : pt->get_child("pony.animations")) 
     {
-        //LOG(INFO) << "Initalizing animations...";
+         //LOG(INFO) << "Initializing animations...";
         //LOG(INFO) << animation.first << std::endl;
         this->animationcomponet->add_animation(animation.first, animation.second.get<float>("time"), animation.second.get<int>("start.x"), animation.second.get<int>("start.y"), animation.second.get<int>("end.x"), animation.second.get<int>("end.y"), animation.second.get<int>("width"), animation.second.get<int>("height"));
     }

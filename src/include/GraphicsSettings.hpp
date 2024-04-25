@@ -25,7 +25,7 @@ class GraphicsSettings
           //Variables
           std::string title;
           sf::VideoMode resolution;
-          std::vector<sf::VideoMode> Videomodes;
+          std::vector<sf::VideoMode> videoModes;
           sf::ContextSettings windowSettings;
           boost::property_tree::ptree pt;
           
@@ -48,15 +48,15 @@ class GraphicsSettings
           
           
           
-          /// savetofile
+          /// saveToFile
           /// @brief Save the current graphics settings to a file to acess later.
           /// @param path to the file to write on
-          void savetofile(const std::string path);
+          void saveToFile(const std::string &path);
           
-          /// loadfromfile
+          /// loadFromFile
           /// @brief Load saved graphics settings from a file.
           /// @param path to the file to read from
-          void loadfromfile(const std::string path);
+          void loadFromFile(const std::string &path);
 
 
           //Modifiers 

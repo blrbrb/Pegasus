@@ -21,18 +21,18 @@ public:
     virtual ~NormalTile();
     
     //Accessors 
-    const sf::FloatRect getGlobalBounds() const;
-    const std::string asString() const;
+    const sf::FloatRect getGlobalBounds() const override;
+    const std::string asString() const override;
 
    
     
   
 
-    void savetoFile(std::ofstream& in);
+    void savetoFile(std::ofstream& in) override;
     
     //Functions
-    void update(const float& dt);
-    void render(sf::RenderTarget & target, sf::Shader* shader = NULL, sf::Vector2f LightPosition = sf::Vector2f());
+    void update(const float& dt) override;
+    void render(sf::RenderTarget & target, sf::Shader* shader = nullptr, sf::Vector2f LightPosition = sf::Vector2f()) override;
     
     //Modifiers 
     void add_object(short type, sf::Vector2f& object_position);

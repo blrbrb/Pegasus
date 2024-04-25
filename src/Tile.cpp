@@ -22,7 +22,7 @@ Tile::Tile()
 }
 
                                                                                         
-Tile::Tile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, bool collision_enabled)
+Tile::Tile(short type, float x, float y, sf::Vector2f gridsizeF, sf::Texture& texture, const sf::IntRect& texturerect, bool collisionEnabled)
 {
    //Tile constructor that needs to be called if there is a tile object/object tile on the map.
     this->type = type;
@@ -33,11 +33,11 @@ Tile::Tile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& t
    
     this->rect.setTextureRect(texturerect);
      // this->rect.setPosition(obX, obY);
-     this->rect.setPosition(x * gridsize_f.x, y * gridsize_f.y);
+     this->rect.setPosition(x * gridsizeF.x, y * gridsizeF.y);
     
          
    
-    this->collison_enabled = collision_enabled;
+    this->collison_enabled = collisionEnabled;
     
     
     
@@ -48,17 +48,17 @@ Tile::Tile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& t
     //this->type = type;
 }
 
-Tile::Tile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture, bool collision_enabled)
+Tile::Tile(short type, float x, float y, sf::Vector2f gridsizeF, sf::Texture& texture, bool collision_enabled)
 {
     this->rect.setTexture(texture);
    
 
     //  
-    sf::Vector2f gridPosition = sf::Vector2f(gridsize_f.x * x, gridsize_f.y * y); 
+    sf::Vector2f gridPosition = sf::Vector2f(gridsizeF.x * x, gridsizeF.y * y);
     this->rect.setPosition(x, y);
 
 
-   // this->rect.setTextureRect(texturerect);
+   // this->rect.setTextureRect(textureRect);
     this->collison_enabled = collision_enabled;
     short fart;
     fart = type;
@@ -79,7 +79,7 @@ Tile::~Tile()
 
 //Functions
 
-const sf::Vector2f &Tile::getposition() const
+const sf::Vector2f &Tile::getPosition() const
 {
     return this->rect.getPosition(); 
 }
@@ -110,7 +110,7 @@ const sf::Vector2f Tile::getCenter() const
     return sf::Vector2f(this->rect.getGlobalBounds().width / 2, this->rect.getGlobalBounds().height / 2);
 }
 
-const sf::IntRect Tile::gettexturerect() const
+const sf::IntRect Tile::getTextureRect() const
 {
     return this->rect.getTextureRect(); 
 }
@@ -124,10 +124,12 @@ const sf::Vector2i Tile::getTextureCoords() const
     return test;
 }
 
-const short& Tile::getObject_type() const
+const short& Tile::getObjectType() const
 {
     return this->object_type; 
 }
+
+
 
 
 

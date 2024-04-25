@@ -11,7 +11,7 @@
 
 /* BEGIN BUTTON */
 
-GUI::Button::Button(float x, float y, float width, float height, sf::Font *font, std::string text, unsigned character_size, sf::Color idlecolor, sf::Color hovercolor, sf::Color activecolor, sf::Color text_idlecolor, sf::Color text_hovercolor, sf::Color text_activecolor, sf::Color outline_activeColor, sf::Color outline_idleColor, sf::Color outline_hoverColor, short unsigned ID)
+GUI::Button::Button(float x, float y, float width, float height, sf::Font *font, const std::string& text, unsigned character_size, sf::Color idle_color, sf::Color hover_color, sf::Color active_color, sf::Color text_idle_color, sf::Color text_hover_color, sf::Color text_active_color, sf::Color outline_active_color, sf::Color outline_idle_color, sf::Color outline_hover_color, short unsigned ID) : hover(false), pressed(false), resources_from_header(false)
 {
     /*!
      
@@ -24,15 +24,15 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
      @param sf::Font *font
      @param std::string text
      @param unsigned character_size
-     @param sf::Color idlecolor
-     @param sf::Color hovercolor
-     @param sf::Color activecolor
-     @param sf::Color text_idlecolor
-     @param sf::Color text_hovercolor
-     @param sf::Color text_activecolor
+     @param sf::Color idle_color
+     @param sf::Color hover_color
+     @param sf::Color active_color
+     @param sf::Color text_idle_color
+     @param sf::Color text_hover_color
+     @param sf::Color text_active_color
      @param sf::Color outline_activecolor
      @param sf::Color outline_idlecolor
-     @param sf::Color outline_hoverColor
+     @param sf::Color outline_hover_color
      @param short  unsigned ID
      
      */
@@ -48,7 +48,7 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
     this-> font = font;
     this->text.setFont(*this->font);
     this->text.setString(text);
-    this->text.setFillColor(text_idlecolor);
+    this->text.setFillColor(text_idle_color);
     this->text.setCharacterSize(character_size);
     
     //Configure the Position of the Text on the Button to *roughly* match
@@ -58,29 +58,29 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
     this->text.setPosition(this->rectangle.getPosition().x + this->rectangle.getPosition().x/ 2.f + 20.f - this->rectangle.getPosition().x / 2.f, this->rectangle.getPosition().y + this->rectangle.getSize().y / 2.f - 20.f);
     
     //Button rect colors
-    this->idleColor = idlecolor;
-    this->hoverColor = hovercolor;
-    this->activeColor = activecolor;
+    this->idleColor = idle_color;
+    this->hoverColor = hover_color;
+    this->activeColor = active_color;
     
     //Button Text colors
-    this->text_idlecolor = text_idlecolor;
-    this->text_hovercolor = text_hovercolor;
-    this->text_activecolor = text_activecolor;
+    this->text_idlecolor = text_idle_color;
+    this->text_hovercolor = text_hover_color;
+    this->text_activecolor = text_active_color;
     
     //Button Outline colors
-    this->outline_idleColor = outline_idleColor;
-    this->outline_hoverColor = outline_hoverColor;
-    this->outline_activeColor = outline_activeColor;
+    this->outline_idleColor = outline_idle_color;
+    this->outline_hoverColor = outline_hover_color;
+    this->outline_activeColor = outline_active_color;
     
     
     this->rectangle.setFillColor(this->idleColor);
-    this->rectangle.setOutlineColor(outline_idleColor);
+    this->rectangle.setOutlineColor(outline_idle_color);
     this->rectangle.setOutlineThickness(1.f);
 
 }
 
 
-GUI::Button::Button(float x, float y, float width, float height, sf::Font *font, std::string text, unsigned int character_size, const std::string idle_texture, const std::string active_texture, const std::string hover_texture, short unsigned ID)
+GUI::Button::Button(float x, float y, float width, float height, sf::Font *font, const std::string& text, unsigned int character_size, const std::string &idle_texture, const std::string &active_texture, const std::string &hover_texture, short unsigned ID) : hover(false), pressed(false), resources_from_header(false)
 {
     //const int x = 1;
     ///const sf::Uint8* test = reinterpret_cast<sf::Uint8*>(red_button00_data);
@@ -137,7 +137,7 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
     
 }
 
-GUI::Button::Button(float x, float y, float width, float height, const std::string idle_texture, const std::string active_texture, const std::string hover_texture, short unsigned ID)
+GUI::Button::Button(float x, float y, float width, float height, const std::string &idle_texture, const std::string &active_texture, const std::string &hover_texture, short unsigned ID) : font(nullptr), hover(false), pressed(false), resources_from_header(false)
 {
   
     
@@ -207,7 +207,7 @@ GUI::Button::Button(float x, float y, float width, float height, const std::stri
 }
 
 
-GUI::Button::Button(float x, float y, float width, float height, sf::Font* font, std::string text, unsigned int character_size, short unsigned ID)
+GUI::Button::Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned int character_size, short unsigned ID) : hover(false), pressed(false), resources_from_header(true)
 {
    
     this->ButtonState = IDLE_BUTTON;
@@ -231,7 +231,7 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font* font,
     this->text.setPosition(this->rectangle.getPosition().x + this->rectangle.getPosition().x / 2.f + 20.f - this->rectangle.getPosition().x / 2.f, this->rectangle.getPosition().y + this->rectangle.getSize().y / 2.f - 20.f);
 }
 
-GUI::Button::Button(float x, float y, float width, float height, short unsigned ID)
+GUI::Button::Button(float x, float y, float width, float height, short unsigned ID) :font(nullptr), hover(false), pressed(false), resources_from_header(true)
 {
   
     this->ButtonState = IDLE_BUTTON;
@@ -246,16 +246,12 @@ GUI::Button::Button(float x, float y, float width, float height, short unsigned 
     this->text.setPosition(this->rectangle.getPosition().x + this->rectangle.getPosition().x / 2.f + 20.f - this->rectangle.getPosition().x / 2.f, this->rectangle.getPosition().y + this->rectangle.getSize().y / 2.f - 20.f);
 }
 
-GUI::Button::~Button()
-{
-    
- 
-    
-}
+GUI::Button::~Button() = default;
+
 
 //Functions
 
-void GUI::Button::update(const sf::Vector2i Mousepos) {
+void GUI::Button::update(const sf::Vector2i &Mousepos) {
     
     this->ButtonState = IDLE_BUTTON; 
 
@@ -280,7 +276,7 @@ void GUI::Button::update(const sf::Vector2i Mousepos) {
             
             //if the button is not given a texture with one of the overload constructors, give it a fill color
             
-            if(this->rectangle.getTexture() == NULL)
+            if(this->rectangle.getTexture() == nullptr)
             {
                 this->rectangle.setFillColor(this->idleColor);
                 this->text.setFillColor(this->text_idlecolor);
@@ -293,7 +289,7 @@ void GUI::Button::update(const sf::Vector2i Mousepos) {
             
             this->rectangle.setTexture(&hover_texture);
             
-            if (this->rectangle.getTexture() == NULL)
+            if (this->rectangle.getTexture() == nullptr)
             {
                 this->rectangle.setFillColor(this->hoverColor);
                 this->text.setFillColor(this->text_hovercolor);
@@ -306,7 +302,7 @@ void GUI::Button::update(const sf::Vector2i Mousepos) {
            
             this->rectangle.setTexture(&clicked);
              
-            if (this->rectangle.getTexture() == NULL)
+            if (this->rectangle.getTexture() == nullptr)
             {
                 this->rectangle.setFillColor(this->activeColor);
                 this->text.setFillColor(this->text_activecolor);
@@ -337,7 +333,7 @@ void GUI::Button::render(sf::RenderTarget& target) {
 
 //Accessors
 // return the bolean for wether or not the user has pressed the button
-const bool GUI::Button::isPressed() const {
+bool GUI::Button::isPressed() const {
     
     if (this->ButtonState == PRESSED)
         return true; 
@@ -349,31 +345,32 @@ const bool GUI::Button::isPressed() const {
 
 //Debug, fix "returning refrence to local temp. object" warning later
 
-const std::string GUI::Button::getText() const
+std::string GUI::Button::getText() const
 {
     return this->text.getString();
 }
 
-void GUI::Button::setText(const std::string text)
+void GUI::Button::setText(const std::string &button_text)
 {
     
-    this->text.setString(text);
+    this->text.setString(button_text);
     
     
 }
 
-void GUI::Button::resize(sf::Vector2f newsize)
+void GUI::Button::resize(sf::Vector2f newSize)
 {
-    this->rectangle.setSize(newsize);
+    this->rectangle.setSize(newSize);
 }
 
-void GUI::Button::reposition(sf::Vector2f newposition)
+void GUI::Button::reposition(sf::Vector2f newPosition)
 {
-    this->rectangle.setPosition(newposition);
+    this->rectangle.setPosition(newPosition);
 }
 
-void GUI::Button::recalc_CharSize(unsigned newsize)
+void GUI::Button::recalculateCharacterSize(unsigned newSize)
 {
+    //TD
 }
 
 void GUI::Button::load_from_header()
@@ -394,9 +391,9 @@ const unsigned short &GUI::Button::getID() const
 }
 
 
-void GUI::Button::setID(const unsigned short ID)
+void GUI::Button::setID(const unsigned short id)
 {
-    this->ID = ID;
+    this->ID = id;
 }
 
 
@@ -413,7 +410,7 @@ void GUI::Button::setID(const unsigned short ID)
 /*BEGIN DROPDOWNLIST*/
 
 
-GUI::DropDownList::DropDownList(float x, float y,float width, float height, sf::Font& font, std::string list[], unsigned number_of_elements, unsigned default_index): font(font), display_list(false), keytime_max(10.f), keytime(2.f)
+GUI::DropDownList::DropDownList(float x, float y,float width, float height, sf::Font& font, std::string list[], unsigned number_of_elements, unsigned default_index): keytime(2.f), keytime_max(10.f), font(font), display_list(false)
 {
     //number_of_elements = sizeof(list) / sizeof(std::string);
     
@@ -466,12 +463,12 @@ void GUI::DropDownList::update(const sf::Vector2i & mousePosWindow, const float&
      
     @return void
      */
-    this->updateketime(dt);
+    this->updateKeyTime(dt);
 
     this->active_element->update(mousePosWindow);
 
         //Show and hide the list
-    if (this->active_element->isPressed() && this->getkeytime())
+    if (this->active_element->isPressed() && this->getKeyTime())
         {
             if (this->display_list)
                 this->display_list = false;
@@ -485,7 +482,7 @@ void GUI::DropDownList::update(const sf::Vector2i & mousePosWindow, const float&
             {
                 i->update(mousePosWindow);
 
-                if (i->isPressed() && this->getkeytime())
+                if (i->isPressed() && this->getKeyTime())
                 {
                     this->display_list = false;
                     this->active_element->setText(i->getText());
@@ -515,7 +512,7 @@ void GUI::DropDownList::render(sf::RenderTarget& target)
 
 //Accessors
 
-const bool GUI::DropDownList::getkeytime()
+bool GUI::DropDownList::getKeyTime()
 {
     if (this->keytime >= this->keytime_max)
     {
@@ -532,7 +529,7 @@ const unsigned short &GUI::DropDownList::getID() const
 }
 
 
-void GUI::DropDownList::updateketime(const float& dt)
+void GUI::DropDownList::updateKeyTime(const float& dt)
 {
     if (this->keytime < this->keytime_max)
     this->keytime += 10.f * dt;
@@ -549,7 +546,7 @@ void GUI::DropDownList::updateketime(const float& dt)
 /* BEGIN TEXTURE SELECTOR*/
 
 //this Is NOT the version of the texture Selector being called in EditorState
-GUI::TextureSelector::TextureSelector(float x, float y,float width, float height, sf::Vector2f gridsize, const sf::Texture* texture_sheet, sf::Font& font, std::string text, bool ImGui) : keytimeMax(2.f), keytime(0.f)
+GUI::TextureSelector::TextureSelector(float x, float y, float width, float height, sf::Vector2f gridSize, const sf::Texture* texture_sheet, sf::Font& font, const std::string& text, bool using_imgui) :keyTime(0.f), keyTimeMax(2.f), multi_select(false), height(0.f), width(0.f)
 {
     /*!
                 @brief Construct's the Texture Selector Element
@@ -564,15 +561,15 @@ GUI::TextureSelector::TextureSelector(float x, float y,float width, float height
                 @return void
 
      */
-sf::Vector2f offset = gridsize;
+sf::Vector2f offset = gridSize;
 
-this->ImGui = ImGui; 
+this->using_imgui = using_imgui;
 this->bounds.setSize(sf::Vector2f(width, height));
 this->bounds.setPosition(x + offset.x, y + offset.y);
 this->bounds.setFillColor(sf::Color(50, 50, 50, 100));
 this->bounds.setOutlineThickness(1.f);
 this->bounds.setOutlineColor(sf::Color(255, 255, 255, 200));
-this->texturesheet = *texture_sheet;
+this->textureSheet = *texture_sheet;
 this->size = texture_sheet->getSize();
 this->sheet.setTexture(*texture_sheet);
 this->sheet.setPosition(x + offset.x, y + offset.y);
@@ -588,23 +585,23 @@ if (this->sheet.getGlobalBounds().height > this->bounds.getGlobalBounds().height
 
 //Configure the texture selector element
 this->selector.setPosition(x + offset.x, y + offset.y);
-this->selector.setSize(gridsize);
+this->selector.setSize(gridSize);
 this->selector.setFillColor(sf::Color::Transparent);
 this->selector.setOutlineColor(sf::Color::Green);
 this->selector.setOutlineThickness(1.f);
 
 this->active = false;
-this->gridsize = gridsize;
+this->gridSize = gridSize;
 
-this->texturerect.width = gridsize.x;
-this->texturerect.height = gridsize.y;
+this->textureRect.width = gridSize.x;
+this->textureRect.height = gridSize.y;
 this->hidden = false;
 
-this->hide = new GUI::Button(x, y, gridsize.x, gridsize.y, "Resources/GUI/TickBox/Orange/red_boxCross.png", "Resources/GUI/TickBox/Orange/red_boxTick.png", "Resources/GUI/TickBox/Orange/red_boxTick.png");
+this->hide = new GUI::Button(x, y, gridSize.x, gridSize.y, "Resources/GUI/TickBox/Orange/red_boxCross.png", "Resources/GUI/TickBox/Orange/red_boxTick.png", "Resources/GUI/TickBox/Orange/red_boxTick.png");
 
 std::cout << this->bounds.getGlobalBounds().width << std::endl;
 
-if (ImGui)
+if (this->using_imgui)
 {
     int count = 0;
     for (auto& p : std::filesystem::recursive_directory_iterator("Resources/GUI/Icons/guitile"))
@@ -620,9 +617,9 @@ if (ImGui)
 
             std::cout << "Resources/GUI/Icons/guitile/" + p.path().filename().string() << std::endl;
 
-
-            this->guitextures.push_back(sf::Texture());
-            this->guitextures[count - 1].loadFromFile("Resources/GUI/Icons/guitile/" + p.path().filename().string());
+            //do not use emplace_back, we need a temporary object with the size of an empty sf::Texture
+            this->guiTextures.push_back(sf::Texture());
+            this->guiTextures[count - 1].loadFromFile("Resources/GUI/Icons/guitile/" + p.path().filename().string());
 
 
 
@@ -659,9 +656,9 @@ void GUI::TextureSelector::update(const sf::Vector2i& MousePosWindow, const floa
 
 
 
-        if (this->hide->isPressed() && this->getkeytime())
+        if (this->hide->isPressed() && this->getKeyTime())
         {
-            if (this->hidden == true)
+            if (this->hidden)
                 this->hidden = false;
 
             else
@@ -681,20 +678,20 @@ void GUI::TextureSelector::update(const sf::Vector2i& MousePosWindow, const floa
           {
               this->active = true;
               
-              this->MousePosGrid.x = (MousePosWindow.x - static_cast<int>(this->bounds.getPosition().x)) / static_cast<unsigned>(this->gridsize.x);
-              this->MousePosGrid.y = (MousePosWindow.y - static_cast<int>(this->bounds.getPosition().y)) / static_cast<unsigned>(this->gridsize.y);
+              this->MousePosGrid.x = (MousePosWindow.x - static_cast<int>(this->bounds.getPosition().x)) / static_cast<unsigned>(this->gridSize.x);
+              this->MousePosGrid.y = (MousePosWindow.y - static_cast<int>(this->bounds.getPosition().y)) / static_cast<unsigned>(this->gridSize.y);
               
-              this->selector.setPosition(this->bounds.getPosition().x + this->MousePosGrid.x * this->gridsize.x,
-                                         this->bounds.getPosition().y + this->MousePosGrid.y * this->gridsize.y);
+              this->selector.setPosition(this->bounds.getPosition().x + static_cast<float>(this->MousePosGrid.x) * this->gridSize.x,
+                                         this->bounds.getPosition().y + static_cast<float>(this->MousePosGrid.y) * this->gridSize.y);
               
               //Update the Texture Rectangle
               
-              this->texturerect.left = static_cast<int>(this->selector.getPosition().x - this->bounds.getPosition().x);
-              this->texturerect.top = static_cast<int>(this->selector.getPosition().y - this->bounds.getPosition().y);
+              this->textureRect.left = static_cast<int>(this->selector.getPosition().x - this->bounds.getPosition().x);
+              this->textureRect.top = static_cast<int>(this->selector.getPosition().y - this->bounds.getPosition().y);
               
               
               
-            //  this->texture_rects.push_back(this->texturerect); 
+            //  this->texture_rects.push_back(this->textureRect);
               
           }
           
@@ -711,9 +708,9 @@ void GUI::TextureSelector::update(const sf::Vector2i& MousePosWindow, const floa
 
 void GUI::TextureSelector::updatekeytime(const float& dt)
 {
-    if (this->keytime < this->keytimeMax)
+    if (this->keyTime < this->keyTimeMax)
     {
-        this->keytime += 10.f * dt;
+        this->keyTime += 10.f * dt;
     }
     
 }
@@ -728,7 +725,7 @@ void GUI::TextureSelector::render(sf::RenderTarget &target)
         if(this->active)
            target.draw(this->selector);
     }
-    if(!this->ImGui)
+    if(!this->using_imgui)
      this->hide->render(target);
    
 }
@@ -741,30 +738,26 @@ const bool &GUI::TextureSelector::getActive() const
 
 const sf::IntRect &GUI::TextureSelector::getTextureRect() const
 {
-    return this->texturerect;
+    return this->textureRect;
 }
 
-const std::vector<sf::IntRect> GUI::TextureSelector::getTextureRects() const
+const std::vector<sf::IntRect> & GUI::TextureSelector::getTextureRects() const
 {
     return this->texture_rects;
 }
 
-const bool GUI::TextureSelector::getkeytime()
+
+bool GUI::TextureSelector::getKeyTime()
 {
-    if (this->keytime >= this->keytimeMax)
+    if (this->keyTime >= this->keyTimeMax)
     {
-        this->keytime = 0.f;
+        this->keyTime = 0.f;
         return true;
     }
 
     return false;
 }
 
-
-const bool& GUI::TextureSelector::getMulitSelect() const
-{
-    return this->multi_select;
-}
 
 const sf::Vector2u& GUI::TextureSelector::getMaxSize() const
 {
@@ -778,7 +771,7 @@ const sf::Vector2u& GUI::TextureSelector::getMaxSize() const
 
 /*BEGIN CHECKBOX*/
 
-GUI::CheckBox::CheckBox(float x, float y)
+GUI::CheckBox::CheckBox(float x, float y) : BoxState(0), checked(false), hovering(false)
 {
     //HARD CODED CHECK BOX TEXTURES
     this->idle_box.loadFromFile("Resources/GUI/TickBox/Grey/grey_box.png");
@@ -788,18 +781,14 @@ GUI::CheckBox::CheckBox(float x, float y)
     
 }
 
-GUI::CheckBox::~CheckBox()
-{
-    
-}
-
-void GUI::CheckBox::update(const sf::Vector2i Mousepos)
+GUI::CheckBox::~CheckBox() = default;
+void GUI::CheckBox::update(const sf::Vector2i &MousePos)
 {
     
     
     this->BoxState = IDLE_BOX;
         
-        if (this->box.getGlobalBounds().contains(static_cast<sf::Vector2f>(Mousepos)))
+        if (this->box.getGlobalBounds().contains(static_cast<sf::Vector2f>(MousePos)))
         {
 
             this->BoxState = HOVER_BOX;
@@ -843,7 +832,7 @@ void GUI::CheckBox::update(const sf::Vector2i Mousepos)
     
 
 
-const bool GUI::CheckBox::isPressed() const
+bool GUI::CheckBox::isPressed() const
 {
     if(this->BoxState == PRESSED_BOX)
         return true;
@@ -855,12 +844,12 @@ const bool GUI::CheckBox::isPressed() const
 }
 
 void GUI::CheckBox::render(sf::RenderTarget &target) { 
-    
+    target.draw(this->box);
 }
 /*END CHECKBOX */
 
 /*BEGIN MISC*/
-const unsigned GUI::calcCharSize(const sf::VideoMode& vm, const unsigned modifier)
+unsigned int GUI::calcCharSize(const sf::VideoMode& vm, const unsigned int &modifier)
 {
     /*
     * Calculates the optimal size for text elements based on the current resolution
@@ -876,16 +865,17 @@ const unsigned GUI::calcCharSize(const sf::VideoMode& vm, const unsigned modifie
     
 }
 
-
-const float GUI::pixelpercentX(const float percent, const sf::VideoMode& vm)
+const sf::Vector2f& GUI::pixelPercent(sf::Vector2f percent, const sf::VideoMode &resolution) {
+    return sf::Vector2f(std::floor(static_cast<float>(resolution.width) * (percent.x / 100.f)), std::floor(static_cast<float>(resolution.height) / (percent.y / 100.f)));
+}
+float GUI::pixelpercentX(const float &percent, const sf::VideoMode& vm)
 {
-    
-    
+
 
     return std::floor(static_cast<float>(vm.width) * (percent / 100.f));
 }
 
-const float GUI::pixelpercentY(const float percent, const sf::VideoMode& vm)
+float GUI::pixelpercentY(const float &percent, const sf::VideoMode& vm)
 {
   
     
@@ -894,18 +884,20 @@ const float GUI::pixelpercentY(const float percent, const sf::VideoMode& vm)
 
 
 
-const std::string GUI::convertToString(char* a, int size)
+std::string GUI::convertToString(char* a, int size)
 {
     int i;
-    std::string s = "";
+    std::string s;
     for (i = 0; i < size; i++) {
-        s = s + a[i];
+        s += s + a[i];
     }
     return s;
 }
 
 
-GUI::ProgressBar::ProgressBar(float x, float y, float width, float height,sf::VideoMode& vm, sf::Color inner_color, unsigned charSize, sf::Font* font)
+
+
+GUI::ProgressBar::ProgressBar(float x, float y, float width, float height,sf::VideoMode& vm, sf::Color inner_color, unsigned charSize, sf::Font* font) :MaxVal(0)
 {
     float _width = GUI::pixelpercentX(width, vm);
     float _height = GUI::pixelpercentY(height, vm);
@@ -935,17 +927,10 @@ GUI::ProgressBar::ProgressBar(float x, float y, float width, float height,sf::Vi
 }
 
 
-GUI::ProgressBar::~ProgressBar()
-{
-    
-    
-    
-    
-}
+GUI::ProgressBar::~ProgressBar() = default;
 
 
-
-void GUI::ProgressBar::update(const int current_value, const int max_value)
+void GUI::ProgressBar::update(const int &current_value, const int &max_value)
 {
     float percent = static_cast<float>(current_value) / static_cast<float>(max_value);
     
@@ -969,12 +954,12 @@ void GUI::ProgressBar::render(sf::RenderTarget& target)
 }
 
 
-const float GUI::ProgressBar::getWidth()
+const float & GUI::ProgressBar::getWidth() const
 {
     return this->Max_width;
 }
 
-const sf::Vector2f GUI::ProgressBar::getSize()
+const sf::Vector2f & GUI::ProgressBar::getSize()
 {
     return this->Interior.getSize(); 
 }
@@ -985,7 +970,7 @@ const sf::Vector2f GUI::ProgressBar::getSize()
 /*BEGIN ICON*/
  
 
-GUI::Icon::Icon(float x, float y, const std::string icon_texture)
+GUI::Icon::Icon(float x, float y, const std::string &icon_texture)
 {
     
     this->icontexture.loadFromFile( icon_texture);
@@ -996,14 +981,7 @@ GUI::Icon::Icon(float x, float y, const std::string icon_texture)
 }
 
 
-GUI::Icon::~Icon()
-{
-    
-    
-    
-    
-}
-
+GUI::Icon::~Icon()= default;
 
 void GUI::Icon::render(sf::RenderTarget& target)
 {

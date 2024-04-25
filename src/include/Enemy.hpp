@@ -35,7 +35,7 @@ public:
     EnemySpawner& getEnemySpawnerTile();
     const unsigned& getGainExp() const;
     
-    virtual void render(sf::RenderTarget& target,sf::Shader* shader = nullptr,const sf::Vector2f light = sf::Vector2f(), const bool render_hitbox = false) = 0;
+    virtual void render(sf::RenderTarget& target, sf::Shader* shader = nullptr, const sf::Vector2f &light = sf::Vector2f(), const bool render_hitbox = false) = 0;
  
 protected:
 

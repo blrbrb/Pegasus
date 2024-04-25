@@ -62,9 +62,9 @@ const bool EditorModes::getkeytime()
 {
     /**
     @class EditorModes
-    @brief Acess the keytime
-        @see updatekeytime()
-     @sa updatekeytime()
+    @brief Acess the keyTime
+        @see updateKeyTime()
+     @sa updateKeyTime()
     @discussion You can use this function to create a minimum amount of time that must pass before the user can acess a button, or key again.
     @return const bool
      */

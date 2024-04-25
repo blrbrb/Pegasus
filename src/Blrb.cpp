@@ -106,7 +106,7 @@ void Blrb::update(const float &dt, sf::Vector2f &MousePosView)
 
 
 
-void Blrb::render(sf::RenderTarget &target, sf::Shader *shader, const sf::Vector2f light, const bool render_hitbox)
+void Blrb::render(sf::RenderTarget &target, sf::Shader *shader, const sf::Vector2f &light, const bool render_hitbox)
 {
     if (shader)
       {

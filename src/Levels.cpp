@@ -86,7 +86,7 @@ void Levels::update(const float& dt, Entity* entity, EnemySystem& enemysystem)
 bool Levels::saveLevel(std::string index, std::string filename)
 {
 	std::cout << filename << std::endl; 
-	if (this->map.left.at(index)->savetofile(filename, true))
+	if (this->map.left.at(index)->saveToFile(filename, true))
 		return true;
 	else
 		return false; 
@@ -94,7 +94,7 @@ bool Levels::saveLevel(std::string index, std::string filename)
 
 bool Levels::loadLevel(std::string index, std::string filename)
 { 
-	return this->map.left.at(index)->loadfromfile(filename, true);
+	return this->map.left.at(index)->loadFromFile(filename, true);
 	
 }
 
@@ -124,12 +124,12 @@ bool  Levels::saveLevelsBatch(std::string filename)
 		}
 		for(int x = 0; x < this->map.left.size(); x++)
 		{
-			//this->map.left.at(this->map.right.at(this->get_name(x)))->savetofile(filename); ///// 
+			//this->map.left.at(this->map.right.at(this->get_name(x)))->saveToFile(filename); /////
 
 			 
 			//std::cout << map.left.at(this->map.left.aa)->getLevelIndex() << " this is the title of the level being saved currently..." << std::endl;
 
-			//this->map.left.at(x)->savetofile(filename);
+			//this->map.left.at(x)->saveToFile(filename);
 			//{
 			//	std::cout << "POO POO!!!" << std::endl; 
 			//}

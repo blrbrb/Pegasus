@@ -213,9 +213,9 @@ public:
     void setType(short level_type); 
 
     void RemoveTile(const int x, const int y, const int z, const int type);
-    bool savetofile(const std::string filename, bool json=false);   
+    bool saveToFile(const std::string filename, bool json= false);
    
-    bool loadfromfile(const std::string filename, bool json=false);
+    bool loadFromFile(const std::string filename, bool json= false);
     void addGenerationTexture(const std::string texture_filename);
     
     //update functions

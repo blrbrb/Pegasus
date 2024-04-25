@@ -18,7 +18,7 @@ public:
     virtual const sf::Vector2f& getObjectposition() const;
 
     //Functions 
-    virtual void render(sf::RenderTarget& target, sf::Shader* shader = NULL, sf::Vector2f LightPosition = sf::Vector2f());
+    virtual void render(sf::RenderTarget& target, sf::Shader* shader = nullptr, sf::Vector2f LightPosition = sf::Vector2f());
     virtual void update(const float& dt);
     virtual void savetoFile(std::ofstream& out);
     

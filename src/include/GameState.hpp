@@ -92,9 +92,9 @@ class GameState : public State {
     ///Update user input, e.g close the window
     void updateInput(const float& dt);
     ///Update the Buttons
-    void updatebuttons();
+    void updateButtons();
     ///Update the Tile Map, shaders, etc
-    void updatetilemap(const float& dt);
+    void updateTileMap(const float& dt);
     ///Render all of the Gamestate elements
     void render(sf::RenderTarget* target);
 
@@ -161,7 +161,7 @@ class GameState : public State {
     void initplayerGUI();
     void initfonts();
     void initpausemenu();
-    void inittilemap();
+    void initTileMap();
     void initshaders();
     void initenemysystem();
     void initgamestatedata();

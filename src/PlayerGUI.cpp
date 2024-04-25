@@ -162,7 +162,7 @@ void PlayerGUI::updateMagicbar()
 
 void PlayerGUI::updateLevelTag()
 {
-    this->LevelTagstring = std::to_string(this->player->getStatusComponet()->level);
+    this->LevelTagstring = std::to_string(this->player->getStatusComponent()->level);
     this->LevelTagText.setString(LevelTagstring);
     
 }
@@ -170,7 +170,7 @@ void PlayerGUI::updateLevelTag()
 void PlayerGUI::updateMoney()
 {
     
-    this->coins_string = std::to_string(this->player->getStatusComponet()->coins);
+    this->coins_string = std::to_string(this->player->getStatusComponent()->coins);
     this->CurrentCoins.setString(coins_string);
     
 }

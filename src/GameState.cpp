@@ -25,7 +25,7 @@ GameState::GameState(StateData* state_data)
         this->initplayers();
         this->initplayerGUI();
         this->initenemysystem();
-        this->inittilemap();
+        this->initTileMap();
         this->initdialougesystem();
         
     }
@@ -163,7 +163,7 @@ void GameState::initkeybinds() {
         //this->log << "GAmestate Keybinds exist";
         while (ifs >> key >> key2)
         {
-            this->keybinds[key] = this->supportedkeys->at(key2);
+            this->keyBinds[key] = this->supportedKeys->at(key2);
            //this->log << key << " " << key2;
         }
     }
@@ -228,7 +228,7 @@ void GameState::initplayers()
 
 void GameState::initgamestatedata()
 {
-    this->gamestatedata.keybinds = &this->keybinds;
+    this->gamestatedata.keybinds = &this->keyBinds;
     this->gamestatedata.font = &this->font; 
     std::cout << "init gamestate data" << std::endl;
     
@@ -245,11 +245,11 @@ void GameState::initpausemenu()
    std::cout << "init gamestate pause menu" << std::endl;
 }
 
-void GameState::inittilemap()
+void GameState::initTileMap()
 {
-    this->Tilemap = new TileMap(*this->state_data->gridsize, 100, 100, "Resources/Assets/Tiles/sheet.png");
-    
-    this->Tilemap->loadfromfile("Data/TileMap/New_Map.cfg", true); 
+    this->Tilemap = new TileMap(*this->state_data->gridSize, 100, 100, "Resources/Assets/Tiles/sheet.png");
+
+    this->Tilemap->loadFromFile("Data/TileMap/New_Map.cfg", true);
 
      std::cout << "init gamestate tilemap" << std::endl;
 
@@ -261,15 +261,15 @@ void GameState::inittilemap()
 
 void GameState::update(const float& dt)
 {
-     std::cout << "update gamestate" << std::endl;
+
     this->updateShaders(dt); 
    
-    srand(static_cast<unsigned>(time(NULL)));
-     std::cout << "update shaders gamestate" << std::endl;
+    srand(static_cast<unsigned>(time(nullptr)));
+
     this->updateMousePosition(&this->view);
-    this->updatekeytime(dt);
+    this->updateKeyTime(dt);
     this->updateInput(dt);
-    //std::cout << "update mouse pos key time and input gamestate" << std::endl;
+
     if(!this->paused) //Update while unpaused 
      {
        
@@ -277,7 +277,7 @@ void GameState::update(const float& dt)
            
             this->updatePlayerGUI(dt);
             this->updatePlayerInput(dt);
-            this->updatetilemap(dt);
+         this->updateTileMap(dt);
             this->updatePlayer(dt); 
            
             this->updateEnemies(dt);
@@ -288,7 +288,7 @@ void GameState::update(const float& dt)
     else // Update while Paused
      {
          this->pMenu->update(this->MousePosWindow);
-         this->updatebuttons();  
+         this->updateButtons();
          
          //ImGui::Text("Hello, world %d", 123);
          
@@ -303,34 +303,33 @@ void GameState::update(const float& dt)
 
 void GameState::updateInput(const float& dt)
 {
-     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("CLOSE"))) && this->getkeytime())
+     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("CLOSE"))) && this->getKeyTime())
      {
          if (!this->paused)
-             this->Pause_State();
+             this->pause();
          else
-             this->Unpause_State();
+             this->unpause();
      }
 }
 
-void GameState::updatetilemap(const float& dt)
+void GameState::updateTileMap(const float& dt)
 {
     this->Tilemap->update(this->player, dt); 
     this->Tilemap->updateWorldBoundsCollision(this->player, dt);
     this->Tilemap->updateTileCollision(this->player, dt);
     this->Tilemap->updateTiles(this->player, dt, *this->enemysystem);
-     std::cout << "update tilemap gamestate" << std::endl;
     
 }
 
 
 
 
-void GameState::updatebuttons()
+void GameState::updateButtons()
 {
     if(this->pMenu->isButtonPressed("Pause_Quit_Button"))
     {
-        this->endstate();        
-        this->endstate();        
+        this->endState();
+        this->endState();
     }
     
 
@@ -378,9 +377,9 @@ void GameState::updateView(const float &dt)
     
 
     //Update the GridPosition view
-    this->ViewGridPosition.x = static_cast<int>(this->view.getCenter().x) / static_cast<int>(this->state_data->gridsize->x);
+    this->ViewGridPosition.x = static_cast<int>(this->view.getCenter().x) / static_cast<int>(this->state_data->gridSize->x);
     
-    this->ViewGridPosition.y = static_cast<int>(this->view.getCenter().y) / static_cast<int>(this->state_data->gridsize->y);
+    this->ViewGridPosition.y = static_cast<int>(this->view.getCenter().y) / static_cast<int>(this->state_data->gridSize->y);
 }
 
 void GameState::updateShaders(const float& dt)
@@ -400,12 +399,12 @@ void GameState::updatePlayerGUI(const float &dt)
 {
     this->playerGUI->update(dt);   
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F) && this->getkeytime()) 
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F) && this->getKeyTime())
     {
        this->playerGUI->toggleCharacterTab(); 
     } 
 
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z) && this->getkeytime()) 
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z) && this->getKeyTime())
     {
         this->dialougeSystem->advance(); 
     }
@@ -416,26 +415,26 @@ void GameState::updatePlayerInput(const float& dt)
    //check for a quit
 
     
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_RIGHT"))))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("MOVE_RIGHT"))))
     {
         this->player->move(dt, 1.f, 0.f);
        // this->log << "RIGHT" << std::endl;
     }
     
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT"))) )
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("MOVE_LEFT"))) )
     {
         
         this->player->move(dt, -1.f, 0.f);
         //this->log << "LEFT" << std::endl;
     }
     
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_UP"))))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("MOVE_UP"))))
     {
         this->player->move(dt, 0.f, -1.f);
         //this->log << "UP" << std::endl;
     }
     
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN"))))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("MOVE_DOWN"))))
     {
         
         this->player->move(dt, 0.f, 1.f);
@@ -446,7 +445,7 @@ void GameState::updatePlayerInput(const float& dt)
     }
     
     //hide the player's inventory 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E) && this->getkeytime())
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E) && this->getKeyTime())
     {
         this->playerGUI->HideInventory();
     }
@@ -519,7 +518,7 @@ void GameState::render(sf::RenderTarget* target) {
 
 void GameState::updateDialouge(const float& dt)
 {
-    if(this->getkeytime()) 
+    if(this->getKeyTime())
     {
         this->dialougeSystem->update(dt);
     }
@@ -530,7 +529,7 @@ void GameState::updateDialouge(const float& dt)
 
 void GameState::checkforendstate() {
     
-   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("CLOSE")))) {
+   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("CLOSE")))) {
           
           //return this->quit = true;
         
@@ -659,7 +658,7 @@ void GameState::handletilemap()
     }
    
     try {
-        this->Tilemap->loadfromfile(custom_tilemap_path);
+        this->Tilemap->loadFromFile(custom_tilemap_path);
     } 
 
     catch (std::runtime_error& e) 

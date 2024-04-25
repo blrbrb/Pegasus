@@ -80,17 +80,20 @@ namespace GUI {
 /// <param name="vm"></param>
 /// <param name="view"></param>
 /// <returns>newly calculated size / position for gui object</returns>
-const float pixelpercentX(const float percent, const sf::VideoMode& vm);
-
-const float pixelpercentY(const float percent, const sf::VideoMode& vm);
 
 
-const std::string convertToString(char* a, int size);
+const sf::Vector2f& pixelPercent(sf::Vector2f percent, const sf::VideoMode& resolution);
+float pixelpercentX(const float &percent, const sf::VideoMode& vm);
+
+float pixelpercentY(const float &percent, const sf::VideoMode& vm);
+
+
+std::string convertToString(char* a, int size);
 
 /// Calculate a good character size for text based on the total size of the renderable window space
 /// @param vm A refrence to the sf::VideoMode
 ///@returns const unsigned character size
-   const unsigned calcCharSize(const sf::VideoMode& vm, const unsigned modifier = 60);
+    unsigned int calcCharSize(const sf::VideoMode& vm, const unsigned int &modifier = 60);
 
 
 ///A GUI element designed to handle user input visually, can be customized with text and color
@@ -150,31 +153,44 @@ public:
     /// <param name="font"><type name ="sf::Font"/>font</param>
     /// <param name="text">text</param>
     /// <param name="character_size">text size</param>
-    /// <param name="idlecolor">idle color</param>
-    /// <param name="hovercolor">mouseover color</param>
-    /// <param name="activecolor">active color </param>
-    /// <remarks> the <paramref name="activecolor"/> is the color that the button texture will be updated with when it is being interacted with <type name="sf::Color"/> </remarks> 
-    /// <param name="text_idlecolor">text idle color</param>
-    /// <param name="text_hovercolor">text hover color</param>
-    /// <param name="text_activecolor">text_activecolor</param>
-    /// <param name="outline_activeColor">outline active color</param>
-    /// <param name="outline_idleColor">outline idle color</param>
-    /// <param name="outline_hoverColor">outline hover color</param>
+    /// <param name="idle_color">idle color</param>
+    /// <param name="hover_color">mouseover color</param>
+    /// <param name="active_color">active color </param>
+    /// <remarks> the <paramref name="active_color"/> is the color that the button texture will be updated with when it is being interacted with <type name="sf::Color"/> </remarks>
+    /// <param name="text_idle_color">text idle color</param>
+    /// <param name="text_hover_color">text hover color</param>
+    /// <param name="text_active_color">text_active_color</param>
+    /// <param name="outline_active_color">outline active color</param>
+    /// <param name="outline_idle_color">outline idle color</param>
+    /// <param name="outline_hover_color">outline hover color</param>
     /// <param name="ID">optional ID</param>
-    Button(float x, float y, float width, float height, sf::Font *font, std::string text, unsigned character_size, sf::Color idlecolor, sf::Color hovercolor, sf::Color activecolor, sf::Color text_idlecolor, sf::Color text_hovercolor, sf::Color text_activecolor,sf::Color outline_activeColor = sf::Color::Transparent, sf::Color outline_idleColor = sf::Color::Transparent, sf::Color outline_hoverColor = sf::Color::Transparent, short unsigned ID = 0);
+    Button(float x, float y, float width, float height, sf::Font *font, const std::string& text, unsigned character_size, sf::Color idle_color, sf::Color hover_color, sf::Color active_color, sf::Color text_idle_color, sf::Color text_hover_color, sf::Color text_active_color, sf::Color outline_active_color = sf::Color::Transparent, sf::Color outline_idle_color = sf::Color::Transparent, sf::Color outline_hover_color = sf::Color::Transparent, short unsigned ID = 0);
 
 
    
-	
-	Button(float x, float y, float width, float height, sf::Font* font, std::string text, unsigned character_size, const std::string idle_texture, const std::string active_texture, const std::string hover_texture, short unsigned ID = 0);
+	/**
+	 * @brief Construct a button UI element
+	 * @param x - the horizontal position of the button relative to the screen
+	 * @param y - the vertical position of the button relative to the screen
+	 * @param width - the width of the button relative to the screen
+	 * @param height - the height of the button relative to the screen
+	 * @param font - the font, if text is rendered to the button
+	 * @param text - text to render onto the button
+	 * @param character_size - the size of the text on the button
+	 * @param idle_texture - the button's idle texture (a mouse or controller has not clicked and are not hovering over the button)
+	 * @param active_texture - the button's active texture (a mouse or controller has clicked on the button)
+	 * @param hover_texture - the button's hover texture (a mouse of controller is currently hovering over the button)
+	 * @param ID - the button's unique ID for easy indexing
+	 */
+	Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned character_size, const std::string &idle_texture, const std::string &active_texture, const std::string &hover_texture, short unsigned ID = 0);
     
     
     
    
 
-	Button(float x, float y, float width, float height, const std::string idle_texture, const std::string active_texture, const std::string hover_texture, short unsigned ID = 0);
+	Button(float x, float y, float width, float height, const std::string &idle_texture, const std::string &active_texture, const std::string &hover_texture, short unsigned ID = 0);
 
-	Button(float x, float y, float width, float height, sf::Font* font, std::string text, unsigned int character_size, short unsigned ID = 0);
+	Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned int character_size, short unsigned ID = 0);
 
 
     Button(float x, float y, float width, float height, short unsigned ID);
@@ -183,27 +199,27 @@ public:
    
     
     void render(sf::RenderTarget& target);
-    void update(const sf::Vector2i Mousepos);
+    void update(const sf::Vector2i& Mousepos);
 
     
      //Accessors
      /// Retreive wether or not the user has pressed the button
-     const bool isPressed() const;
+     bool isPressed() const;
     
      ///Retreive the text on the Button
-     const std::string getText() const;
+     std::string getText() const;
      const short unsigned& getID() const;
    
      
     //Modifiers
-    ///Change, or set the Button's text
-    void setText(const std::string text);
-    ///Change, or set the Button's unique ID
-    void setID(const short unsigned ID);
+    ///Change, or set the Button's button_text
+    void setText(const std::string &button_text);
+    ///Change, or set the Button's unique id
+    void setID(short unsigned id);
 
-    void resize(sf::Vector2f newsize);
-    void reposition(sf::Vector2f newposition);
-    void recalc_CharSize(unsigned newsize); 
+    void resize(sf::Vector2f newSize);
+    void reposition(sf::Vector2f newPosition);
+    void recalculateCharacterSize(unsigned newSize);
 
     void load_from_header();
     
@@ -238,14 +254,25 @@ public:
     ~DropDownList();
     
     //Accessors
-    const bool getkeytime();
+    /**
+     * @brief Calculates the number of frames that have passed inbetween inputs and checks to see if a minimum time value has been met
+     * @example
+     * @code
+     * if(DropDownList.getKeyTime())
+     * {
+     * /let the user register another input again
+     * }
+     * @endcode
+     * @return
+     */
+    bool getKeyTime();
     bool display_list;
-    const unsigned short& getID() const;
+    [[nodiscard]] const unsigned short& getID() const;
     
     //Functions
     void render(sf::RenderTarget& target);
     void update(const sf::Vector2i& MouseposWindow, const float& dt);
-    void updateketime(const float& dt);
+    void updateKeyTime(const float& dt);
     
 };
 
@@ -254,28 +281,27 @@ class TextureSelector
 private:
     
     bool active;
-    bool ImGui; 
+    bool using_imgui;
     //bool hidden;
     bool multi_select; 
-    sf::Vector2f gridsize; 
-    float keytime;
+    sf::Vector2f gridSize;
+    float keyTime;
     float height;
     float width;
-    const float keytimeMax;
+    const float keyTimeMax;
     sf::Vector2u size;
-    sf::Texture texturesheet; 
+    sf::Texture textureSheet;
     sf::RectangleShape bounds;
     sf::RectangleShape selector;
     sf::RectangleShape sidebar;
-    std::vector<sf::Sprite> guisprites;
-    std::vector<sf::Texture> guitextures; 
+    std::vector<sf::Sprite> guiSprites;
+    std::vector<sf::Texture> guiTextures;
     std::map<std::string, int> guiTextureKeys; 
     sf::Sprite sheet;
   
     sf::Vector2u MousePosGrid;
-    sf::IntRect texturerect;
-    sf::IntRect textureRect2; 
-    Button* hide;
+    sf::IntRect textureRect;
+     Button* hide;
   
   
     
@@ -287,30 +313,27 @@ public:
     /// @param y the Y position of the Texture Selector
     /// @param width the width of the Texture Selector
     /// @param height the height of the Texture Selector
-    /// @param gridsize the gridSize
+    /// @param gridSize the gridSize
     /// @param texture_sheet the texture sheet for the Texture Selector element to source tile textures from
     /// @param font the font for the Texture Selector to use
     /// @param text a string of text for the Texture Selector
-    TextureSelector(float x, float y, float width, float height, sf::Vector2f gridsize, const sf::Texture* texture_sheet, sf::Font& font, std::string text, bool ImGui = false);
+    TextureSelector(float x, float y, float width, float height, sf::Vector2f gridSize, const sf::Texture* texture_sheet, sf::Font& font, const std::string& text, bool using_imgui = false);
     
 
 
 
-    /// <summary>
-    /// Overload For ImGui Texture Editor
-    /// </summary>
+
    
     ~TextureSelector();
     
     //Accessors
-    ///Return wether or not the user's mouse is hovering over the Texture selector element
+    ///Returns whether or not the user's mouse is hovering over the Texture selector element
     const bool& getActive() const;
-    const bool& getMulitSelect() const;
     const sf::Vector2u& getMaxSize() const; 
     ////Return an sf::IntRect refrence to the texture rectangle the user has selected
     const sf::IntRect& getTextureRect() const;
-    const std::vector<sf::IntRect> getTextureRects() const;
-    const bool getkeytime();
+    const std::vector<sf::IntRect> & getTextureRects() const;
+    bool getKeyTime();
     
     
     
@@ -344,8 +367,8 @@ public:
     ~CheckBox();
     
         
-      void update(const sf::Vector2i Mousepos);
-      const bool isPressed() const;
+      void update(const sf::Vector2i &MousePos);
+      bool isPressed() const;
       void render(sf::RenderTarget& target);
     
 };
@@ -374,19 +397,19 @@ public:
     /// @param MaxValue the Maximum percentage value for the ProgressBar to display, e.g (blank out of blank)
     /// @param vm the sf::VideoMode
     /// @param inner_color sf::Color, the inner color of the ProgressBar
-    /// @param charsize the character size for text above the ProgressBar
-    ProgressBar(float x, float y, float width, float height,sf::VideoMode& vm, sf::Color inner_color, unsigned charsize, sf::Font* font = nullptr);
+    /// @param charSize the character size for text above the ProgressBar
+    ProgressBar(float x, float y, float width, float height, sf::VideoMode& vm, sf::Color inner_color, unsigned charSize, sf::Font* font = nullptr);
     
     
     ~ProgressBar();
     
-    void update(const int current_value, const int max_value);
+    void update(const int &current_value, const int &max_value);
     void render(sf::RenderTarget& target);
   
     //Accessors
-    const float getWidth();
+    const float & getWidth() const;
     ///Return a sf::Vector2f to the size of the ProgressBar
-    const sf::Vector2f getSize(); 
+    const sf::Vector2f & getSize();
 };
 
 class Icon
@@ -398,7 +421,7 @@ public:
     /// @param x the X position of the Icon element on screen
     /// @param y the Y position of the Icon on screen
     /// @param icon_texture std::string to a texture file to source the icon from
-    Icon(float x, float y, const std::string icon_texture);
+    Icon(float x, float y, const std::string &icon_texture);
     virtual ~Icon();
     
     void render(sf::RenderTarget& target);
