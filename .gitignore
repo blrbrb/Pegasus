@@ -4,9 +4,9 @@
 #visual studio caches 
 /.vs 
 
+
 #Application Resources 
-**/.png
-**/.PNG
+
 **/.wav
 **/.jpeg. 
 **/.ttf
@@ -45,12 +45,6 @@ Data/
 *.out
 *.app
 
-#Library Dependencies 
-Imgui/ 
-packages/
-include/boost/
-include/Imgui/
-
 
 # Compiled Static libraries
 *.lai
@@ -58,13 +52,20 @@ include/Imgui/
 *.a
 *.lib
 
+# Debug Logs 
+*.log
+
 # Executables
 *.exe
 *.out
 *.app
 
-#Library Dependencies 
-Imgui/ 
-packages/
-include/boost/
-include/Imgui/
+#Cmake Cache 
+CMakeCache.txt
+_deps/
+CMakeFiles/
+obj/
+src/CMakeCache.txt
+src/CMakeFiles/
+
+

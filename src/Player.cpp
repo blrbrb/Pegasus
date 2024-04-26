@@ -183,7 +183,8 @@ void Player::render(sf::RenderTarget &target, sf::Shader* shader,const sf::Vecto
         
        
        // shader->setUniform("lights", player_light.light_system.at(node_count))
-         shader->setUniform("lightPos", light);
+          shader->setUniform("lightPos", light);
+          shader->setUniform("hasTexture", true);
         //shader->setUniform("Intensity", sf::Glsl::Vec4(testcolor2));
        // shader->setUniform("color", sf::Glsl::vec)
        // shader->setUniform("Radius", sf::Vector2f(10.f, 10.f));
