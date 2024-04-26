@@ -41,26 +41,24 @@ class EditorState : public State
     public:
         
         //Constructor and Destructor
-        EditorState(StateData* state_data);
+        explicit EditorState(StateData* state_data);
     
-        virtual ~EditorState();
+        ~EditorState() override;
 
     
         //Update Functions
-        void updateInput(const float& dt);
-        void updateEditorinput(const float& dt);
-        void update(const float& dt);
-        void updatebuttons();
-        void updateevents();
+        void updateInput(const float& dt) override;
+        void updateEditorInput(const float& dt);
+        void update(const float& dt) override;
+        void updateButtons();
         void updateGUI(const float& dt);
         void updateModes(const float& dt);
-        void updatepausemenubuttons(); 
-        void updateshaders(const float& dt);
-        void updateImGui(); 
-        void TextInput();  
-        
-        //Render Funcions
-        void renderbuttons(sf::RenderTarget& target);
+        void updatePauseMenuButtons();
+       // void updateshaders(const float& dt);
+
+
+        //Render Functions
+        void renderButtons(sf::RenderTarget& target);
         void renderGUI(sf::RenderTarget& target);
         void renderModes(sf::RenderTarget& target);
         void render(sf::RenderTarget* target);   
@@ -70,45 +68,42 @@ class EditorState : public State
    
 private:
     
-        //Initalizer Functions
-        void initkeybinds();
-        void initview();
+        //Initializer Functions
+        void initkeybinds() override;
+        void initView();
         void initFonts();
         void initButtons();
         void initbackground();
-        void initvariables();
-        void initpausemenu();
-        void initeditorstatedata();
-        void inittilemap();
-        void initsidebar();
+        void initVariables();
+        void initPauseMenu();
+        void initEditorStateData();
+        void initTileMap();
+        void initSidebar();
         void initGUI();
         void initbg(); 
-        void initmodes(); 
-        void initlevels(); 
-        bool initshader();
-        void initrendersprite();
-        //Exception Handler Functions 
-        void handlefonts(); 
+        void initModes();
+        void initLevels();
+        bool initShader();
+        void initRenderSprite();
 
-     
-    
+        //Exception Handler Functions
+        void handleFonts();
 
         //GUI
        std::map<std::string, GUI::Button*> buttons;
-       float cameraspeed;
-      
-    
+       float cameraSpeed;
+
+        //Text
+        sf::Font font;
+        sf::Text cursorText;
+
         //Modes
         std::vector<EditorModes*> modes;
         unsigned activeMode;
         //Active Level Manager
        
-                       
-    
-        //Text
-        sf::Font font;
-        sf::Text cursortext;
-    
+
+
         //PauseMenu
         PauseMenu* pMenu;
     
@@ -118,7 +113,7 @@ private:
         std::string curr_level;
     
         //Data
-        EditorStateData editorstatedata;  
+        EditorStateData editorStateData;
         Levels* levels;
        
         //Sounds
@@ -126,18 +121,17 @@ private:
         sf::Sound UI_invalid;
     
         //Camera
-        sf::View mainview;
+        sf::View mainView;
 
-        std::string customfile; 
+        std::string customFile;
 
-        //GUI 
-        int str_size; 
+        int str_size;
        sf::RectangleShape bg; 
-        //sf::ConvexShape bg; 
+       //sf::ConvexShape bg;
        sf::RectangleShape bg_interior; 
        sf::FloatRect view_default_reset;
-       sf::Sprite rendersprite; 
-       sf::RenderTexture rendertexture;
+       sf::Sprite renderSprite;
+       sf::RenderTexture renderTexture;
        sf::Shader core_shader;
        AnimationComponent* animations; 
        sf::Sprite loading_sprite; 

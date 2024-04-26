@@ -5,22 +5,22 @@
 #include "include/imgui.h"
 #include "include/imgui-SFML.h"
 
-EditorState::EditorState(StateData* state_data): State(state_data)
+EditorState::EditorState(StateData* state_data): State(state_data), cameraSpeed(120.f), pMenu(nullptr), Tilemap(nullptr),
+                                                 levels(nullptr), str_size(0), animations(nullptr)
 {
-    this->initvariables();
-    this->initshader(); 
-    this->initeditorstatedata();
-    this->initview();
+    this->initVariables();
+    this->initShader();
+    this->initEditorStateData();
+    this->initView();
     this->initFonts();
-    this->initkeybinds();
-    this->initpausemenu();
+    this->initPauseMenu();
     this->initButtons();
-    this->inittilemap();
-    this->initlevels();
-    this->initbg(); 
-    this->initrendersprite();
+    this->initTileMap();
+    this->initLevels();
+    this->initbg();
+    this->initRenderSprite();
     this->initGUI();
-    this->initmodes();
+    this->initModes();
     this->activeMode = EDITOR_MODES::DEFAULT_MODE;
    
  
@@ -55,10 +55,10 @@ EditorState::~EditorState() {
 
 
 
-//initalization functions
-void EditorState::initvariables()
+//initialization functions
+void EditorState::initVariables()
 {
-    this->cameraspeed = 200.f; 
+    this->cameraSpeed = 200.f;
     
 }
 
@@ -66,21 +66,21 @@ void EditorState::initvariables()
 //initalizer functions
 void EditorState::initButtons()
 {
-    
+
 }
 
-void EditorState::inittilemap()
+void EditorState::initTileMap()
 {
     this->Tilemap = new TileMap(this->gridSize, 100, 100, "Resources/Assets/Tiles/sheet.png");
-    this->Tilemap->addGenerationTexture("Resources/Assets/Tiles/sheet.png"); 
+    this->Tilemap->addGenerationTexture("Resources/Assets/Tiles/sheet.png");
 }
 
-void EditorState::initview()
+void EditorState::initView()
 {
-    this->mainview.setSize(sf::Vector2f(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 4.f, static_cast<float>(this->state_data->gfxsettings->resolution.height) / 4.f ));
+    this->mainView.setSize(sf::Vector2f(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 4.f, static_cast<float>(this->state_data->gfxsettings->resolution.height) / 4.f ));
     
     
-    this->mainview.setCenter(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 2.f,
+    this->mainView.setCenter(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 2.f,
                              static_cast<float>(this->state_data->gfxsettings->resolution.height) / 2.f);
     sf::Vector2f Screen_Left(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 4.f, static_cast<float>(this->state_data->gfxsettings->resolution.height) / 4.f);
     sf::Vector2f Screen_Right(static_cast<float>(this->state_data->gfxsettings->resolution.width) / 2.f,
@@ -91,7 +91,7 @@ void EditorState::initview()
 }
 
 
-void EditorState::initpausemenu()
+void EditorState::initPauseMenu()
 {
     
      const sf::VideoMode& vm = this->state_data->gfxsettings->resolution;
@@ -104,7 +104,7 @@ void EditorState::initpausemenu()
    
 }
 
-void EditorState::updatepausemenubuttons()
+void EditorState::updatePauseMenuButtons()
 {
     
     //Quit: Back to Main
@@ -121,7 +121,7 @@ void EditorState::updatepausemenubuttons()
         try
         {
 
-            this->Tilemap->saveToFile("Data/TileMap/text.dat");
+            this->Tilemap->saveToFile("Data/TileMap/test.dat");
         }
         
         catch (std::runtime_error& e)
@@ -137,7 +137,7 @@ void EditorState::updatepausemenubuttons()
     {
         try
         {
-            this->Tilemap->loadFromFile("Data/TileMap/text.dat");
+            this->Tilemap->loadFromFile("Data/TileMap/test.dat");
         }
         
         catch (std::runtime_error& e)
@@ -149,16 +149,8 @@ void EditorState::updatepausemenubuttons()
         
 }
 
-void EditorState::updateshaders(const float& dt)
-{
-    this->core_shader.setUniform("lightPos", this->MousePosView);
-}
 
-void EditorState::updateImGui()
-{ 
-   
 
-}
 
 
 
@@ -169,8 +161,8 @@ void EditorState::initkeybinds()
 
          if (ifs.is_open())
          {
-             std::string key = "";
-             std::string key2 = "";
+             std::string key;
+             std::string key2;
              //std::cout << "editorstate keyBinds exist" << std::endl;
              while (ifs >> key >> key2)
              {
@@ -192,19 +184,19 @@ void EditorState::initkeybinds()
     ifs.close();
 }
 
-void EditorState::initmodes()
+void EditorState::initModes()
 {
     //INIT LEVELS MUST ALWAYS, ALWAYS BE CALLED FIRST FOR THIS FUNCTION TO WORK!!!!!!!!!!!
-    this->modes.push_back(new DefaultMode(this->state_data, this->levels->getCurrent(), &this->editorstatedata, this->levels));
-    this->modes.push_back(new EnemyEditorMode(this->state_data, this->Tilemap, &this->editorstatedata, this->levels));
-    this->modes.push_back(new EnviornmentalMode(this->state_data, this->Tilemap, &this->editorstatedata, this->levels));
-    //this->modes.push_back(new LevelManagerMode(this->state_data, this->Tilemap, &this->editorstatedata, this->levels)); 
-    this->modes.push_back(new ShaderEditorMode(this->state_data, this->levels->getCurrent(), &this->editorstatedata, this->levels));
+    this->modes.push_back(new DefaultMode(this->state_data, this->levels->getCurrent(), &this->editorStateData, this->levels));
+    this->modes.push_back(new EnemyEditorMode(this->state_data, this->Tilemap, &this->editorStateData, this->levels));
+    this->modes.push_back(new EnviornmentalMode(this->state_data, this->Tilemap, &this->editorStateData, this->levels));
+    //this->modes.push_back(new LevelManagerMode(this->state_data, this->Tilemap, &this->editorStateData, this->levels));
+    this->modes.push_back(new ShaderEditorMode(this->state_data, this->levels->getCurrent(), &this->editorStateData, this->levels));
     
     this->activeMode = EDITOR_MODES::DEFAULT_MODE;
 }
 
-void EditorState::initlevels()
+void EditorState::initLevels()
 {
     this->levels = new Levels(*this->state_data->gridSize);
     this->levels->add_level("Map"); 
@@ -213,11 +205,11 @@ void EditorState::initlevels()
 
 }
 
-void EditorState::handlefonts()
+void EditorState::handleFonts()
 {
 
-    //LOG(INFO) << "attemping to handle exception";
-    std::string custom_font_path = "";
+    //LOG(INFO) << "attempting to handle exception";
+    std::string custom_font_path;
 
     for (auto& p : std::filesystem::recursive_directory_iterator("Resources/Assets/Fonts"))
     {
@@ -229,11 +221,11 @@ void EditorState::handlefonts()
     }
     std::cout << custom_font_path << std::endl;
     this->font.loadFromFile(custom_font_path);
-    std::cout << "Sucessfully loaded fonts";
+    std::cout << "Successfully loaded fonts";
 
 }
 
-void EditorState::initsidebar()
+void EditorState::initSidebar()
 {
     //config the sidebar
     
@@ -271,7 +263,7 @@ void EditorState::initbg()
 
 
 
-bool EditorState::initshader() 
+bool EditorState::initShader()
 {
   //  sf::VideoMode& vm = sf::VideoMode::get
     if (!this->core_shader.loadFromFile("Data/Shader/vertex_shader.vert", "Data/Shader/fragment_shader.frag"))
@@ -280,21 +272,21 @@ bool EditorState::initshader()
     sf::Vector2f resolution = sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height);
     this->core_shader.setUniform("resolution", resolution);
     
-   /// this->core_shader.setUniform("LightPos",this->editorstatedata.mousePosView);
+   /// this->core_shader.setUniform("LightPos",this->editorStateData.mousePosView);
 }
 
-void EditorState::initrendersprite()
+void EditorState::initRenderSprite()
 {
-    if (!this->rendertexture.create(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height))
+    if (!this->renderTexture.create(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height))
     {
-       // LOG(FATAL) << "failed to create rendertexture at " << this->state_data->gfxsettings->resolution.width << "x" << this->state_data->gfxsettings->resolution.height;
+       // LOG(FATAL) << "failed to create renderTexture at " << this->state_data->gfxsettings->resolution.width << "x" << this->state_data->gfxsettings->resolution.height;
         throw std::runtime_error("unable to create rendertextrue GameState Line 78");
 
     }
 
-    this->rendersprite.setTexture(this->rendertexture.getTexture());
+    this->renderSprite.setTexture(this->renderTexture.getTexture());
 
-    this->rendersprite.setTextureRect(
+    this->renderSprite.setTextureRect(
         sf::IntRect(
             0,
             0,
@@ -327,22 +319,22 @@ void EditorState::initbackground()
 }
 
 
-void EditorState::initeditorstatedata()
+void EditorState::initEditorStateData()
 {
-    //this->editorstatedata.view = &this->view;
-    this->editorstatedata.keybinds = &this->keyBinds;
-    this->editorstatedata.keytime = &this->keyTime;
-    this->editorstatedata.ketyimeMax = &this->keyTimeMax;
+    //this->editorStateData.view = &this->view;
+    this->editorStateData.keybinds = &this->keyBinds;
+    this->editorStateData.keytime = &this->keyTime;
+    this->editorStateData.ketyimeMax = &this->keyTimeMax;
 
-    this->editorstatedata.mouseposGridI = &this->MousePosGridI;
-    this->editorstatedata.mousePosView = &this->MousePosView;
-    this->editorstatedata.mousePosWindow = &this->MousePosWindow;
-    this->editorstatedata.mousePosScreen= &this->MousePosScreen; 
-    this->editorstatedata.mouseposGridF = &this->MousePosGridF; 
-    this->editorstatedata.view = &this->mainview;
-    this->editorstatedata.font = &this->font; 
-    this->editorstatedata.selection_color = ImVec4(sf::Color::Transparent); 
-    this->editorstatedata.shader = &this->core_shader; 
+    this->editorStateData.mouseposGridI = &this->MousePosGridI;
+    this->editorStateData.mousePosView = &this->MousePosView;
+    this->editorStateData.mousePosWindow = &this->MousePosWindow;
+    this->editorStateData.mousePosScreen= &this->MousePosScreen;
+    this->editorStateData.mouseposGridF = &this->MousePosGridF;
+    this->editorStateData.view = &this->mainView;
+    this->editorStateData.font = &this->font;
+    this->editorStateData.selection_color = ImVec4(sf::Color::Transparent);
+    this->editorStateData.shader = &this->core_shader;
     
     
 }
@@ -353,17 +345,17 @@ void EditorState::update(const float& dt) {
     
    
    
-    this->updateMousePosition(&this->mainview);
-    this->updateshaders(dt);
+    this->updateMousePosition(&this->mainView);
+
     this->updateKeyTime(dt);
-    this->updateEditorinput(dt);
+    this->updateEditorInput(dt);
     
    
    
    
     if (!this->paused) //Unpaused
     {
-        this->updatebuttons();
+        this->updateButtons();
             this->updateGUI(dt);
         
         this->updateInput(dt);
@@ -372,7 +364,7 @@ void EditorState::update(const float& dt) {
     else //Paused
     {
         this->pMenu->update(this->MousePosScreen);
-        this->updatepausemenubuttons();
+        this->updatePauseMenuButtons();
     }
     
 }
@@ -388,7 +380,7 @@ void EditorState::updateInput(const float& dt) {
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("MOVE_CAMERA_RIGHT"))))
     {
-        this->mainview.move(this->cameraspeed * dt, 0.f);
+        this->mainView.move(this->cameraSpeed * dt, 0.f);
        // this->Tilemap->saveToFile("text.slmp");
         //std::cout << "camera right" << std::endl;
       //  std::cout << "Map Saved" << std::endl;
@@ -396,17 +388,17 @@ void EditorState::updateInput(const float& dt) {
     
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("MOVE_CAMERA_LEFT"))))
     {
-        this->mainview.move(-this->cameraspeed * dt, 0.f);
+        this->mainView.move(-this->cameraSpeed * dt, 0.f);
     }
     
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("MOVE_CAMERA_UP"))))
     {
-        this->mainview.move(0.f, -this->cameraspeed * dt);
+        this->mainView.move(0.f, -this->cameraSpeed * dt);
     }
     
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("MOVE_CAMERA_DOWN"))))
     {
-        this->mainview.move(0.f, this->cameraspeed * dt);
+        this->mainView.move(0.f, this->cameraSpeed * dt);
     }
     
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::L) && this->getKeyTime())
@@ -450,12 +442,12 @@ void EditorState::updateInput(const float& dt) {
     //Zoom the World Builder View in or out
    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::O))
     {
-        this->mainview.zoom(1.01);
+        this->mainView.zoom(1.01);
     }
     
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P) && this->getKeyTime())
     {
-        this->mainview.zoom(0.5);
+        this->mainView.zoom(0.5);
     }
    
     
@@ -492,7 +484,7 @@ void EditorState::updateInput(const float& dt) {
 
 
 
-void EditorState::updatebuttons()
+void EditorState::updateButtons()
 {
     /*!
     @class EditorState
@@ -508,22 +500,13 @@ void EditorState::updatebuttons()
     
 }
 
-void EditorState::updateevents()
-{
 
 
 
 
 
 
-
-}
-
-
-
-
-
-void EditorState::updateEditorinput(const float& dt)
+void EditorState::updateEditorInput(const float& dt)
 {
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("CLOSE"))) && this->getKeyTime())
@@ -603,7 +586,7 @@ void EditorState::updateGUI(const float& dt)
         {
             if (ImGui::MenuItem("Zoom In") && this->getKeyTime())
             {
-                this->mainview.zoom(0.5);
+                this->mainView.zoom(0.5);
             }
             if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
             {
@@ -616,7 +599,7 @@ void EditorState::updateGUI(const float& dt)
             if (ImGui::MenuItem("Reset View") && this->getKeyTime())
             {
                
-                this->mainview.reset(this->view_default_reset);
+                this->mainView.reset(this->view_default_reset);
                 
 
             }
@@ -631,7 +614,7 @@ void EditorState::updateGUI(const float& dt)
 
             if (ImGui::MenuItem("Zoom In") && this->getKeyTime())
             {
-                this->mainview.zoom(0.5);
+                this->mainView.zoom(0.5);
             }
             if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
             {
@@ -727,7 +710,7 @@ void EditorState::updateGUI(const float& dt)
 
         if (load) 
         {
-            this->Tilemap->loadFromFile("Data/TileMap/New_Map.cfg", true);
+            this->Tilemap->loadFromFile("Data/TileMap/test.dat", false);
             load = false;
         }
             if (ImGui::Button("Tiles", sf::Vector2f(50.f, 0.f))) {
@@ -840,23 +823,23 @@ void EditorState::render(sf::RenderTarget* target)
         target = this->window;
     target->draw(this->bg);     
 
-    this->rendertexture.clear();
+    this->renderTexture.clear();
 
-    this->rendertexture.setView(this->mainview);
+    this->renderTexture.setView(this->mainView);
     
     //Tilemap Camera (same as game camera)
-    this->window->setView(this->mainview);
-    target->draw(this->bg_interior); 
-    this->levels->render(this->rendertexture, this->mainview, this->MousePosGridI, &this->core_shader); 
-   // this->Tilemap->render(*target, this->mainview, this->MousePosGridI);
+    this->window->setView(this->mainView);
+    target->draw(this->bg_interior);
+    this->levels->render(this->renderTexture, this->mainView, this->MousePosGridI, &this->core_shader);
+   // this->Tilemap->render(*target, this->mainView, this->MousePosGridI);
 
-    this->rendertexture.setView(this->rendertexture.getDefaultView()); 
+    this->renderTexture.setView(this->renderTexture.getDefaultView());
     //Buttons Camera
     this->window->setView(this->window->getDefaultView());
-    this->rendertexture.display(); 
-    target->draw(this->rendersprite);
+    this->renderTexture.display();
+    target->draw(this->renderSprite);
     this->renderModes(*target);
-    //this->renderbuttons(*target);
+    this->renderButtons(*target);
     
   
    
@@ -887,7 +870,7 @@ void EditorState::renderGUI(sf::RenderTarget &target)
 }
 
 
-void EditorState::renderbuttons(sf::RenderTarget& target)
+void EditorState::renderButtons(sf::RenderTarget& target)
 {
     for (auto &it : this->buttons)
        {

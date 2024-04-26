@@ -21,7 +21,7 @@ GameState::GameState(StateData* state_data)
         this->initfonts();
         this->inittextures();
         this->initpausemenu();
-        this->initshaders();
+        //this->initshaders();
         this->initplayers();
         this->initplayerGUI();
         this->initenemysystem();
@@ -91,7 +91,7 @@ void GameState::initdeferedrender() {
     this->log("creating a new render texture with the size " + this->state_data->gfxsettings->resolution.width + 'x' + this->state_data->gfxsettings->resolution.height, "State::Game");
     if(!this->rendertexture.create(this->state_data->gfxsettings->resolution.width,this->state_data->gfxsettings->resolution.height))
     {
-        //LOG(FATAL) << "failed to create rendertexture at " << this->state_data->gfxsettings->resolution.width << "x" << this->state_data->gfxsettings->resolution.height;
+        //LOG(FATAL) << "failed to create renderTexture at " << this->state_data->gfxsettings->resolution.width << "x" << this->state_data->gfxsettings->resolution.height;
         throw std::runtime_error("unable to create rendertextrue GameState Line 78"); 
         
     }
@@ -462,8 +462,8 @@ void GameState::render(sf::RenderTarget* target) {
     //There is clearly a render layering issue here, the tilemap refuses to render at all. Possible causes: 
     //There's something fucky with the defered render 
     //there's something fucky with the actual renderSprite. 
-    //There's something fucky with the order that the renders are being called, and assigned to the rendersprite. 
-    //The rendertexture is broken. 
+    //There's something fucky with the order that the renders are being called, and assigned to the renderSprite.
+    //The renderTexture is broken.
     if(!target)
         target = this->window;
     
@@ -475,9 +475,9 @@ void GameState::render(sf::RenderTarget* target) {
    
 
    // target->mapPixelToCoords(this->Tilemap->getMaxSizeGrid()); 
-   this->Tilemap->render(this->rendertexture,this->view, this->ViewGridPosition, false, &this->core_shader);
+   this->Tilemap->render(this->rendertexture,this->view, this->ViewGridPosition, false);
     //this->Tilemap->render()
-    //this->Tilemap->renderlighttile(this->rendertexture, &this->core_shader);
+    //this->Tilemap->renderlighttile(this->renderTexture, &this->core_shader);
    
   
     //target->mapPixelToCoords(static_cast<sf::Vector2i>(this->player->getCenter())); 
@@ -492,7 +492,7 @@ void GameState::render(sf::RenderTarget* target) {
        }
    
     
-     this->Tilemap->DefferedRender(this->rendertexture, &this->core_shader);
+     this->Tilemap->DefferedRender(this->rendertexture);
     
     
     
@@ -501,7 +501,7 @@ void GameState::render(sf::RenderTarget* target) {
     this->playerGUI->render(this->rendertexture); 
 
     //the dialouge system needs to be rendered with the view set to the PlayerGUI's view, that way attached dialouge will fill the screen correctly. 
-   // this->dialougeSystem->render(this->rendertexture);
+   // this->dialougeSystem->render(this->renderTexture);
     
     if(this->paused)
     {

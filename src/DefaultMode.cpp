@@ -60,10 +60,10 @@ void DefaultMode::updateInput(const float& dt)
                                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::M)) 
                                    {
                                        this->levels->addTile(this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, 0, this->TextureRect, collision, this->type); 
-                                       //this->levels[curr_level]->addTile(this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, 0, this->TextureRect, collision, this->type);
+                                       //this->levels[curr_level]->addTile(this->editorStateData->mousePosView->x, this->editorStateData->mousePosView->y, 0, this->TextureRect, collision, this->type);
                                    }
                                    this->levels->addTile(this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, this->layer, this->TextureRect, collision, this->type);
-                                   // this->tilemap->addTile(this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, this->layer, this->TextureRect, collision, this->type);
+                                   // this->tilemap->addTile(this->editorStateData->mousePosView->x, this->editorStateData->mousePosView->y, this->layer, this->TextureRect, collision, this->type);
                                     
                                        std::cout << "LOCKED: Tile Added" << std::endl;
                                 }
@@ -94,14 +94,14 @@ void DefaultMode::updateInput(const float& dt)
 
 
 
-                                  //this->tilemap->addTile(this->editorstatedata->mouseposGrid->x + (t * this->statedata->gridSize->x) ,this->editorstatedata->mouseposGrid->y + (i * this->statedata->gridSize->y), this->layer, this->TextureRect, collision, type);
+                                  //this->tilemap->addTile(this->editorStateData->mouseposGrid->x + (t * this->statedata->gridSize->x) ,this->editorStateData->mouseposGrid->y + (i * this->statedata->gridSize->y), this->layer, this->TextureRect, collision, type);
 
-                             // this->tilemap->addTile(this->editorstatedata->mouseposGrid->x + i, this->editorstatedata->mouseposGrid->y, this->layer, this->TextureRect, collision, type);
+                             // this->tilemap->addTile(this->editorStateData->mouseposGrid->x + i, this->editorStateData->mouseposGrid->y, this->layer, this->TextureRect, collision, type);
 
                               }
                               else
                                   this->levels->addTile(this->editorstatedata->mouseposGridI->x++, this->editorstatedata->mouseposGridI->y++, this->layer, this->TextureRect, collision, this->type); 
-                                 // this->tilemap->addTile(this->editorstatedata->mouseposGridI->x++, this->editorstatedata->mouseposGridI->y++, this->layer, this->TextureRect, collision, this->type);
+                                 // this->tilemap->addTile(this->editorStateData->mouseposGridI->x++, this->editorStateData->mouseposGridI->y++, this->layer, this->TextureRect, collision, this->type);
                                std::cout << "Tile Added" << std::endl;
                               
                            }
@@ -240,7 +240,7 @@ void DefaultMode::updateInput(const float& dt)
        {
            std::cout << "object added" << std::endl;
            this->tilemap->addTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, this->editorstatedata->mouseposGridF->x, this->editorstatedata->mouseposGridF->y, ObjectTypes::LANTERN);
-           //this->tilemap->addObject(this->editorstatedata->mousePosWindow->x, this->editorstatedata->mousePosWindow->y);
+           //this->tilemap->addObject(this->editorStateData->mousePosWindow->x, this->editorStateData->mousePosWindow->y);
        }
        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Numpad4) && this->getkeytime())
        {
@@ -446,7 +446,7 @@ void DefaultMode::initGUI()
     sf::VideoMode vm = statedata->gfxsettings->resolution;
     
  
-   // this->select_Rect.setOrigin(sf::Vector2f(this->select_Rect.getGlobalBounds().width / 2.f / this->statedata->gridSize - static_cast<float>(this->editorstatedata->mouseposGrid->x), this->select_Rect.getGlobalBounds().height / 2.f / this->statedata->gridSize - static_cast<float>(this->editorstatedata->mouseposGrid->y)));
+   // this->select_Rect.setOrigin(sf::Vector2f(this->select_Rect.getGlobalBounds().width / 2.f / this->statedata->gridSize - static_cast<float>(this->editorStateData->mouseposGrid->x), this->select_Rect.getGlobalBounds().height / 2.f / this->statedata->gridSize - static_cast<float>(this->editorStateData->mouseposGrid->y)));
     
   //  sf::IntRect fart = this->texture_selector->getTextureRect(); 
     this->select_Rect.setSize(sf::Vector2f(statedata->gridSize->x, statedata->gridSize->y));
