@@ -57,8 +57,8 @@ GraphicsSettings::GraphicsSettings()
     pt.put("contextSettings.windowFlags", this->windowSettings.attributeFlags);
   
 
-
-    boost::property_tree::json_parser::write_json("Config/Window.cfg", pt);
+    
+    //boost::property_tree::json_parser::write_json("Config/Window.cfg", pt);
 
     //LOG(INFO) << "done creating graphics settings info"; 
     this->videoModes = sf::VideoMode::getFullscreenModes();
@@ -69,7 +69,21 @@ GraphicsSettings::GraphicsSettings()
 
 void GraphicsSettings::saveToFile(const std::string &path)
          {
-           
+            pt.put("window.title", this->title);
+            pt.put("window.resolution.width", this->resolution.width);
+            pt.put("window.resolution.height", this->resolution.height);
+            pt.put("window.fullscreen", this->fullscreen);
+            pt.put("window.vsync", this->vsync);
+            pt.put("contextSettings.bitdepth", this->windowSettings.depthBits);
+            pt.put("contextSettings.debug", this->windowSettings.Debug);
+            pt.put("contextSettings.framerate_limit", this->framerate_limit);
+            pt.put("contextSettings.stencil_depth", this->windowSettings.stencilBits);
+            pt.put("contextSettings.version_maj", this->windowSettings.majorVersion);
+            pt.put("contextSettings.version_min", this->windowSettings.minorVersion);
+            pt.put("contextSettings.device_accept_sRgb", this->windowSettings.sRgbCapable);
+            pt.put("contextSettings.antialias_level", this->antialias_level);
+            pt.put("contextSettings.stencildepth", this->windowSettings.stencilBits);
+            pt.put("contextSettings.windowFlags", this->windowSettings.attributeFlags);
 
            //There needs to be a thread resource use manager embedded somewhere here.
            //Assume we don't understand what the user's hardware is yet. Call this->graphicssettings->CUDA_Flush();

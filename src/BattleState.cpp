@@ -90,7 +90,7 @@ void BattleState::initbackground()
 
 void BattleState::initdialouge()
 { 
-    this->dialougecomponent = new DialougeSystem("Resources/Assets/Fonts/PressStart2P.ttf", this->state_data->gfxsettings->resolution);
+    this->dialougecomponent = new DialougeSystem("Resources/Assets/Fonts/OpenSans-Variable.ttf", this->state_data->gfxsettings->resolution);
     this->dialougecomponent->addTextbox(1, "fuck my ass fuck my ass fuck my fucking ass bro"); 
 }
 

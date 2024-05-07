@@ -29,7 +29,6 @@ EditorState::EditorState(StateData* state_data): State(state_data), cameraSpeed(
 
 }
 
-
 EditorState::~EditorState() {
     
 
@@ -72,7 +71,7 @@ void EditorState::initButtons()
 void EditorState::initTileMap()
 {
     this->Tilemap = new TileMap(this->gridSize, 100, 100, "Resources/Assets/Tiles/sheet.png");
-    this->Tilemap->addGenerationTexture("Resources/Assets/Tiles/sheet.png");
+    //this->Tilemap->addGenerationTexture("Resources/Assets/Tiles/sheet.png");
 }
 
 void EditorState::initView()
@@ -300,7 +299,7 @@ void EditorState::initRenderSprite()
 
 void EditorState::initFonts() {
     
-    if (!this->font.loadFromFile("Resources/Assets/Fonts/PressStart2P.ttf"))
+    if (!this->font.loadFromFile("Resources/Assets/Fonts/OpenSans-Variable.ttf"))
     {
         
         throw std::runtime_error("ERROR unable to load default font file EditorState lin 233"); 

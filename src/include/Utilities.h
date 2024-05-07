@@ -12,7 +12,7 @@ namespace Resources {
     /// <summary>
     /// path to the font
     /// </summary>
-    const std::string font = "Resources/Assets/Fonts/PressStart2P.ttf";
+    const std::string font = "Resources/Assets/Fonts/OpenSans-Variable.ttf";
     /// <summary>
     /// GUI Red Button Idle Texture
     /// </summary>

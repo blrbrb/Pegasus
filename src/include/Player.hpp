@@ -8,7 +8,7 @@
 
 #ifndef Player_hpp
 #define Player_hpp
-
+#define BOOST_BIND_GLOBAL_PLACEHOLDERS
 #include "Entity.hpp"
 #include "Inventory.hpp"
 #include "Item.hpp" 

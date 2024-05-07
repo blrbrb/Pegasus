@@ -62,6 +62,7 @@ void SettingsState::initGUI() {
     sf::VideoMode& vm = this->state_data->gfxsettings->resolution;
     
   
+    this->buttons["RESOLUTION"] = new GUI::Button(GUI::pixelpercentX(20.f,vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(5.f, vm), GUI::pixelpercentY(5.f, vm), &this->font, "Test Button", GUI::calcCharSize(vm), 12);
 
 
     
@@ -98,7 +99,7 @@ void SettingsState::initFonts()
 {
     
     
-    if (!this->font.loadFromFile("Resources/Assets/Fonts/PressStart2P.ttf"))
+    if (!this->font.loadFromFile("Resources/Assets/Fonts/OpenSans-Variable.ttf"))
     {
         //LOG(WARNING) << "unable to load default font"; 
         //LOG(FATAL) << "throwing runtime exception on line 104";
@@ -178,6 +179,10 @@ void SettingsState::render(sf::RenderTarget* target) {
 void SettingsState::renderGUI(sf::RenderTarget& target)
 {
     
+    for (auto & it: this->buttons)
+    {
+        it.second->render(target);
+    }
    
 }
 
@@ -268,6 +273,7 @@ void SettingsState::updateGUI(const float& dt) {
          
             this->state_data->gfxsettings->vsync = &vertical_sync;
             this->state_data->gfxsettings->saveToFile("Config/Window.cfg");
+            this->state_data->gfxsettings->loadFromFile("Config/Window.cfg");
             if (vertical_sync)
             {
 
@@ -299,6 +305,11 @@ void SettingsState::updateGUI(const float& dt) {
     
 
     ImGui::End();
+
+    for (auto & it: this->buttons)
+    {
+        it.second->update(this->MousePosWindow);
+    }
 
     
 }

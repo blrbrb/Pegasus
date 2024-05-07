@@ -55,7 +55,7 @@ private:
         sf::RectangleShape background;
         sf::Texture backgroundTexture;
         sf::SoundBuffer click; 
-      
+        
        
    
     

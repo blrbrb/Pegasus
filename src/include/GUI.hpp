@@ -13,6 +13,9 @@
 #include "red_button00.h"
 #include "red_button01.h"
 #include "red_button02.h" 
+#include "gui_gradient.h"
+#include "gui_gradient.h"
+
 //Core
 #include <deque>
 #include <map>
@@ -96,14 +99,49 @@ std::string convertToString(char* a, int size);
     unsigned int calcCharSize(const sf::VideoMode& vm, const unsigned int &modifier = 60);
 
 
+
+class GradientElement : public sf::Drawable
+{
+    public: 
+          explicit GradientElement(const float width=256, const float height=256, const float x=0, const float y=0);  
+            ~GradientElement(); 
+
+        
+        void initVertexArray(sf::Vector2f size, sf::Vector2f position); 
+      
+        sf::FloatRect getGlobalBounds() const; 
+        sf::Vector2f getPosition() const; 
+
+        void setPosition(sf::Vector2f position);
+        void setSize(sf::Vector2f size);
+        void setColor(const sf::Color& colorA, const sf::Color& colorB);
+        sf::Vector2f getSize() const; 
+        
+        void setUUID(unsigned long int unique_id);
+
+        void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+    private:
+
+        sf::VertexArray geom;  
+        sf::RectangleShape _core; 
+        sf::Color colorA; 
+        sf::Color colorB; 
+        unsigned long int uuid; //set this to the GL states whatever uuid. 
+        std::stack<sf::Vertex> renderBuffer; //not to be confused with the v abstract render deferred layer for picasso 
+       
+
+};
 ///A GUI element designed to handle user input visually, can be customized with text and color
 class Button {
 
 private:
    
+   
     short unsigned ButtonState;
     short unsigned ID;
-    sf::RectangleShape rectangle;
+    GradientElement* rectangle;
+   
     sf::FloatRect ButtonBounds; 
     sf::Texture idle;
     sf::Texture clicked; 

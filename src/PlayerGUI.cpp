@@ -93,7 +93,7 @@ void PlayerGUI::initTabs(sf::VideoMode& vm, sf::Font& font, Player& player)
 
 void PlayerGUI::initfont()
 {
-    this->font.loadFromFile("Resources/Assets/Fonts/PressStart2P.ttf");
+    this->font.loadFromFile("Resources/Assets/Fonts/OpenSans-Variable.ttf");
 } 
 
 

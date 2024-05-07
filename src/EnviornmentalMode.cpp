@@ -43,7 +43,7 @@ void EnviornmentalMode::inittext()
 void EnviornmentalMode::initGUI()
 {
    //
-    this->guitexture.loadFromFile("Resources/GUI/Icons/Lantern.png");
+    //this->guitexture.loadFromFile("Resources/GUI/Icons/Lantern.png");
     this->guisprite.setTexture(this->guitexture);
     this->guisprite.setScale(4.f, 4.f); 
     this->sidebar.setSize(sf::Vector2f(80.f, static_cast<float>(this->statedata->gfxsettings->resolution.height)));

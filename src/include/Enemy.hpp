@@ -46,7 +46,7 @@ protected:
     
 private:
     //initalizer functions
-   virtual void initVariables() = 0;
+   virtual void initVariables();
    virtual void initanimations() = 0;
    unsigned gainExp;
     

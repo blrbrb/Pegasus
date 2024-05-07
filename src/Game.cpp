@@ -7,6 +7,7 @@
 // 
 
 #include "include/game.hpp"
+#include "game.hpp"
 
 
 INITIALIZE_EASYLOGGINGPP
@@ -98,7 +99,7 @@ bool Game::initJoySticks()
 void Game::initStates() {
     
 
-    this->states.push(new MainMenuState(&this->state_data)); 
+    this->states.push(new EditorState(&this->state_data)); 
     
 }
 
@@ -123,19 +124,20 @@ void Game::initWindow() {
      @return  void
 
     */
-
+   
     ImGui::CreateContext();
    
-
+   
     if (this->gfxsettings->fullscreen) {
         //it might be a good idea to assign the hanging window1 pointer a value, and then use the newer .create method
        // this->window1 = new sf::RenderWindow();
-        this->window = new sf::RenderWindow(this->gfxsettings->resolution, this->gfxsettings->title, sf::Style::Fullscreen, this->gfxsettings->windowSettings);
+        
+        this->window = new sf::RenderWindow(this->gfxsettings->resolution, this->gfxsettings->title, sf::Style::Resize | sf::Style::Close, this->gfxsettings->windowSettings);
     }
 
 
     else
-        this->window = new sf::RenderWindow(this->gfxsettings->resolution, this->gfxsettings->title, sf::Style::Titlebar, this->gfxsettings->windowSettings);
+        this->window = new sf::RenderWindow(this->gfxsettings->resolution, this->gfxsettings->title, sf::Style::Resize | sf::Style::Close,this->gfxsettings->windowSettings);
      //   assert(this->gfxsettings->resolution.isValid());
   
        // this->window1->create(this->gfxsettings->resolution, this->gfxsettings->title, sf::Style::Titlebar, this->gfxsettings->windowSettings);
@@ -146,24 +148,24 @@ void Game::initWindow() {
 
  
 
-    sf::RenderWindow& window1 = *this->window;
-    assert(window1.isOpen());
-    window1.setActive(true);
-    
+
     //ImGui::CreateContext();
     //ImGui::ShowDemoWindow();
-    if (ImGui::SFML::Init(window1))
+    if (ImGui::SFML::Init(*this->window))
     {
       // this->states.top()->log("ImGui has properly been initalized", "Main");
       //LOG(INFO)<< "initalized imgui";
     } 
 
-    ///ImGui::StyleColorsDark();
-   // ImGui::SetCurrentContext()
-    //ImGui_ImplGlfw_InitForOpenGL(this->window1, true);
+  
     this->initWindowIcon(); 
 }
 
+void Game::initGTK()
+{
+
+    
+}
 void Game::initStateData()
 {
     this->state_data.window = this->window;
@@ -256,16 +258,18 @@ void Game::Update()
         //Application end
     else {
         if (this->window->hasFocus()) {
+
+            //update stack final 
             this->states.top()->update(this->dt);
 
             if (this->states.top()->getQuit()) {
+
+
                 LOG(INFO) << "Size of deque: " << this->states.size();
 
                 LOG(INFO) << "destroying state ";
 
-                this->states.top()->endState();
-
-
+        
                 this->states.pop();
                 //DO NOT attempt to delete items from the states stack here
                 //popping them already frees the memory.
@@ -275,7 +279,7 @@ void Game::Update()
                 // delete this->states.top();
                 //it's better to just let .pop() do it's job properly and not introduce any more surface area for more issues in the future
 
-                // LOG(INFO) << "top of deque: " << this->states.size();
+                 LOG(INFO) << "top of deque: " << this->states.size();
 
             }
         }
@@ -302,29 +306,26 @@ void Game::UpdateEvents() {
         
        
     }
+     
 }
 
 void Game::render() {
  
-    this->window->clear(sf::Color::Black); 
+    this->window->clear(sf::Color(31, 31, 31, 255));
+
     this->window->pushGLStates();
     
-    if (!this->states.empty())
-     
-       
-     
-        
+    if (!this->states.empty())    
          this->states.top()->render(); 
 
-         
-        
     ImGui::SFML::Render(*this->window);
   
-    this->window->popGLStates();
+   this->window->popGLStates();
 
    this->window->display();  
                                                        
-    
+  
+   
   }
         
 void Game::UpdateDT()

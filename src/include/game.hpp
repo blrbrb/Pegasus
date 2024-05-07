@@ -62,7 +62,10 @@ private:
     sf::Joystick joystick; 
 
 
-    sf::RenderWindow* window;
+    sf::RenderWindow* window; 
+    
+  
+    
     Sound::MusicPlayer* music_player; 
     sf::Event event;
     sf::Vector2f gridSize;
@@ -84,6 +87,7 @@ private:
     //init functions
     void load();
     void initWindow();
+    void initGTK();
     void initStates();
     void initKeys();
     bool initJoySticks();

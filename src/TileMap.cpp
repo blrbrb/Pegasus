@@ -900,7 +900,7 @@ bool TileMap::loadFromFile(const std::string filename, bool json)
                     int enemy_type = 0;
                     int enemyAmount = 0;
                     int enemyTimer = 0;
-                    int enemyMaxDistance = 0;
+                    int enemyMaxDistance = 0;   
 
                     in >> std::hex >> textureX >> textureY >> enemy_type >> enemyAmount >> enemyTimer >> enemyMaxDistance;
                     //  std::cout << "reading the spawner tile position X: it's  " << x << "position Y:  " << y << " " << std::endl;

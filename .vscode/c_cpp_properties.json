@@ -5,22 +5,27 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/src/include",
-                "~/usr/include",
-                "~/usr/local/include",
-                "${workspaceFolder}/src/Imgui"
+                "${workspaceFolder}/src/Imgui",
+                "/usr/include/gtk-3.0",
+                "/usr/lib/x86_64-linux-gnu/glib-2.0/include",
+                "/usr/include/**",
+                "/usr/include/gtk-3.0/gtk",
+                "/usr/include/gtk-3.0/gdk",
+                "/usr/include/gtk-3.0"  
+                
+
+              
+
             ],
-            "defines": ["BOOST_STATIC=1"],
+            "defines": [],
             "cStandard": "c17",
             "cppStandard": "gnu++20",
             "intelliSenseMode": "linux-gcc-x64",
             "browse": {
                 "path": [
-                    "~/usr/local/include",
-                    "src/include",
-                    "~/usr/include",
-                    "~/usr/local/include", 
-                    "~/usr/local/lib",
-                    "src/Imgui"
+                    "${workspaceFolder}/src/include",
+                    "${workspaceFolder}/src/Imgui",
+                    "${workspaceFolder}/src"
                 ]
             }
         }

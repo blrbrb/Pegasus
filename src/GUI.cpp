@@ -7,11 +7,12 @@
 //
 
 #include "include/GUI.hpp"
+#include "GUI.hpp"
 
 
 /* BEGIN BUTTON */
 
-GUI::Button::Button(float x, float y, float width, float height, sf::Font *font, const std::string& text, unsigned character_size, sf::Color idle_color, sf::Color hover_color, sf::Color active_color, sf::Color text_idle_color, sf::Color text_hover_color, sf::Color text_active_color, sf::Color outline_active_color, sf::Color outline_idle_color, sf::Color outline_hover_color, short unsigned ID) : hover(false), pressed(false), resources_from_header(false)
+GUI::Button::Button(float x, float y, float width, float height, sf::Font *font, const std::string& text, unsigned character_size, sf::Color idle_color, sf::Color hover_color, sf::Color active_color, sf::Color text_idle_color, sf::Color text_hover_color, sf::Color text_active_color, sf::Color outline_active_color, sf::Color outline_idle_color, sf::Color outline_hover_color, short unsigned ID) :  hover(false), pressed(false), resources_from_header(false)
 {
     /*!
      
@@ -37,9 +38,10 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
      
      */
     this->ID = ID;
-    
-    this->rectangle.setSize(sf::Vector2f(x,y));
-    this->rectangle.setPosition(width, height);
+    this->rectangle = new GUI::GradientElement(width, height, x, y);
+    this->rectangle->setSize(sf::Vector2f(x,y));
+
+    this->rectangle->setPosition(sf::Vector2f(width, height));
     
     this->ButtonState = IDLE_BUTTON;
     
@@ -55,7 +57,7 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
     //the center the top left corner is at the center of the button rectangle
     //(Side note) I failed highschool geom. I have no fucking idea why this works, but it does
     
-    this->text.setPosition(this->rectangle.getPosition().x + this->rectangle.getPosition().x/ 2.f + 20.f - this->rectangle.getPosition().x / 2.f, this->rectangle.getPosition().y + this->rectangle.getSize().y / 2.f - 20.f);
+    this->text.setPosition(this->rectangle->getPosition().x + this->rectangle->getPosition().x/ 2.f + 40.f - this->rectangle->getPosition().x / 2.f, this->rectangle->getPosition().y + this->rectangle->getSize().y / 2.f - 40.f);
     
     //Button rect colors
     this->idleColor = idle_color;
@@ -73,9 +75,9 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
     this->outline_activeColor = outline_active_color;
     
     
-    this->rectangle.setFillColor(this->idleColor);
-    this->rectangle.setOutlineColor(outline_idle_color);
-    this->rectangle.setOutlineThickness(1.f);
+    //this->rectangle.setFillColor(this->idleColor);
+    //this->rectangle.setOutlineColor(outline_idle_color);
+    //this->rectangle.setOutlineThickness(1.f);
 
 }
 
@@ -89,9 +91,9 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
     
     this->ButtonState = IDLE_BUTTON;
     this->ID = ID; 
-       
-       this->rectangle.setSize(sf::Vector2f(x,y));
-       this->rectangle.setPosition(width, height);
+    this->rectangle = new GUI::GradientElement(width, height, x, y);   
+       this->rectangle->setSize(sf::Vector2f(x,y));
+       this->rectangle->setPosition(sf::Vector2f(width, height));
        
       
        
@@ -101,7 +103,7 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
     this->text.setFillColor(text_idlecolor);
     this->text.setCharacterSize(character_size);
     
-     this->text.setPosition(this->rectangle.getPosition().x + this->rectangle.getPosition().x/ 2.f + 20.f - this->rectangle.getPosition().x / 2.f, this->rectangle.getPosition().y + this->rectangle.getSize().y / 2.f - 20.f);
+     this->text.setPosition(this->rectangle->getPosition().x + this->rectangle->getPosition().x/ 2.f + 40.f - this->rectangle->getPosition().x / 2.f, this->rectangle->getPosition().y + this->rectangle->getSize().y / 2.f - 40.f);
     
     try
     {
@@ -109,19 +111,19 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
         if (!this->idle.loadFromFile(idle_texture))
         {
             //LOG(WARNING) << "unable to initalize custom button [IDLE_BUTTON] texture " << idle_texture << " . Falling back on default button [IDLE_BUTTON] texture" << std::endl;
-            this->load_from_header();
+            //this->load_from_header();
         }
 
         if (!this->clicked.loadFromFile(active_texture))
         {
 
            // LOG(WARNING) << "unable to initalize custom button [PRESSED] texture " << active_texture << " . Falling back on default button [PRESSED] texture" << std::endl;
-            this->load_from_header();
+            //this->load_from_header();
         }
         if (!this->hover_texture.loadFromFile(hover_texture))
         {
             //LOG(WARNING) << "unable to initalize custom button [HOVER] texture " << hover_texture << " . Falling back on default button [HOVER] texture" << std::endl;
-            this->load_from_header();
+            //this->load_from_header();
         }
 
     }
@@ -132,7 +134,7 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
         //LOG(FATAL) << "GUI::BUTTON(float x, float y, float width, float height, sf::Font *font, std::string text, unsigned int" << std::endl << "character_size, const std::string idle_texture, const std::string active_texture, const std::string" << std::endl << "hover_texture, short unsigned ID)" << std::endl;
     }
     
-    this->rectangle.setTexture(&idle);
+    //this->rectangle.setTexture(&idle);
     
     
 }
@@ -161,13 +163,16 @@ GUI::Button::Button(float x, float y, float width, float height, const std::stri
     @param short  unsigned ID
     
     */
-    
+    this->rectangle = new GUI::GradientElement(width, height, x, y);
+    this->rectangle->setSize(sf::Vector2f(x,y));
+
+    this->rectangle->setPosition(sf::Vector2f(width, height));
     try
     {
         if (!this->idle.loadFromFile(idle_texture))
         {
             //LOG(WARNING) << "unable to initalize custom button [IDLE_BUTTON] texture " << idle_texture << " . Falling back on default button [IDLE_BUTTON] texture";
-            this->load_from_header(); 
+            //this->load_from_header(); 
 
         }
         
@@ -175,15 +180,15 @@ GUI::Button::Button(float x, float y, float width, float height, const std::stri
         {
             
             //LOG(WARNING) << "unable to initalize custom button [PRESSED] texture " << active_texture << " . Falling back on default button [PRESSED] texture";
-            this->load_from_header();
+            //this->load_from_header();
         }
         if(!this->hover_texture.loadFromFile(hover_texture))
         {
             //LOG(WARNING) << "unable to initalize custom button [HOVER] texture " << hover_texture << " . Falling back on default button [HOVER] texture";
-            this->load_from_header();
+           // this->load_from_header();
         }
            
-        this->rectangle.setTexture(&idle);
+        //this->rectangle.setTexture(&idle);
     
     }
     catch (std::invalid_argument& e)
@@ -194,10 +199,7 @@ GUI::Button::Button(float x, float y, float width, float height, const std::stri
     
     this->ID = ID;
           
-    this->rectangle.setSize(sf::Vector2f(width, height));
-    
-          this->rectangle.setPosition(x,y);
-          
+ 
           this->ButtonState = IDLE_BUTTON;
         
     
@@ -213,22 +215,24 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font* font,
     this->ButtonState = IDLE_BUTTON;
     this->ID = ID;
     //load the default textures from header
-    this->load_from_header();
-    this->rectangle.setTexture(&idle);
-    this->rectangle.setSize(sf::Vector2f(x, y));
-    this->rectangle.setPosition(width, height);
+    //this->load_from_header();
+    //this->rectangle.setTexture(&idle);
+     this->rectangle = new GUI::GradientElement(x,y, width, height);
+    //this->rectangle->setSize(sf::Vector2f(x, y));
+    this->rectangle->setPosition(sf::Vector2f(width, height));
 
   
 
     this->font = font;
     this->text.setFont(*this->font);
     this->text.setString(text);
-    this->text.setFillColor(text_idlecolor);
+    this->text.setFillColor(sf::Color::White);
     this->text.setCharacterSize(character_size);
 
 
-
-    this->text.setPosition(this->rectangle.getPosition().x + this->rectangle.getPosition().x / 2.f + 20.f - this->rectangle.getPosition().x / 2.f, this->rectangle.getPosition().y + this->rectangle.getSize().y / 2.f - 20.f);
+     std::cout << this->rectangle->getPosition().x << std::endl; 
+     //this->text.setPosition(this->rectangle->getGlobalBounds().top, this->rectangle->getGlobalBounds().width)
+    this->text.setPosition(this->rectangle->getPosition().x + this->rectangle->getPosition().x / 2.f- this->rectangle->getPosition().x / 2.f, this->rectangle->getPosition().y + this->rectangle->getSize().y / 2.f );
 }
 
 GUI::Button::Button(float x, float y, float width, float height, short unsigned ID) :font(nullptr), hover(false), pressed(false), resources_from_header(true)
@@ -237,13 +241,14 @@ GUI::Button::Button(float x, float y, float width, float height, short unsigned 
     this->ButtonState = IDLE_BUTTON;
     this->ID = ID;
     //load the default textures from header
-    this->load_from_header();
-    this->rectangle.setTexture(&idle);
-    this->rectangle.setSize(sf::Vector2f(x, y));
-    this->rectangle.setPosition(width, height);
+    //this->load_from_header();
+   // this->rectangle.setTexture(&idle);
+    this->rectangle = new GUI::GradientElement(width, height, x, y);
+    this->text.setFillColor(sf::Color::White); 
+    this->text.setScale(sf::Vector2f(2, 2));
 
-
-    this->text.setPosition(this->rectangle.getPosition().x + this->rectangle.getPosition().x / 2.f + 20.f - this->rectangle.getPosition().x / 2.f, this->rectangle.getPosition().y + this->rectangle.getSize().y / 2.f - 20.f);
+    std::cout << this->rectangle->getPosition().x << std::endl;
+    this->text.setPosition(this->rectangle->getPosition().x + this->rectangle->getPosition().x / 2.f + 20.f - this->rectangle->getPosition().x / 2.f, this->rectangle->getPosition().y + this->rectangle->getSize().y / 2.f - 20.f);
 }
 
 GUI::Button::~Button() = default;
@@ -255,7 +260,7 @@ void GUI::Button::update(const sf::Vector2i &Mousepos) {
     
     this->ButtonState = IDLE_BUTTON; 
 
-    if (this->rectangle.getGlobalBounds().contains(static_cast<sf::Vector2f>(Mousepos)))
+    if (this->rectangle->getGlobalBounds().contains(static_cast<sf::Vector2f>(Mousepos)))
     {
 
         this->ButtonState = HOVER;
@@ -272,50 +277,55 @@ void GUI::Button::update(const sf::Vector2i &Mousepos) {
             
         case IDLE_BUTTON: //the Button is not being interacted with by the user
             
-            this->rectangle.setTexture(&idle);
+            //this->rectangle.setTexture(&idle);
             
             //if the button is not given a texture with one of the overload constructors, give it a fill color
             
-            if(this->rectangle.getTexture() == nullptr)
-            {
-                this->rectangle.setFillColor(this->idleColor);
-                this->text.setFillColor(this->text_idlecolor);
-                this->rectangle.setOutlineColor(this->outline_idleColor);
-            }
+            //if(this->rectangle.getTexture() == nullptr)
+            //{
+                //this->rectangle.setFillColor(this->idleColor);
+                this->text.setFillColor(sf::Color::White); 
+                this->rectangle->setColor(sf::Color(255, 190,111),sf::Color(246, 2, 0));
+              //  this->rectangle.setOutlineColor(this->outline_idleColor);
+            //}
             
             break;
             
         case HOVER: // the user's cursor is hovering over the button
             
-            this->rectangle.setTexture(&hover_texture);
+            //this->rectangle.setTexture(&hover_texture);
             
-            if (this->rectangle.getTexture() == nullptr)
-            {
-                this->rectangle.setFillColor(this->hoverColor);
-                this->text.setFillColor(this->text_hovercolor);
-                this->rectangle.setOutlineColor(this->outline_hoverColor);
-            }
+            //if (this->rectangle.getTexture() == nullptr)
+            //{
+                //this->rectangle.setFillColor(this->hoverColor);
+                this->text.setFillColor(sf::Color::White);
+                this->rectangle->setColor(sf::Color(170, 10, 10, 255), sf::Color(200, 10, 10, 255));
+              //  this->rectangle.setOutlineColor(this->outline_hoverColor);
+            //}
             
             break;
             
         case PRESSED: // the button has been interacted with
            
-            this->rectangle.setTexture(&clicked);
+            //this->rectangle.setTexture(&clicked);
              
-            if (this->rectangle.getTexture() == nullptr)
-            {
-                this->rectangle.setFillColor(this->activeColor);
-                this->text.setFillColor(this->text_activecolor);
-                this->rectangle.setOutlineColor(this->outline_activeColor);
-            }
+            //if (this->rectangle.getTexture() == nullptr)
+            //{
+                //this->rectangle.setFillColor(this->activeColor);
+               
+                 this->text.setFillColor(sf::Color::White);
+                 this->rectangle->setColor(sf::Color(191, 90, 90), sf::Color(246, 64, 64));
+                //this->rectangle.setOutlineColor(this->outline_activeColor);
+            //}
             
             break;
             
         default:
             //will appear if something is wrong with the initalizaiton of the button texture.
-            this->rectangle.setFillColor(sf::Color::Red);
+           // this->rectangle.setFillColor(sf::Color::Red);
             this->text.setFillColor(sf::Color::Green);
-            this->rectangle.setOutlineColor(sf::Color::Blue);
+            this->rectangle->setColor(sf::Color(191, 90, 90), sf::Color(246, 64, 64));
+            //this->rectangle.setOutlineColor(sf::Color::Blue);
           std::cout << "ERROR CODE BUTTON:210 || GUI::BUTTON::UPDATE || UNABLE TO LOAD BUTTON FROM TEXTURE FILE CHECK BUTTON CONSTRUCTOR" << std::endl;
             break;
     }
@@ -325,9 +335,9 @@ void GUI::Button::update(const sf::Vector2i &Mousepos) {
     
 
 void GUI::Button::render(sf::RenderTarget& target) {
-
-    target.draw(this->rectangle);
+    target.draw(*this->rectangle);
     target.draw(this->text);
+    
     
 }
 
@@ -360,12 +370,12 @@ void GUI::Button::setText(const std::string &button_text)
 
 void GUI::Button::resize(sf::Vector2f newSize)
 {
-    this->rectangle.setSize(newSize);
+    this->rectangle->setSize(newSize);
 }
 
 void GUI::Button::reposition(sf::Vector2f newPosition)
 {
-    this->rectangle.setPosition(newPosition);
+    this->rectangle->setPosition(newPosition);
 }
 
 void GUI::Button::recalculateCharacterSize(unsigned newSize)
@@ -597,7 +607,7 @@ this->textureRect.width = gridSize.x;
 this->textureRect.height = gridSize.y;
 this->hidden = false;
 
-this->hide = new GUI::Button(x, y, gridSize.x, gridSize.y, "Resources/GUI/TickBox/Orange/red_boxCross.png", "Resources/GUI/TickBox/Orange/red_boxTick.png", "Resources/GUI/TickBox/Orange/red_boxTick.png");
+this->hide = new GUI::Button(x, y, gridSize.x, gridSize.y,9);
 
 std::cout << this->bounds.getGlobalBounds().width << std::endl;
 
@@ -990,9 +1000,112 @@ void GUI::Icon::render(sf::RenderTarget& target)
     
 }
 
+GUI::GradientElement::GradientElement(const float width, const float height, const float x, const float y) 
+{   
+        this->_core.setPosition(sf::Vector2f(x,y)); 
+        this->_core.setSize(sf::Vector2f(width, height));
+      
+       std::cout << "width= " << width << " " << "height= " << height << " " << "x= " << x << " " << "y= " << y << std::endl;
+       this->initVertexArray(sf::Vector2f(width, height), sf::Vector2f(x,y));
+       
+}
+
+GUI::GradientElement::~GradientElement()
+{
+
+}
+
+void GUI::GradientElement::initVertexArray(sf::Vector2f size, sf::Vector2f position)
+{
+    this->_core.setSize(size); 
+    this->_core.setPosition(position); 
 
 
+    std::cout << "left= " << position.x << std::endl << "top= " << position.y << std::endl;
+    //size = bottom right corner
+    std::cout << "width= " << size.x << std::endl << "height= " << size.y << std::endl;
+    
+    this->geom = sf::VertexArray(sf::Quads, 4);
+
+    this->geom[0].position = this->_core.getPoint(0); 
+    
+    this->geom[1].position = this->_core.getPoint(1); 
+    this->geom[2].position = this->_core.getPoint(2);
+    this->geom[3].position = this->_core.getPoint(3);
+    
+   // if(std::size_t & this->geom.getVertexCount()) 
+   // {
+        //c_assert("you fucking retard "); 
+        //this->colorA = nullptr; 
+        //this->
+   // } 
 
 
+    //push all points to the render buffer
+   
+
+    //vertical gradient is  AABB or BBAA 
+    //horizontal gradient is ABBA or BAAB
+    //this->geom[0].color = sf::Color(191, 64, 64,255); 
+    //this->geom[1].color = sf::Color(191, 64, 64,255); 
+    //this->geom[2].color = sf::Color(246, 2, 0,255); 
+    //this->geom[3].color = sf::Color(246, 2, 0,255); 
+
+    return; 
+
+}
 
 
+sf::FloatRect GUI::GradientElement::getGlobalBounds() const
+{
+    return this->_core.getGlobalBounds();
+}
+
+sf::Vector2f GUI::GradientElement::getPosition() const {
+       return this->_core.getPosition(); 
+    }
+
+void GUI::GradientElement::setPosition(sf::Vector2f position)
+{
+     sf::Transform transform;
+    transform.translate(position - this->geom[0].position);
+
+    // Apply the transformation to each vertex of the rectangle
+    for (std::size_t i = 0; i < this->geom.getVertexCount(); ++i) {
+        this->geom[i].position = transform.transformPoint(this->geom[i].position);
+    }
+}
+
+void GUI::GradientElement::setSize(sf::Vector2f size)
+{  
+    this->_core.setSize(size);
+    this->geom[0].position = this->_core.getPoint(0);
+    this->geom[1].position = this->_core.getPoint(1); 
+    this->geom[2].position = this->_core.getPoint(2);
+    this->geom[3].position = this->_core.getPoint(3);
+}
+
+void GUI::GradientElement::setColor(const sf::Color &colorA, const sf::Color &colorB)
+{
+    this->geom[0].color = colorA;
+    this->geom[1].color = colorA;
+    this->geom[2].color = colorB;
+    this->geom[3].color = colorB;
+}
+
+sf::Vector2f GUI::GradientElement::getSize() const
+{
+    return this->_core.getSize();
+    
+}
+
+void GUI::GradientElement::setUUID(unsigned long int unique_id)
+{
+    this->uuid = unique_id; //too big 
+}
+
+void GUI::GradientElement::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+    
+    target.draw(this->geom, states);
+}

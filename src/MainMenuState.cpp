@@ -154,7 +154,7 @@ void MainMenuState::initFonts() {
     try
     {
 
-        if (!this->font.loadFromFile("Resources/Assets/Fonts/PressStart2P.ttf"))
+        if (!this->font.loadFromFile("Resources/Assets/Fonts/OpenSans-Variable.ttf"))
         {
           
             //LOG(WARNING) << "Unable to load font from Resources/Assets/Fonts/*"; 
@@ -165,7 +165,7 @@ void MainMenuState::initFonts() {
         catch (std::runtime_error& e) {
             
            // this->log("looking for fonts in " + std::filesystem::current_path(), "State::Menu");
-            // this->font.loadFromFile("Resources/PressStart2p.ttf")''
+            // this->font.loadFromFile("Resources/OpenSans-Variable.ttf")''
         }
     
     
@@ -182,12 +182,8 @@ void MainMenuState::initbackground()
 {
 
     this->background.setSize(sf::Vector2f(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y)));
-  
-   
-    
-    
-   // this->background.setTexture(&this->backgroundTexture);
-    this->background.setFillColor(sf::Color::Black);
+    //WebGL default light grey background (same as ponytown)
+    this->background.setFillColor(sf::Color(31,31,31,255));
 
 }
 

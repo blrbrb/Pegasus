@@ -78,7 +78,7 @@ void GameState::initvariables()
 void GameState::initdialougesystem()
 {
     // LOG(INFO) << "creating new dialouge system object..."; 
-    this->dialougeSystem = new DialougeSystem("Resources/Assets/Fonts/PressStart2P.ttf", this->state_data->gfxsettings->resolution); 
+    this->dialougeSystem = new DialougeSystem("Resources/Assets/Fonts/OpenSans-Variable.ttf", this->state_data->gfxsettings->resolution); 
     //this->dialougeSystem->addTextbox(DEBUG_TAG);
    // this->dialougeSystem->addTextbox(DIALOUGE, "Welcome to the tutorial/demo.\n This is a debug demonstration generic\n dialouge window. Please Enter the Key\n 'z' to obscure this message"); 
     //this->dialougeSystem->addTextbox(DIALOUGE, "Hmmmm, it would appear that\n I can safley fit about twenty or so\n characters onto the screen before\n I begin to spill over out of the dialougebox\n");
@@ -207,9 +207,9 @@ void GameState::inittextures()
 
 void GameState::initfonts()
 {
-    if (!this->font.loadFromFile("Resources/Assets/Fonts/PressStart2P.ttf"))
+    if (!this->font.loadFromFile("Resources/Assets/Fonts/OpenSans-Variable.ttf"))
        {
-           //LOG(WARNING) << "unable to load default font Resources/Assets/Fonts/PressStart2P.ttf";
+           //LOG(WARNING) << "unable to load default font Resources/Assets/Fonts/OpenSans-Variable.ttf";
            ///LOG(WARNING) << "throwing runtime exception on line 209"; 
            throw std::runtime_error("ERROR Could not load font from font file GameState lin 185");                           
        }
