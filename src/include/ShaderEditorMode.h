@@ -6,7 +6,7 @@ class ShaderEditorMode : public EditorModes
 {
 public: 
 
-	ShaderEditorMode(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata, Levels* levels);
+	ShaderEditorMode(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata);
 	virtual ~ShaderEditorMode();
 
 

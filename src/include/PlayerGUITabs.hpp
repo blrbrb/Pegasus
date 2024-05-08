@@ -43,7 +43,7 @@ private:
 
 
 	//Minium amount of time in between allowed key presses 
-	float keytimeMax{};
+	float keytimeMax;
 	sf::Clock keytimer; 
 
 };

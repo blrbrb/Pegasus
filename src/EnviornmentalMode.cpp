@@ -42,7 +42,7 @@ void EnviornmentalMode::inittext()
 
 void EnviornmentalMode::initGUI()
 {
-   //
+   
     //this->guitexture.loadFromFile("Resources/GUI/Icons/Lantern.png");
     this->guisprite.setTexture(this->guitexture);
     this->guisprite.setScale(4.f, 4.f); 
@@ -51,7 +51,7 @@ void EnviornmentalMode::initGUI()
     this->sidebar.setOutlineColor(sf::Color(200,200,200,150));
     this->sidebar.setOutlineThickness(1.f);
     
-     //config the selection rectangle. Twice the size of the regular selection rectangle. Enviornmental objects like trees, rocks mountains etc.
+    //config the selection rectangle. Twice the size of the regular selection rectangle. Enviornmental objects like trees, rocks mountains etc.
     this->select_Rect.setSize(sf::Vector2f(statedata->gridSize->x, statedata->gridSize->y));
     this->select_Rect.setTexture(tilemap->getTileSheet());
      
@@ -60,17 +60,16 @@ void EnviornmentalMode::initGUI()
      //this->select_Rect.setOutlineColor(sf::Color::Green);
      //this->select_Rect.setOutlineThickness(2);
      
-     //Config the TextureSelector from GUI.hpp
+     
      this->texture_selector = new GUI::TextureSelector(20.f, 20.f, 543.f, 560.f, *this->statedata->gridSize, this->tilemap->getTileSheet(), *this->editorstatedata->font, "X");
      
     
      
-     //this->buffer.loadFromFile(resourcePath() + "Beep.wav");
-     //this->UI_invalid.setBuffer(buffer
+     
 }
 
 
-EnviornmentalMode::EnviornmentalMode(StateData *statedata, TileMap *tilemap, EditorStateData *editorstatedata, Levels* levels) : EditorModes(statedata, tilemap, editorstatedata, levels)
+EnviornmentalMode::EnviornmentalMode(StateData *statedata, TileMap *tilemap, EditorStateData *editorstatedata) : EditorModes(statedata, tilemap, editorstatedata)
 {
     this->initvariables();
     this->inittext();

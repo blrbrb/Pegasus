@@ -70,12 +70,9 @@ void TileMap::initgeometry()
 
 void TileMap::init_object_textures()
 {
-    std::cout << "the stupid fucking texture is being initalized " << std::endl;
-    if (!this->object_textures["LANTERN"].loadFromFile("Resources/Assets/Entity/Objects/lantern.png"))
-    {
-        //LOG(FATAL) << "Unable to load object texture" << std::endl;
+    LOG(INFO) << "initalizing tilemap texture... TileMap.cpp | 73";
 
-    }
+   
 
 }
 

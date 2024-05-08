@@ -17,7 +17,7 @@ class EnemyEditorMode : public EditorModes
 {
 public:
     
-    EnemyEditorMode(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata, Levels* levels = nullptr);
+    EnemyEditorMode(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata);
     virtual ~EnemyEditorMode();
     
     

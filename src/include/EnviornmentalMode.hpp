@@ -49,7 +49,7 @@ private:
     
 public:
     
-    EnviornmentalMode(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata, Levels* levels = nullptr);
+    EnviornmentalMode(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata);
     virtual ~EnviornmentalMode();
     
     //Functions

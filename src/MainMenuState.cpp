@@ -277,7 +277,6 @@ void MainMenuState::updatebuttons(const float& dt) {
     if (this->buttons["EDITOR"]->isPressed())
     {
         this->states->push(new EditorState(this->state_data)); 
-        this->log("Creating EditorState", "State::Menu");
         
     }
     if (this->buttons["SETTINGS"]->isPressed())

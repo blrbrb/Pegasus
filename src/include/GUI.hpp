@@ -71,6 +71,16 @@ enum BoxStates{IDLE_BOX = 0, ///<The box has not been interacted with
     PRESSED_BOX
     
 };
+
+struct Pallete
+{
+    Pallete();
+    ~Pallete(); 
+    sf::Color idle; 
+    sf::Color hover;
+    sf::Color active; 
+    sf::Color accent; 
+};
 ///Namespace containing all of the GUI objects
 namespace GUI {
 
@@ -99,6 +109,103 @@ std::string convertToString(char* a, int size);
     unsigned int calcCharSize(const sf::VideoMode& vm, const unsigned int &modifier = 60);
 
 
+
+
+class RoundedRectangleShape : public sf::Shape
+{
+    public:
+        ////////////////////////////////////////////////////////////
+        /// \brief Default constructor
+        ///
+        /// \param size Size of the rectangle
+        /// \param radius Radius for each rounded corner
+        /// \param cornerPointCount Number of points of each corner
+        ///
+        ////////////////////////////////////////////////////////////
+        explicit RoundedRectangleShape(const sf::Vector2f& size = sf::Vector2f(0, 0), float radius = 0, unsigned int cornerPointCount = 0);
+
+        ////////////////////////////////////////////////////////////
+        /// \brief Set the size of the rounded rectangle
+        ///
+        /// \param size New size of the rounded rectangle
+        ///
+        /// \see getSize
+        ///
+        ////////////////////////////////////////////////////////////
+        void setSize(const sf::Vector2f& size);
+
+        ////////////////////////////////////////////////////////////
+        /// \brief Get the size of the rounded rectangle
+        ///
+        /// \return Size of the rounded rectangle
+        ///
+        /// \see setSize
+        ///
+        ////////////////////////////////////////////////////////////
+        const sf::Vector2f& getSize() const;
+
+        ////////////////////////////////////////////////////////////
+        /// \brief Set the radius of the rounded corners
+        ///
+        /// \param radius Radius of the rounded corners
+        ///
+        /// \see getCornersRadius
+        ///
+        ////////////////////////////////////////////////////////////
+        void setCornersRadius(float radius);
+
+        ////////////////////////////////////////////////////////////
+        /// \brief Get the radius of the rounded corners
+        ///
+        /// \return Radius of the rounded corners
+        ///
+        /// \see setCornersRadius
+        ///
+        ////////////////////////////////////////////////////////////
+        float getCornersRadius() const;
+
+        ////////////////////////////////////////////////////////////
+        /// \brief Set the number of points of each corner
+        ///
+        /// \param count New number of points of the rounded rectangle
+        ///
+        /// \see getPointCount
+        ///
+        ////////////////////////////////////////////////////////////
+        void setCornerPointCount(unsigned int count);
+
+        ////////////////////////////////////////////////////////////
+        /// \brief Get the number of points defining the rounded rectangle
+        ///
+        /// \return Number of points of the rounded rectangle
+        ///
+        ////////////////////////////////////////////////////////////
+        virtual std::size_t getPointCount() const;
+
+        ////////////////////////////////////////////////////////////
+        /// \brief Get a point of the rounded rectangle
+        ///
+        /// The result is undefined if \a index is out of the valid range.
+        ///
+        /// \param index Index of the point to get, in range [0 .. GetPointCount() - 1]
+        ///
+        /// \return Index-th point of the shape
+        ///
+        ////////////////////////////////////////////////////////////
+        virtual sf::Vector2f getPoint(std::size_t index) const; 
+
+
+    
+       
+
+    private:
+         ////////////////////////////////////////////////////////////
+        // Member data
+        ////////////////////////////////////////////////////////////
+        sf::Vector2f size;
+        float radius;
+        unsigned int cornerpointCount;
+};
 
 class GradientElement : public sf::Drawable
 {
@@ -133,6 +240,36 @@ class GradientElement : public sf::Drawable
 
 };
 ///A GUI element designed to handle user input visually, can be customized with text and color
+
+class PillButton
+{
+    public: 
+         PillButton(float x, float y, float width, float height, unsigned cornerCount); 
+
+         PillButton(float x, float y, float width, float height, unsigned cornerCount, sf::Font& font, const std::string& text="");
+
+        ~PillButton(); 
+        
+        void update(const sf::Vector2i& Mousepos);  
+
+        void render(sf::RenderTarget& target);
+
+        void setCharacterSize(const unsigned& characterSize);
+
+        const bool& isPressed();
+    private: 
+        Pallete b_colors; 
+        sf::Font* font; 
+        sf::Text text;
+        RoundedRectangleShape b_geom;
+        unsigned short b_state; 
+        bool hover;
+        bool active; 
+        bool pressed;
+        
+};
+
+
 class Button {
 
 private:
@@ -231,7 +368,10 @@ public:
 	Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned int character_size, short unsigned ID = 0);
 
 
-    Button(float x, float y, float width, float height, short unsigned ID);
+    Button(float x, float y, float width, float height, short unsigned ID=0);
+
+
+    
 
     virtual ~Button();
    

@@ -10,13 +10,13 @@
 
 
 
-DefaultMode::DefaultMode(StateData *statedata, TileMap* tilemap, EditorStateData* editorstatedata, Levels* levels) : EditorModes(statedata, tilemap, editorstatedata, levels)
+DefaultMode::DefaultMode(StateData *statedata, TileMap* tilemap, EditorStateData* editorstatedata) : EditorModes(statedata, tilemap, editorstatedata)
 {
     this->initvariables();
     this->inittext();
     this->initgrid();
     this->initGUI();
-
+    std::cout << this->tilemap->getMaxSize().x << " " << "sanity check max tilemap size X DefaultMode | 19" << std::endl;
 
 }
 
@@ -28,16 +28,9 @@ DefaultMode::~DefaultMode()
 void DefaultMode::updateInput(const float& dt)
 {
 
-   
-
-  
-
     
+ this->TextureRect = this->texture_selector->getTextureRect();
     
-        //this->TextureRect = this->texture_selector->getTextureRect();
-    
-    
-  
 
 
    if((sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->getkeytime()) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->editorstatedata->keybinds->at("PLACE"))) && this->getkeytime() ))
@@ -59,10 +52,10 @@ void DefaultMode::updateInput(const float& dt)
                                 { 
                                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::M)) 
                                    {
-                                       this->levels->addTile(this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, 0, this->TextureRect, collision, this->type); 
+                                       this->tilemap->addTile(this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, 0, this->TextureRect, collision, this->type); 
                                        //this->levels[curr_level]->addTile(this->editorStateData->mousePosView->x, this->editorStateData->mousePosView->y, 0, this->TextureRect, collision, this->type);
                                    }
-                                   this->levels->addTile(this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, this->layer, this->TextureRect, collision, this->type);
+                                   this->tilemap->addTile(this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, this->layer, this->TextureRect, collision, this->type);
                                    // this->tilemap->addTile(this->editorStateData->mousePosView->x, this->editorStateData->mousePosView->y, this->layer, this->TextureRect, collision, this->type);
                                     
                                        std::cout << "LOCKED: Tile Added" << std::endl;
@@ -85,7 +78,7 @@ void DefaultMode::updateInput(const float& dt)
                                   {
                                       for (int y = 0; y < this->tilemap->getMaxSizeGrid().y; y++)
                                       {
-                                          this->levels->addTile(x, y, this->layer, this->TextureRect, collision, this->type);
+                                          this->tilemap->addTile(x, y, this->layer, this->TextureRect, collision, this->type);
                                           //this->tilemap->addTile(x, y, this->layer, this->TextureRect, collision, this->type);
                                       }
 
@@ -100,9 +93,9 @@ void DefaultMode::updateInput(const float& dt)
 
                               }
                               else
-                                  this->levels->addTile(this->editorstatedata->mouseposGridI->x++, this->editorstatedata->mouseposGridI->y++, this->layer, this->TextureRect, collision, this->type); 
+                                  this->tilemap->addTile(this->editorstatedata->mouseposGridI->x++, this->editorstatedata->mouseposGridI->y++, this->layer, this->TextureRect, collision, this->type); 
                                  // this->tilemap->addTile(this->editorStateData->mouseposGridI->x++, this->editorStateData->mouseposGridI->y++, this->layer, this->TextureRect, collision, this->type);
-                               std::cout << "Tile Added" << std::endl;
+                                 std::cout << "Tile Added" << std::endl;
                               
                            }
 
@@ -279,7 +272,8 @@ void DefaultMode::updateInput(const float& dt)
 
 
 void DefaultMode::update(const float &dt)
-{
+{   
+    std::cout << "updating default editor state mode" << std::endl; 
     this->updateGUI(dt);
 
     if (ImGui::GetIO().WantCaptureMouse == false)
@@ -287,12 +281,13 @@ void DefaultMode::update(const float &dt)
         this->updateInput(dt);
     }
 
-    // this->updateInput(dt);
+     this->updateInput(dt);
 }
 
 void DefaultMode::updateGUI(const float& dt)
 {
-    //this->select_Rect.setTextureRect(this->texture_selector->getTextureRect());
+    std::cout << "default mode updating the GUI" << std::endl;
+    this->select_Rect.setTextureRect(this->texture_selector->getTextureRect());
 
     ImGui::Begin("Map Editor", NULL, ImGuiWindowFlags_NoMove);
     this->texture_selector->update(*this->editorstatedata->mousePosWindow, dt);
@@ -307,13 +302,13 @@ void DefaultMode::updateGUI(const float& dt)
         this->select_Rect.setPosition(this->editorstatedata->mouseposGridI->x * this->statedata->gridSize->x, this->editorstatedata->mouseposGridI->y * this->statedata->gridSize->y);
 
     }
-   // this->texturesample.setTexture(*this->select_Rect.getTexture());
+    this->texturesample.setTexture(*this->select_Rect.getTexture());
   
 
 
     this->select_Rect.setOrigin(sf::Vector2f(this->select_Rect.getLocalBounds().width, this->select_Rect.getLocalBounds().height) / 2.f);
    
-    //this->select_Rect.setTextureRect(this->texture_selector->getTextureRect());
+    this->select_Rect.setTextureRect(this->texture_selector->getTextureRect());
    // this->texturesample.setTextureRect(this->TextureRect);
     std::stringstream cursor_text;
     cursor_text << "MouseX: " << this->editorstatedata->mousePosView->x << "\n"
@@ -376,6 +371,7 @@ void DefaultMode::updateGUI(const float& dt)
 
 void DefaultMode::renderGUI(sf::RenderTarget &target)
 {
+    std::cout << "rendering default mode gui DefaultMode.cpp | 374 " << std::endl;
     if (!this->texture_selector->getActive())
        {
            target.setView(*this->editorstatedata->view);
@@ -386,7 +382,7 @@ void DefaultMode::renderGUI(sf::RenderTarget &target)
            
        }
 
-
+ std::cout << "rendering default mode gui DefaultMode.cpp | 385 " << std::endl;
     if (this->showgrid) 
     {
         for (auto& it : this->grid) 
@@ -406,7 +402,7 @@ void DefaultMode::renderGUI(sf::RenderTarget &target)
      
      
     
-       
+        std::cout << "rendering default mode gui DefaultMode.cpp | 405 " << std::endl;
        target.setView(*this->editorstatedata->view);
 }
 
@@ -429,7 +425,7 @@ void DefaultMode::initvariables()
 void DefaultMode::inittext()
 {
     
-    sf::VideoMode vm = statedata->gfxsettings->resolution;
+   
         
            
           

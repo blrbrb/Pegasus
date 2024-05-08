@@ -1,7 +1,7 @@
 #
 #include "include/ShaderEditorMode.h"
 
-ShaderEditorMode::ShaderEditorMode(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata, Levels* levels) : EditorModes(statedata, tilemap, editorstatedata, levels)
+ShaderEditorMode::ShaderEditorMode(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata) : EditorModes(statedata, tilemap, editorstatedata)
 { 
    
 
@@ -47,14 +47,14 @@ void ShaderEditorMode::updateGUI(const float& dt)
 
     ImGui::Text("Light Color"); 
 
-    ImGui::ColorPicker4("Light Color", &this->editorstatedata->selection_color.x);
+    //ImGui::ColorPicker4("Light Color", &this->editorstatedata->selection_color.x);
    
    
   
     ImGui::End(); 
    // ImGui::SliderInt()
-    this->selection_color_ImGUi = ImVec4(this->editorstatedata->selection_color); 
-    this->selection_color = this->editorstatedata->selection_color; 
+    //this->selection_color_ImGUi = ImVec4(this->editorstatedata->selection_color); 
+   // this->selection_color = this->editorstatedata->selection_color; 
     this->editorstatedata->shader->setUniform("ambientData", sf::Glsl::Vec4(this->selection_color)); 
  //   this->core_shader.setParameter("ambientData", this->selection_color); 
 }

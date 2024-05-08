@@ -28,7 +28,12 @@ font(font)
     this->menutext.setPosition(this->container.getPosition().x + this->container.getSize().x / 2.f - this->menutext.getGlobalBounds().width / 2.f,
                                this->container.getPosition().y + GUI::pixelpercentY(4,vm ));
     
-    
+    //test 
+
+    this->pillbutt = new GUI::RoundedRectangleShape(sf::Vector2f(200.f, 200.f), 45.f, 20);
+    this->pillbutt->setPosition(this->container.getPosition().x + this->container.getSize().x / 2.f - this->menutext.getGlobalBounds().width / 2.f,
+                               this->container.getPosition().y + GUI::pixelpercentY(4,vm ));
+
 }
 
 PauseMenu::~PauseMenu()
@@ -48,14 +53,6 @@ void PauseMenu::update(const sf::Vector2i& MousePos)
            i.second->update(MousePos);
     }
     
-    ImGui::Begin("Settings"); 
-  
-    ImGui::SliderFloat("Music Volume", &this->adjusted_volume, 0.0f, 100.0f, "ratio = %.3");
-
-
-
-    
-    ImGui::End();
 }
 
 void PauseMenu::render(sf::RenderTarget& target)
@@ -72,6 +69,9 @@ void PauseMenu::render(sf::RenderTarget& target)
     }
    
     target.draw(this->menutext);
+
+    //GUI Pill Button render test 
+    target.draw(*this->pillbutt);
 }
 
 std::map<std::string, GUI::Button*>& PauseMenu::getButtons()
@@ -88,7 +88,7 @@ void PauseMenu::addbutton(const std::string key, const unsigned charSize, const 
    
     this->buttons[key] = new GUI::Button(width, height, x, y, &this->font, text, charSize);
 
-  
+    
     
    
     

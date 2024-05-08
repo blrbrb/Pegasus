@@ -99,7 +99,7 @@ bool Game::initJoySticks()
 void Game::initStates() {
     
 
-    this->states.push(new EditorState(&this->state_data)); 
+    this->states.push(new MainMenuState(&this->state_data)); 
     
 }
 

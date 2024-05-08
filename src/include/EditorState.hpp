@@ -90,7 +90,7 @@ private:
         void handleFonts();
 
         //GUI
-       std::map<std::string, GUI::Button*> buttons;
+       std::map<std::string, GUI::Button*> buttons; //could be causing error 
        float cameraSpeed;
 
         //Text

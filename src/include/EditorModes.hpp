@@ -35,7 +35,6 @@ public:
     sf::Vector2f* mousePosView;
     sf::Vector2i* mouseposGridI; 
     sf::Vector2f* mouseposGridF; 
-    ImVec4 selection_color;
     sf::Font* font; 
     sf::Shader* shader;
 
@@ -49,15 +48,13 @@ class EditorModes
 protected:
     
     TileMap* tilemap;
-    Levels* levels; 
     StateData* statedata;
     EditorStateData* editorstatedata;
-    std::string curr_level;
     ImGuiIO io;
     
 public:
     
-    EditorModes(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata, Levels* levels = nullptr);
+    EditorModes(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata);
     virtual ~EditorModes();
     
     const bool getkeytime();

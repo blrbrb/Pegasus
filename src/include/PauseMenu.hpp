@@ -23,7 +23,7 @@ private:
     sf::RectangleShape background;
     sf::RectangleShape container; 
     float adjusted_volume; 
-    
+    GUI::RoundedRectangleShape* pillbutt;
     sf::Font& font;
     sf::Text menutext;
     

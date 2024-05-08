@@ -25,8 +25,6 @@ EditorState::EditorState(StateData* state_data): State(state_data), cameraSpeed(
    
  
     
-     
-
 }
 
 EditorState::~EditorState() {
@@ -186,21 +184,18 @@ void EditorState::initkeybinds()
 void EditorState::initModes()
 {
     //INIT LEVELS MUST ALWAYS, ALWAYS BE CALLED FIRST FOR THIS FUNCTION TO WORK!!!!!!!!!!!
-    this->modes.push_back(new DefaultMode(this->state_data, this->levels->getCurrent(), &this->editorStateData, this->levels));
-    this->modes.push_back(new EnemyEditorMode(this->state_data, this->Tilemap, &this->editorStateData, this->levels));
-    this->modes.push_back(new EnviornmentalMode(this->state_data, this->Tilemap, &this->editorStateData, this->levels));
+    this->modes.push_back(new DefaultMode(this->state_data, this->Tilemap, &this->editorStateData));
+    this->modes.push_back(new EnemyEditorMode(this->state_data, this->Tilemap, &this->editorStateData));
+    this->modes.push_back(new EnviornmentalMode(this->state_data, this->Tilemap, &this->editorStateData));
     //this->modes.push_back(new LevelManagerMode(this->state_data, this->Tilemap, &this->editorStateData, this->levels));
-    this->modes.push_back(new ShaderEditorMode(this->state_data, this->levels->getCurrent(), &this->editorStateData, this->levels));
+    //this->modes.push_back(new ShaderEditorMode(this->state_data, this->Tilemap, &this->editorStateData, this->levels));
     
     this->activeMode = EDITOR_MODES::DEFAULT_MODE;
 }
 
 void EditorState::initLevels()
 {
-    this->levels = new Levels(*this->state_data->gridSize);
-    this->levels->add_level("Map"); 
-    this->curr_level = "Map";
-    this->levels->set_current_level(this->curr_level); 
+    
 
 }
 
@@ -233,26 +228,20 @@ void EditorState::initSidebar()
 
 void EditorState::initGUI()
 {
-    sf::Image image;
-    //this->loading_texture.loadFromImage(header_to_image("loading"));
-    image.create(LOADING_ICON.width, LOADING_ICON.height, LOADING_ICON.data);
-    this->loading_texture.loadFromImage(image);
-    this->loading_sprite.setTexture(this->loading_texture); 
-    this->loading_sprite.setScale(sf::Vector2f(10.f, 10.f));
-    this->buffering = false;
+   
 }
 
 void EditorState::initbg()
 {
    
     
-    sf::FloatRect screen = sf::FloatRect(0, 0, this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height); 
-    this->bg.setSize(sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height));   
+    //sf::FloatRect screen = sf::FloatRect(0, 0, this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height); 
+    //this->bg.setSize(sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height));   
       //this->bg.setSize(sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height));   
-    this->bg_interior.setSize(this->levels->getCurrent()->getMaxSize());
-    this->bg_interior.setPosition(sf::Vector2f(0.f, 0.f)); 
-    this->bg_interior.setFillColor(sf::Color::Black); 
-    this->bg.setFillColor(sf::Color(250.f, 0.f, 0.f, 90.f)); 
+    //this->bg_interior.setSize(this->Tilemap->getMaxSize());
+    //this->bg_interior.setPosition(sf::Vector2f(0.f, 0.f)); 
+    //this->bg_interior.setFillColor(sf::Color::Black); 
+    //this->bg.setFillColor(sf::Color(250.f, 0.f, 0.f, 90.f)); 
      
 
 }
@@ -264,14 +253,7 @@ void EditorState::initbg()
 
 bool EditorState::initShader()
 {
-  //  sf::VideoMode& vm = sf::VideoMode::get
-    if (!this->core_shader.loadFromFile("Data/Shader/vertex_shader.vert", "Data/Shader/fragment_shader.frag"))
-        return false;
-    return true;
-    sf::Vector2f resolution = sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height);
-    this->core_shader.setUniform("resolution", resolution);
-    
-   /// this->core_shader.setUniform("LightPos",this->editorStateData.mousePosView);
+  
 }
 
 void EditorState::initRenderSprite()
@@ -320,7 +302,7 @@ void EditorState::initbackground()
 
 void EditorState::initEditorStateData()
 {
-    //this->editorStateData.view = &this->view;
+    
     this->editorStateData.keybinds = &this->keyBinds;
     this->editorStateData.keytime = &this->keyTime;
     this->editorStateData.ketyimeMax = &this->keyTimeMax;
@@ -332,8 +314,7 @@ void EditorState::initEditorStateData()
     this->editorStateData.mouseposGridF = &this->MousePosGridF;
     this->editorStateData.view = &this->mainView;
     this->editorStateData.font = &this->font;
-    this->editorStateData.selection_color = ImVec4(sf::Color::Transparent);
-    this->editorStateData.shader = &this->core_shader;
+    std::cout << "keytime max editor state data EditorState.cpp | 319" <<this->editorStateData.ketyimeMax << std::endl;
     
     
 }
@@ -355,7 +336,7 @@ void EditorState::update(const float& dt) {
     if (!this->paused) //Unpaused
     {
         this->updateButtons();
-            this->updateGUI(dt);
+        this->updateGUI(dt);
         
         this->updateInput(dt);
         this->updateModes(dt);
@@ -402,11 +383,11 @@ void EditorState::updateInput(const float& dt) {
     
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::L) && this->getKeyTime())
     {
-        if(this->levels->getCurrent()->lock_layer)
+        if(this->Tilemap->lock_layer)
        this->Tilemap->lock_layer = false;
         
       else
-          this->levels->getCurrent()->lock_layer = true;
+          this->Tilemap->lock_layer = true;
     }
     
     
@@ -641,7 +622,8 @@ void EditorState::updateGUI(const float& dt)
         if (ImGui::Button("Load Saved Map", sf::Vector2f(125.f, 25.f)))
         {
            // LOG(INFO) << "attempting to load tilemap data from " << "Data/TileMap/" + GUI::convertToString(str0, this->str_size);
-            this->levels->loadLevel(this->curr_level, "Data/TileMap/" + GUI::convertToString(str0, this->str_size));
+            //this->tilemap->loadFromFile(this->curr_level, "Data/TileMap/" + GUI::convertToString(str0, this->str_size));
+            this->Tilemap->loadFromFile("Data/Tilemap/Map.dat");
 
         }
         ImGui::SameLine(0.0, 8.f);
@@ -694,7 +676,7 @@ void EditorState::updateGUI(const float& dt)
                 if (ImGui::Button("Save", sf::Vector2f(125.f, 25.f))) 
                 {
                 
-                    this->levels->saveLevel(this->curr_level, GUI::convertToString(str0, this->str_size));
+                    this->Tilemap->saveToFile(GUI::convertToString(str0, this->str_size));
                     save_as = false; 
                 
                 }
@@ -820,7 +802,7 @@ void EditorState::render(sf::RenderTarget* target)
 {
     if (!target)
         target = this->window;
-    target->draw(this->bg);     
+   // target->draw(this->bg);     
 
     this->renderTexture.clear();
 
@@ -829,9 +811,9 @@ void EditorState::render(sf::RenderTarget* target)
     //Tilemap Camera (same as game camera)
     this->window->setView(this->mainView);
     target->draw(this->bg_interior);
-    this->levels->render(this->renderTexture, this->mainView, this->MousePosGridI, &this->core_shader);
-   // this->Tilemap->render(*target, this->mainView, this->MousePosGridI);
-
+   // this->levels->render(this->renderTexture, this->mainView, this->MousePosGridI, &this->core_shader); 
+    std::cout << "rendering tilemap EditorState | 834" << std::endl;
+    this->Tilemap->render(*target, this->mainView, this->MousePosGridI);
     this->renderTexture.setView(this->renderTexture.getDefaultView());
     //Buttons Camera
     this->window->setView(this->window->getDefaultView());

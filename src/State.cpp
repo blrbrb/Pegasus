@@ -12,7 +12,7 @@
 
 State::State(StateData* state_data) :state_ID(0)  {
     
-
+  
     if (state_data != nullptr) {
         this->state_data = state_data;
         std::cout << "state data working as normal" << std::endl; 
@@ -30,7 +30,7 @@ State::State(StateData* state_data) :state_ID(0)  {
     this->keyTimeMax = 2.3f;
     this->gridSize = *state_data->gridSize;
    
-   
+     std::cout << this->state_data->window->getSize().x;
      
 }
 

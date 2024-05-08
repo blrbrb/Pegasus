@@ -8,10 +8,10 @@
 #
 #include "include/EditorModes.hpp"
 
-EditorModes::EditorModes(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata, Levels* levels) : statedata(statedata), tilemap(tilemap), editorstatedata(editorstatedata), levels(levels)
+EditorModes::EditorModes(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata) : statedata(statedata), tilemap(tilemap)
 {
     
-    
+  
 
 }
 

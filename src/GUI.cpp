@@ -229,9 +229,9 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font* font,
     this->text.setFillColor(sf::Color::White);
     this->text.setCharacterSize(character_size);
 
-
-     std::cout << this->rectangle->getPosition().x << std::endl; 
-     //this->text.setPosition(this->rectangle->getGlobalBounds().top, this->rectangle->getGlobalBounds().width)
+     //debug
+     //std::cout << this->rectangle->getPosition().x << std::endl; 
+    
     this->text.setPosition(this->rectangle->getPosition().x + this->rectangle->getPosition().x / 2.f- this->rectangle->getPosition().x / 2.f, this->rectangle->getPosition().y + this->rectangle->getSize().y / 2.f );
 }
 
@@ -246,8 +246,8 @@ GUI::Button::Button(float x, float y, float width, float height, short unsigned 
     this->rectangle = new GUI::GradientElement(width, height, x, y);
     this->text.setFillColor(sf::Color::White); 
     this->text.setScale(sf::Vector2f(2, 2));
-
-    std::cout << this->rectangle->getPosition().x << std::endl;
+    //debug
+    //std::cout << this->rectangle->getPosition().x << std::endl;
     this->text.setPosition(this->rectangle->getPosition().x + this->rectangle->getPosition().x / 2.f + 20.f - this->rectangle->getPosition().x / 2.f, this->rectangle->getPosition().y + this->rectangle->getSize().y / 2.f - 20.f);
 }
 
@@ -394,23 +394,6 @@ void GUI::Button::load_from_header()
     this->clicked.loadFromImage(this->active_loader); 
 
 }
-
-const unsigned short &GUI::Button::getID() const
-{
-    return this->ID;
-}
-
-
-void GUI::Button::setID(const unsigned short id)
-{
-    this->ID = id;
-}
-
-
-
-
-
-
 
 /*END BUTTON*/
 
@@ -607,38 +590,12 @@ this->textureRect.width = gridSize.x;
 this->textureRect.height = gridSize.y;
 this->hidden = false;
 
-this->hide = new GUI::Button(x, y, gridSize.x, gridSize.y,9);
+this->hide = new GUI::Button(x, y, gridSize.x, gridSize.y);
 
-std::cout << this->bounds.getGlobalBounds().width << std::endl;
-
-if (this->using_imgui)
-{
-    int count = 0;
-    for (auto& p : std::filesystem::recursive_directory_iterator("Resources/GUI/Icons/guitile"))
-    {
-        if (p.path().extension() == ".png") {
-
-            count++;
-            std::cout << p.path() << std::endl;
-            std::cout << p.path().filename() << std::endl;
-
-            std::string path = p.path().string();
+//debug
+//std::cout << this->bounds.getGlobalBounds().width << std::endl;
 
 
-            std::cout << "Resources/GUI/Icons/guitile/" + p.path().filename().string() << std::endl;
-
-            //do not use emplace_back, we need a temporary object with the size of an empty sf::Texture
-            this->guiTextures.push_back(sf::Texture());
-            this->guiTextures[count - 1].loadFromFile("Resources/GUI/Icons/guitile/" + p.path().filename().string());
-
-
-
-        }
-
-
-    }
-    this->hide = nullptr;
-}
 
 
 }
@@ -662,7 +619,7 @@ void GUI::TextureSelector::update(const sf::Vector2i& MousePosWindow, const floa
 
         this->hide->update((MousePosWindow));
 
-        //ImGui::Image(this->sheet);    
+     
 
 
 
@@ -735,8 +692,8 @@ void GUI::TextureSelector::render(sf::RenderTarget &target)
         if(this->active)
            target.draw(this->selector);
     }
-    if(!this->using_imgui)
-     this->hide->render(target);
+
+    this->hide->render(target);
    
 }
 
@@ -1005,7 +962,7 @@ GUI::GradientElement::GradientElement(const float width, const float height, con
         this->_core.setPosition(sf::Vector2f(x,y)); 
         this->_core.setSize(sf::Vector2f(width, height));
       
-       std::cout << "width= " << width << " " << "height= " << height << " " << "x= " << x << " " << "y= " << y << std::endl;
+       
        this->initVertexArray(sf::Vector2f(width, height), sf::Vector2f(x,y));
        
 }
@@ -1020,10 +977,9 @@ void GUI::GradientElement::initVertexArray(sf::Vector2f size, sf::Vector2f posit
     this->_core.setSize(size); 
     this->_core.setPosition(position); 
 
-
-    std::cout << "left= " << position.x << std::endl << "top= " << position.y << std::endl;
-    //size = bottom right corner
-    std::cout << "width= " << size.x << std::endl << "height= " << size.y << std::endl;
+    //debug
+    //std::cout << "left= " << position.x << std::endl << "top= " << position.y << std::endl;
+    //std::cout << "width= " << size.x << std::endl << "height= " << size.y << std::endl;
     
     this->geom = sf::VertexArray(sf::Quads, 4);
 
@@ -1032,24 +988,7 @@ void GUI::GradientElement::initVertexArray(sf::Vector2f size, sf::Vector2f posit
     this->geom[1].position = this->_core.getPoint(1); 
     this->geom[2].position = this->_core.getPoint(2);
     this->geom[3].position = this->_core.getPoint(3);
-    
-   // if(std::size_t & this->geom.getVertexCount()) 
-   // {
-        //c_assert("you fucking retard "); 
-        //this->colorA = nullptr; 
-        //this->
-   // } 
 
-
-    //push all points to the render buffer
-   
-
-    //vertical gradient is  AABB or BBAA 
-    //horizontal gradient is ABBA or BAAB
-    //this->geom[0].color = sf::Color(191, 64, 64,255); 
-    //this->geom[1].color = sf::Color(191, 64, 64,255); 
-    //this->geom[2].color = sf::Color(246, 2, 0,255); 
-    //this->geom[3].color = sf::Color(246, 2, 0,255); 
 
     return; 
 
@@ -1108,4 +1047,193 @@ void GUI::GradientElement::draw(sf::RenderTarget &target, sf::RenderStates state
 {
     
     target.draw(this->geom, states);
+}
+
+GUI::RoundedRectangleShape::RoundedRectangleShape(const sf::Vector2f& size, float radius, unsigned int cornerPointCount)
+{
+    this->size = size;
+    this->radius = radius;
+    this->cornerpointCount = cornerPointCount;
+    update();
+}
+
+////////////////////////////////////////////////////////////
+void GUI::RoundedRectangleShape::setSize(const sf::Vector2f& size)
+{
+    this->size = size;
+    update();
+}
+
+////////////////////////////////////////////////////////////
+const sf::Vector2f& GUI::RoundedRectangleShape::getSize() const
+{
+    return this->size;
+}
+
+////////////////////////////////////////////////////////////
+void GUI::RoundedRectangleShape::setCornersRadius(float radius)
+{
+    this->radius = radius;
+    update();
+}
+
+////////////////////////////////////////////////////////////
+float GUI::RoundedRectangleShape::getCornersRadius() const
+{
+    return this->radius;
+}
+
+////////////////////////////////////////////////////////////
+void GUI::RoundedRectangleShape::setCornerPointCount(unsigned int count)
+{
+    this->cornerpointCount = count;
+    update();
+}
+
+////////////////////////////////////////////////////////////
+std::size_t GUI::RoundedRectangleShape::getPointCount() const
+{
+    return this->cornerpointCount*4;
+}
+
+////////////////////////////////////////////////////////////
+sf::Vector2f GUI::RoundedRectangleShape::getPoint(std::size_t index) const
+{
+    if(index >= this->cornerpointCount*4)
+        return sf::Vector2f(0,0);
+
+    float deltaAngle = 90.0f/(this->cornerpointCount-1);
+    sf::Vector2f center;
+    unsigned int centerIndex = index/this->cornerpointCount;
+    static const float pi = 3.141592654f;
+    
+    switch(centerIndex)
+    {
+        case 0: center.x = this->size.x - this->radius; center.y = this->radius; break;
+        case 1: center.x = this->radius; center.y = this->radius; break;
+        case 2: center.x = this->radius; center.y = this->size.y - this->radius; break;
+        case 3: center.x = this->size.x - this->radius; center.y = this->size.y - this->radius; break;
+    }
+
+    return sf::Vector2f(this->radius*cos(deltaAngle*(index-centerIndex)*pi/180)+center.x,
+                        -this->radius*sin(deltaAngle*(index-centerIndex)*pi/180)+center.y);
+}
+
+
+GUI::PillButton::PillButton(float x, float y, float width, float height, unsigned cornerCount)
+{
+    this->b_geom.setSize(sf::Vector2f(width,height)); 
+    this->b_geom.setPosition(sf::Vector2f(x,y));
+    this->b_geom.setFillColor(sf::Color(255, 190,111));
+}
+
+GUI::PillButton::PillButton(float x, float y, float width, float height, unsigned cornerCount, sf::Font &font, const std::string &text)
+{
+    this->b_geom.setSize(sf::Vector2f(width,height)); 
+    this->b_geom.setPosition(sf::Vector2f(x,y));
+    this->b_geom.setFillColor(sf::Color(255, 190,111));
+
+    this->font = &font; 
+    this->text.setString(text);
+
+    this->text.setPosition(sf::Vector2f(this->b_geom.getPosition().x + this->b_geom.getPosition().x / 2.f + 20.f - this->b_geom.getPosition().x / 2.f, this->b_geom.getPosition().y + this->b_geom.getSize().y / 2.f - 20.f));
+}
+
+GUI::PillButton::~PillButton()
+{
+}
+
+void GUI::PillButton::update(const sf::Vector2i &Mousepos)
+{
+    this->b_state= IDLE_BUTTON; 
+
+    if (this->b_geom.getGlobalBounds().contains(static_cast<sf::Vector2f>(Mousepos)))
+    {
+
+        this->b_state = HOVER;
+      
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+          this->b_state = PRESSED;
+          this->pressed = true;
+       
+        }
+    }
+        
+    switch (this->b_state) {
+
+            
+        case IDLE_BUTTON: //the Button is not being interacted with by the user
+            
+            //this->b_geom.setTexture(&idle);
+            
+            //if the button is not given a texture with one of the overload constructors, give it a fill color
+            
+            //if(this->b_geom.getTexture() == nullptr)
+            //{
+                //this->b_geom.setFillColor(this->idleColor);
+                this->text.setFillColor(sf::Color::White); 
+                this->b_geom.setFillColor(sf::Color(246, 2, 0));
+              //  this->b_geom.setOutlineColor(this->outline_idleColor);
+            //}
+            
+            break;
+            
+        case HOVER: // the user's cursor is hovering over the button
+            
+            //this->b_geom.setTexture(&hover_texture);
+            
+            //if (this->b_geom.getTexture() == nullptr)
+            //{
+                //this->b_geom.setFillColor(this->hoverColor);
+                this->text.setFillColor(sf::Color::White);
+                this->b_geom.setFillColor(sf::Color(200, 10, 10, 255));
+              //  this->b_geom.setOutlineColor(this->outline_hoverColor);
+            //}
+            
+            break;
+            
+        case PRESSED: // the button has been interacted with
+           
+            //this->b_geom.setTexture(&clicked);
+             
+            //if (this->b_geom.getTexture() == nullptr)
+            //{
+                //this->b_geom.setFillColor(this->activeColor);
+               
+                 this->text.setFillColor(sf::Color::White);
+                 this->b_geom.setFillColor(sf::Color(246, 64, 64));
+                //this->b_geom.setOutlineColor(this->outline_activeColor);
+            //}
+            
+            break;
+            
+        default:
+            //will appear if something is wrong with the initalizaiton of the button texture.
+           // this->b_geom.setFillColor(sf::Color::Red);
+           
+            this->b_geom.setFillColor(sf::Color(246, 64, 64));
+            //this->b_geom.setOutlineColor(sf::Color::Blue);
+          std::cout << "ERROR CODE BUTTON:210 || GUI::BUTTON::UPDATE || UNABLE TO LOAD BUTTON FROM TEXTURE FILE CHECK BUTTON CONSTRUCTOR" << std::endl;
+            break;
+    }
+}
+
+void GUI::PillButton::render(sf::RenderTarget &target)
+{
+    target.draw(this->b_geom);
+}
+
+void GUI::PillButton::setCharacterSize(const unsigned &characterSize)
+{ 
+ 
+        this->text.setCharacterSize(characterSize);
+}
+
+const bool &GUI::PillButton::isPressed()
+{
+   if(this->b_state == PRESSED)
+        return true;
+
+    return false;
 }

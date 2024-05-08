@@ -11,7 +11,7 @@
 #include "include/imgui.h"
 #include "include/imgui-SFML.h"
  
-EnemyEditorMode::EnemyEditorMode(StateData *statedata, TileMap *tilemap, EditorStateData *editorstatedata, Levels* levels) : EditorModes(statedata, tilemap, editorstatedata, levels)
+EnemyEditorMode::EnemyEditorMode(StateData *statedata, TileMap *tilemap, EditorStateData *editorstatedata) : EditorModes(statedata, tilemap, editorstatedata)
 {
     this->initvariables();
     this->inittext();
@@ -190,7 +190,7 @@ void EnemyEditorMode::updateGUI(const float& dt)
     this->select_Rect.setPosition(this->editorstatedata->mouseposGridI->x * this->statedata->gridSize->x, this->editorstatedata->mouseposGridI->y * this->statedata->gridSize->y);
 
 
-    this->enemy_texture.loadFromFile("Resources/GUI/Icons/Blrb_Icon.png"); 
+    //this->enemy_texture.loadFromFile("Resources/GUI/Icons/Blrb_Icon.png"); 
 
     std::stringstream cursor_text;
     cursor_text << "MouseX: " << this->editorstatedata->mousePosView->x << "\n"
