@@ -15,7 +15,9 @@
 
 //enum TileTypes {DEFAULT=0, UNPASSABLE, OBJECT, SPAWNER, LIGHT, NORMAL};
 static const char * EnumStrings[] = { "Default", "Unpassable", "Object", "Spawner", "Light", "Stop", "YOU FOOL", "NO" };
-
+/**
+ * @enum Types of in game tile. 
+*/
  enum TileTypes : int {
     DEFAULT=0,
     UNPASSABLE,
@@ -25,6 +27,11 @@ static const char * EnumStrings[] = { "Default", "Unpassable", "Object", "Spawne
     NORMAL
 };
 
+/**
+ * @brief  Base abstract tile object. Contains pure virtual method definitions for rendering, collisions, and basic on screen transformations 
+ * @class Tile() 
+ * @
+ */
 class Tile
 {
 private:

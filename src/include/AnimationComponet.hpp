@@ -16,12 +16,17 @@
 /**
     
  @brief When applied to an object, can be used to stitch a spritesheet into a working animation
- 
+ @class AnimationComponent
  
  */
 class AnimationComponet {
     
-private:
+private: 
+    /**
+     * @struct Animation 
+     * @brief represents an ordered sequence of sf::IntRects
+     * 
+    */
     class Animation {
 
 
@@ -127,7 +132,9 @@ private:
             return this->done;
         }
 
-
+        /** 
+         * @brief reset the animation timer, and set the current texture rectangle back to the start 
+        */
         void reset()
         {
             this->timer = 0.f;
@@ -147,22 +154,30 @@ private:
         
         
       
-                                                                                                                                                                                                                                             
+        /** 
+         * @brief has the animation finished playing? 
+         * @returns `bool` wether or not the animation sequence has reached the last texture rectangle
+         * */                                                                                                                                                                                                                                      
         const bool& getDone() const
         {
             return this->done;
 
         }
-
+       /** 
+        * @brief get the delta-time for the  animation
+        * @return the number of seconds / miliseconds that have passed since the beginning of the animation
+       */
         const float& getTimer() const 
         {
             return this->animationtimer;
         }
-
+        /** 
+         * @brief get the texture rectangle the animation begins with 
+         * @returns `sf::IntRect` the first texture rectangle in the animation sequence 
+        */
         const int& getStartRectLeft() const
         {
             return this->startRect.left;
-
         }
         const int& getStartRectTop() const 
         {

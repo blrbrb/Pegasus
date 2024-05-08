@@ -12,31 +12,36 @@
 
 /* BEGIN BUTTON */
 
+/**
+ * @brief initialize a text button with set of colors for the button's container, and text and each of their states 
+ * 
+ * 
+ * @namespace GUI 
+ * @class Button
+ * @addtogroup GUI 
+ * 
+ * 
+ * @param x The x on-screen coordinate of the button's position. 
+ * @param y The y on-screen coordinate of the button's position. 
+ * @param width The horizontal size of the button 
+ * @param height The vertical size of the button
+ * @param font Pointer to an`sf::Font` object. 
+ * @details This font is used to set the text style for the button's text content. It defines
+ * the font family, size, color, and other text properties for the displayed
+ * @param text string thatrepresents the text to be rendered on to the button.
+ * @details  In the provided code snippet, this text is being set to the `sf::Text` object associated with the button. The text will be displayed using
+ * @param character_size unsigned int representing how large the text glyph will be rendered 
+ * @param idle_color The color to display on the button when the button is in it's idle state. 
+ * @details i.e., when the button is not being interacted with by the user.
+ * @param hover_color The cololr to display on the button when the button is in it's hover state. 
+ * @details i.e when it is being hovered over by a user's controller / pointer / mouse, but not being directly interacted with.
+ * @param active_color the color to display on the button when the button is in it's active state.
+ * @details i.e  when it is clicked or activated by the user.
+ * @param ID The unique identifier for the button. It is used to distinguish this button from other buttons in the GUI.
+ */
 GUI::Button::Button(float x, float y, float width, float height, sf::Font *font, const std::string& text, unsigned character_size, sf::Color idle_color, sf::Color hover_color, sf::Color active_color, sf::Color text_idle_color, sf::Color text_hover_color, sf::Color text_active_color, sf::Color outline_active_color, sf::Color outline_idle_color, sf::Color outline_hover_color, short unsigned ID) :  hover(false), pressed(false), resources_from_header(false)
 {
-    /*!
-     
-     @brief Default Constructor for a GUI button element
-        
-     @param float X
-     @param float Y
-     @param float width
-     @param float height
-     @param sf::Font *font
-     @param std::string text
-     @param unsigned character_size
-     @param sf::Color idle_color
-     @param sf::Color hover_color
-     @param sf::Color active_color
-     @param sf::Color text_idle_color
-     @param sf::Color text_hover_color
-     @param sf::Color text_active_color
-     @param sf::Color outline_activecolor
-     @param sf::Color outline_idlecolor
-     @param sf::Color outline_hover_color
-     @param short  unsigned ID
-     
-     */
+    
     this->ID = ID;
     this->rectangle = new GUI::GradientElement(width, height, x, y);
     this->rectangle->setSize(sf::Vector2f(x,y));
@@ -82,6 +87,33 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
 }
 
 
+/**
+ * @brief initialize a text button using a specified set of textures. 
+ * 
+ * @overload GUI::Button() 
+ * @namespace GUI 
+ * @class Button
+ * @addtogroup GUI 
+ * 
+ * 
+ * @param x The x on-screen coordinate of the button's position. 
+ * @param y The y on-screen coordinate of the button's position. 
+ * @param width The horizontal size of the button 
+ * @param height The vertical size of the button
+ * @param font Pointer to an`sf::Font` object. 
+ * @details This font is used to set the text style for the button's text content. It defines
+ * the font family, size, color, and other text properties for the displayed
+ * @param text string thatrepresents the text to be rendered on to the button.
+ * @details  In the provided code snippet, this text is being set to the `sf::Text` object associated with the button. The text will be displayed using
+ * @param character_size unsigned int representing how large the text glyph will be rendered 
+ * @param idle_texture The file path to a texture that will be displayed on the button when it is in it's idle state 
+ * @details i.e., when the button is not being interacted with by the user.
+ * @param active_texture The file path to a texture that will be displayed on the button when it is in it's active state.
+ * @details i.e  when it is clicked or activated by the user.
+ * @param hover_texture The file path to a texture that will be displayed on the button when it is in it's hover state. 
+ * @details i.e when it is being hovered over by a user's controller / pointer / mouse, but not being directly interacted with.
+ * @param ID The unique identifier for the button. It is used to distinguish this button from other buttons in the GUI.
+ */
 GUI::Button::Button(float x, float y, float width, float height, sf::Font *font, const std::string& text, unsigned int character_size, const std::string &idle_texture, const std::string &active_texture, const std::string &hover_texture, short unsigned ID) : hover(false), pressed(false), resources_from_header(false)
 {
     //const int x = 1;
@@ -139,30 +171,31 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font *font,
     
 }
 
+/**
+ * @brief initalize a GUI::Button() with a specified set of textures. 
+ * 
+ * @overload GUI::Button() 
+ * @namespace GUI 
+ * @class Button
+ * @addtogroup GUI 
+ * 
+ * 
+ * @param x The x on-screen coordinate of the button's position. 
+ * @param y The y on-screen coordinate of the button's position. 
+ * @param width The horizontal size of the button 
+ * @param height The vertical size of the button
+ * @param idle_texture The file path to a texture that will be displayed on the button when it is in it's idle state 
+ * @details i.e., when the button is not being interacted with by the user. 
+ * @param active_texture The file path to a texture that will be displayed on the button when it is in it's active state.
+ * @details i.e  when it is clicked or activated by the user.
+ * @param hover_texture The file path to a texture that will be displayed on the button when it is in it's hover state. 
+ * @details i.e when it is being hovered over by a user's controller / pointer / mouse, but not being directly interacted with.
+ * @param ID The unique identifier for the button. It is used to distinguish this button from other buttons in the GUI.
+ */
 GUI::Button::Button(float x, float y, float width, float height, const std::string &idle_texture, const std::string &active_texture, const std::string &hover_texture, short unsigned ID) : font(nullptr), hover(false), pressed(false), resources_from_header(false)
 {
   
-    
-    /*!
-    
-    @brief Simplified Constructor for the GUI Button Element.
-     
-    @discussion Unlike the full constructor, this version initalizes the button rectangle with a texture rather than with a color and also does not include the option to have text.
-     Useful for GUI elements that require a texture
-       
-    @param float X
-    @param float Y
-    @param float width
-    @param float height
-  
-    @param const_std::string Idle_texture
-      @param const_std::string active_texture
-      @param const_std::string hover_texture
-     
-    
-    @param short  unsigned ID
-    
-    */
+
     this->rectangle = new GUI::GradientElement(width, height, x, y);
     this->rectangle->setSize(sf::Vector2f(x,y));
 
@@ -209,6 +242,26 @@ GUI::Button::Button(float x, float y, float width, float height, const std::stri
 }
 
 
+/**
+ * @brief initalizes a GUI::Button() with text and a specified font 
+ * @overload GUI::Button()
+ * 
+ * @namespace GUI 
+ * @class Button 
+ * 
+ * 
+ * @param x The x on-screen coordinate of the button's position. 
+ * @param y The y on-screen coordinate of the button's position. 
+ * @param width The horizontal size of the button 
+ * @param height The vertical size of the button
+ * @param font Pointer to an`sf::Font` object. 
+ * @details This font is used to set the text style for the button's text content. It defines
+ * the font family, size, color, and other text properties for the displayed
+ * @param text string thatrepresents the text to be rendered on to the button.
+ * @details  In the provided code snippet, this text is being set to the `sf::Text` object associated with the button. The text will be displayed using
+ * @param character_size unsigned int representing how large the text glyph will be rendered 
+ * @param ID The unique identifier for the button. It is used to distinguish this button from other buttons in the GUI.
+ */
 GUI::Button::Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned int character_size, short unsigned ID) : hover(false), pressed(false), resources_from_header(true)
 {
    
@@ -235,6 +288,20 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font* font,
     this->text.setPosition(this->rectangle->getPosition().x + this->rectangle->getPosition().x / 2.f- this->rectangle->getPosition().x / 2.f, this->rectangle->getPosition().y + this->rectangle->getSize().y / 2.f );
 }
 
+/**
+ * @brief Initializes a GUI button with specified parameters and default textures. Accepting only coordinates, and size parameters
+ * @namespace GUI 
+ * @class Button
+ * @name Button 
+ * @overload GUI::Button()
+ * @addtogroup GUI
+ * @param x The x on-screen coordinate of the button's position. 
+ * @param y The y on-screen coordinate of the button's position. 
+ * @param width The horizontal size of the button 
+ * @param height The vertical size of the button
+ * @param ID The unique identifier for the button. It is used to distinguish this button from
+ * other buttons in the GUI.
+ */
 GUI::Button::Button(float x, float y, float width, float height, short unsigned ID) :font(nullptr), hover(false), pressed(false), resources_from_header(true)
 {
   
@@ -368,11 +435,21 @@ void GUI::Button::setText(const std::string &button_text)
     
 }
 
+/**
+ * @brief resize the button
+ * 
+ * @param newSize an `sf::Vector2f` object representing the new size that the
+ * button should be resized to.
+ */
 void GUI::Button::resize(sf::Vector2f newSize)
 {
     this->rectangle->setSize(newSize);
 }
-
+/**
+ * @brief reposition the button
+ * 
+ * @param newSize an `sf::Vector2f` object representing the new position to place the button
+ */
 void GUI::Button::reposition(sf::Vector2f newPosition)
 {
     this->rectangle->setPosition(newPosition);
@@ -835,6 +912,16 @@ unsigned int GUI::calcCharSize(const sf::VideoMode& vm, const unsigned int &modi
 const sf::Vector2f& GUI::pixelPercent(sf::Vector2f percent, const sf::VideoMode &resolution) {
     return sf::Vector2f(std::floor(static_cast<float>(resolution.width) * (percent.x / 100.f)), std::floor(static_cast<float>(resolution.height) / (percent.y / 100.f)));
 }
+/**
+ * @brief calculates the pixel value corresponding to a given percentage of the
+ * screen width.
+ * 
+ * @param percent a float value representing a percentage value that you
+ * want to convert to pixels based on the width of the `sf::VideoMode` object `vm`.
+ * @param vm sf::VideoMode() with the width and height of a window in pixels. 
+ * 
+ * @return a percentage of the width of the window's resolution.
+ */
 float GUI::pixelpercentX(const float &percent, const sf::VideoMode& vm)
 {
 
@@ -842,6 +929,16 @@ float GUI::pixelpercentX(const float &percent, const sf::VideoMode& vm)
     return std::floor(static_cast<float>(vm.width) * (percent / 100.f));
 }
 
+/**
+ * @brief calculates the pixel value corresponding to a given percentage of the
+ * screen height.
+ * 
+ * @param percent a float value representing a percentage value that you
+ * want to convert to pixels based on the height of the `sf::VideoMode()` object `vm`.
+ * @param vm sf::VideoMode() with the width and height of a window in pixels. 
+ * 
+ * @return a percentage of the height of the window's resolution.
+ */
 float GUI::pixelpercentY(const float &percent, const sf::VideoMode& vm)
 {
   
@@ -864,6 +961,23 @@ std::string GUI::convertToString(char* a, int size)
 
 
 
+/**
+ * @brief  initialize a progress bar with a default color and text 
+ * 
+ * @namespace GUI 
+ * @class ProgressBar 
+ * @addtogroup GUI 
+ * 
+ * @param x The x on-screen coordinate of the button's position. 
+ * @param y The y on-screen coordinate of the button's position. 
+ * @param width The horizontal size of the button 
+ * @param height The vertical size of the button
+ * @param vm sf::VideoMode() the current resolution of the window 
+ * @param inner_color `sf::Color()` to fill the progress bar  with 
+ * @param charSize size of the text glyph 
+ * @param font pointer to an `sf::Font()`, the font to apply to the text
+ * 
+ */
 GUI::ProgressBar::ProgressBar(float x, float y, float width, float height,sf::VideoMode& vm, sf::Color inner_color, unsigned charSize, sf::Font* font) :MaxVal(0)
 {
     float _width = GUI::pixelpercentX(width, vm);
@@ -910,7 +1024,16 @@ void GUI::ProgressBar::update(const int &current_value, const int &max_value)
     this->text.setString(hpbarText);
 }
 
-
+/**
+ * @brief  render the progress bar to a specified sf::RenderTarget
+ * 
+ * @namespace GUI 
+ * @class ProgressBar 
+ * @addtogroup GUI 
+ * 
+ * @param target `sf::RenderTarget` reference to a suitable render surface
+ * 
+ */
 void GUI::ProgressBar::render(sf::RenderTarget& target)
 {
 
@@ -921,11 +1044,26 @@ void GUI::ProgressBar::render(sf::RenderTarget& target)
 }
 
 
+/**
+ * @brief get the width of the progress bar on screen 
+ * 
+ * @namespace GUI 
+ * @class ProgressBar 
+ * @addtogroup GUI 
+ * 
+ * @return A reference to a constant float value representing the width of the progress bar.
+ */
 const float & GUI::ProgressBar::getWidth() const
 {
     return this->Max_width;
 }
 
+/**
+ * @brief get the height of the progress bar on screen
+ * @namespace GUI 
+ * @class ProgressBar 
+ * @return A reference to a constant float value representing the current size of the progress bar's (filled) interior 
+ */
 const sf::Vector2f & GUI::ProgressBar::getSize()
 {
     return this->Interior.getSize(); 

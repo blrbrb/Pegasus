@@ -22,9 +22,29 @@ Tile::Tile()
 }
 
                                                                                         
+/**
+ * @brief initializes a tile object with a specified type, position, texture, collision
+ * 
+ * @param type The type of tile to construct
+ * @param x the x-coordinate position of the tile on the map grid. 
+ * @details It is multiplied by the `gridsizeF.x` to determine the actual pixel position
+ * of the tile on the screen.
+ * @param y the y-coordinate position of the tile on the map grid. 
+ * @details It is multiplied by the `gridsizeF.y` to determine the actual pixel position
+ * of the tile on the screen.
+ * @param gridsizeF the size of each grid cell in the map.
+ * @details used to calculate the position of the tile  based on its grid coordinates `(x, y)`.
+ * @param texture set the texture of the tile's sprite
+ * @details (`this->rect.setTexture(texture)`). The texture contains the image data that will be displayed on
+ * the tile in the game
+ * @param texturerect the rectangular area of the tile sheet that should be displayed on the tile.
+ * @param collisionEnabled flag that indicates whether collision is enabled for this particular tile. 
+ * @details If `collisionEnabled` is set to `true`, it means that the tile will participate in collision detection and response within the game world. If set to `false
+ */
+
 Tile::Tile(short type, float x, float y, sf::Vector2f gridsizeF, sf::Texture& texture, const sf::IntRect& texturerect, bool collisionEnabled)
 {
-   //Tile constructor that needs to be called if there is a tile object/object tile on the map.
+   
     this->type = type;
    
     this->object_type = object_type; 
@@ -42,10 +62,7 @@ Tile::Tile(short type, float x, float y, sf::Vector2f gridsizeF, sf::Texture& te
     
     
   
-   // this->object_type = object; 
-
-    //this->hasobject = has_object;
-    //this->type = type;
+  
 }
 
 Tile::Tile(short type, float x, float y, sf::Vector2f gridsizeF, sf::Texture& texture, bool collision_enabled)

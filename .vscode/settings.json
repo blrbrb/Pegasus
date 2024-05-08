@@ -92,5 +92,12 @@
         "cinttypes": "cpp",
         "typeindex": "cpp",
         "typeinfo": "cpp"
-    }
+    },
+    "docwriter.style": "Doxygen",
+    "docwriter.progress.trackTypes": true,
+    "docwriter.progress.trackClasses": true,
+    "docwriter.custom.author": "brlbrb / elire",
+    "docwriter.hotkey.mac": "⌥ + .",
+    "docwriter.hotkey.windows": "Alt + .",
+    "docwriter.custom.template": "\n@brief {{summary}}\n{{#params}}\n@param {{name}} ({{type}}) - {{paramExplained}}\n{{/params}}\n{{#returnExplained}}\n@returns {{.}}\n{{/returnExplained}}\n"
 }
