@@ -8,20 +8,17 @@
 
 #ifndef Enemies_Include_h
 
-//All Enemy child classes
-//include this file in any place where enemy objects will be used :)
-
-//Core
+// All Enemy child classes
+// include this file in any place where enemy objects will be used :)
+#include <cstdint>
+// Core
 #include "Enemy.hpp"
 #include "EnemySystem.hpp"
 
-
-//Blrb
-#include "Blrb.hpp"
+// Blrb
 #include "Blerb.hpp"
-
+#include "Blrb.hpp"
 
 #define Enemies_Include_h
-
 
 #endif /* Enemies_Include_h */

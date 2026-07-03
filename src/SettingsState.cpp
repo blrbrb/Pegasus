@@ -4,204 +4,154 @@
 //
 //  Created by Eli Reynolds on 2/5/20.
 //  Copyright © 2020 Eli Reynolds. Apache License .
-// 
+//
 
+#include <SFML/Window/WindowEnums.hpp>
 #
 #include "include/SettingsState.hpp"
 
-
-//Private Functions
-
+// Private Functions
 
 void SettingsState::initvariables()
 {
-    //sthis->current_item = NULL;
+    // sthis->current_item = NULL;
     this->selection_temp = "";
     this->current_item = "";
-    std::vector video_modes = sf::VideoMode::getFullscreenModes(); 
-    for (auto& i : video_modes) 
-    {
-        //std::cout << std::to_string(i.width) + 'x' + std::to_string(i.height) << std::endl;
-        this->modes[std::to_string(i.width) + 'x' + std::to_string(i.height)] = i;
-    
+    std::vector video_modes = sf::VideoMode::getFullscreenModes();
+    for (auto& i : video_modes) {
+        // std::cout << std::to_string(i.width) + 'x' + std::to_string(i.height) << std::endl;
+        this->modes[std::to_string(i.size.x) + 'x' + std::to_string(i.size.y)] = i;
     }
 
-    //this->music_volume = 0.f;
+    // this->music_volume = 0.f;
 }
 
 void SettingsState::initview()
 {
 
-    this->view.setSize(sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.width)); 
-
-
+    this->view.setSize(sf::Vector2f(this->state_data->gfxsettings->resolution.size.x, this->state_data->gfxsettings->resolution.size.x));
 }
 
+void SettingsState::initkeybinds()
+{
 
-void SettingsState::initkeybinds() {
-  
     std::ifstream ifs("SettingsState_Keys.ini");
 
-    if (ifs.is_open())
-    {
+    if (ifs.is_open()) {
         std::string key = "";
         std::string key2 = "";
 
-        while (ifs >> key >> key2)
-        {
+        while (ifs >> key >> key2) {
             this->keyBinds[key] = this->supportedKeys->at(key2);
         }
     }
 
     ifs.close();
-    
- }
+}
 
-void SettingsState::initGUI() {
-    
+void SettingsState::initGUI()
+{
+
     sf::VideoMode& vm = this->state_data->gfxsettings->resolution;
-    
-  
-    this->buttons["RESOLUTION"] = new GUI::Button(GUI::pixelpercentX(20.f,vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(5.f, vm), GUI::pixelpercentY(5.f, vm), &this->font, "Test Button", GUI::calcCharSize(vm), 12);
 
+    this->buttons["RESOLUTION"] = new GUI::Button(GUI::pixelpercentX(20.f, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(5.f, vm), GUI::pixelpercentY(5.f, vm), &this->font, "Test Button", GUI::calcCharSize(vm), 12);
 
-    
-    this->background.setSize(sf::Vector2f(static_cast<float>(vm.width), static_cast<float>(vm.height)));
-    
+    this->background.setSize(sf::Vector2f(static_cast<float>(vm.size.x), static_cast<float>(vm.size.y)));
 
     this->background.setTexture(&this->backgroundTexture);
-    
-   
 
     std::vector<std::string> modes_str;
-    
-    for (auto &i : this->modes)
-    {
-        std::cout << i.second.width << "x" << i.second.height << std::endl; 
-        modes_str.push_back(static_cast<std::string>(std::to_string(i.second.width) + 'x' + std::to_string(i.second.height)));
-        
-        
-    }
-   
 
-    
+    for (auto& i : this->modes) {
+        std::cout << i.second.size.x << "x" << i.second.size.y << std::endl;
+        modes_str.push_back(static_cast<std::string>(std::to_string(i.second.size.x) + 'x' + std::to_string(i.second.size.y)));
+    }
 }
 
 void SettingsState::resetGUI()
 {
- 
 }
-
-
-
 
 void SettingsState::initFonts()
 {
-    
-    
-    if (!this->font.loadFromFile("Resources/Assets/Fonts/OpenSans-Variable.ttf"))
-    {
-        //LOG(WARNING) << "unable to load default font"; 
-        //LOG(FATAL) << "throwing runtime exception on line 104";
-        throw std::runtime_error("ERROR CODE 05: SettingsState::initFonts COULD NOT LOAD FONT FROM FILE");
-        
-    }
 
-    
+    if (!this->font.openFromFile("Resources/Assets/Fonts/OpenSans-Variable.ttf")) {
+        // LOG(WARNING) << "unable to load default font";
+        // LOG(FATAL) << "throwing runtime exception on line 104";
+        throw std::runtime_error("ERROR CODE 05: SettingsState::initFonts COULD NOT LOAD FONT FROM FILE");
+    }
 }
 
-
-SettingsState::SettingsState(StateData* state_data) :  State(state_data)
+SettingsState::SettingsState(StateData* state_data)
+    : State(state_data)
 {
-    try
-    {
+    try {
         this->initvariables();
         this->initFonts();
         this->initkeybinds();
         this->initGUI();
-      
+
     }
-    
-    catch (std::runtime_error& e)
-    {
+
+    catch (std::runtime_error& e) {
         std::cout << e.what() << std::endl;
-        
     }
 }
 
 SettingsState::~SettingsState()
 {
     auto it2 = dropdownlists.begin();
-       for (it2 = dropdownlists.begin(); it2 != this->dropdownlists.end(); ++it2)
-      
-       {
-           delete it2->second;
-           
-       }
+    for (it2 = dropdownlists.begin(); it2 != this->dropdownlists.end(); ++it2)
+
+    {
+        delete it2->second;
+    }
 }
 
+// Functions
+void SettingsState::update(const float& dt)
+{
 
-
-//Functions 
-void SettingsState::update(const float& dt) {
-    
     this->updateView();
     this->updateInput(dt);
     this->updateMousePosition();
     this->updateGUI(dt);
-    
 }
 
 void SettingsState::updateInput(const float& dt)
 {
-
-    
-    
 }
 
-//Render Functions
+// Render Functions
 
-void SettingsState::render(sf::RenderTarget* target) {
-    
-   if (!target)
-       target = this->window;
+void SettingsState::render(sf::RenderTarget* target)
+{
 
-   target->setView(this->view);
-  // target->draw(this->background);
-   
+    if (!target)
+        target = this->window;
+
+    target->setView(this->view);
+    // target->draw(this->background);
+
     this->renderGUI(*target);
-
 }
-
-
-
 
 void SettingsState::renderGUI(sf::RenderTarget& target)
 {
-    
-    for (auto & it: this->buttons)
-    {
+
+    for (auto& it : this->buttons) {
         it.second->render(target);
     }
-   
 }
 
 void SettingsState::updateevents()
 {
-
-
-
-
-
-
 }
 
+void SettingsState::updateGUI(const float& dt)
+{
 
-
-
-void SettingsState::updateGUI(const float& dt) {
-    
-    //GUI element functionality
+    // GUI element functionality
     static char str0[128] = "Map.dat";
     static char str1[128] = "New Area";
     static int switchTabs;
@@ -209,114 +159,85 @@ void SettingsState::updateGUI(const float& dt) {
     static bool style_titlebar = false;
     static bool style_fullscreen = false;
     static bool vertical_sync = false;
-    this->open = true; 
-   //bool is_selected = false; 
-     
+    this->open = true;
+    // bool is_selected = false;
 
     ImGui::SetNextWindowPos(ImVec2(0, 0));
 
-    ImGui::SetNextWindowSize(ImVec2(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height));
+    ImGui::SetNextWindowSize(ImVec2(this->state_data->gfxsettings->resolution.size.x, this->state_data->gfxsettings->resolution.size.y));
     ImGui::Begin("Settings", &this->open);
-        
-   
-    ImGui::Text("Resolution"); 
-    if (ImGui::BeginCombo("##Resolution", this->current_item))
-    {
-        for (auto & n: this->modes)
-        {
-          
-              
+
+    ImGui::Text("Resolution");
+    if (ImGui::BeginCombo("##Resolution", this->current_item)) {
+        for (auto& n : this->modes) {
+
             bool is_selected = (this->current_item == n.first.c_str());
             if (ImGui::Selectable(n.first.c_str(), is_selected))
                 this->selection_temp = n.first;
-                this->current_item = this->selection_temp.c_str();
-            if(is_selected)
-                     ImGui::SetItemDefaultFocus();
-           
+            this->current_item = this->selection_temp.c_str();
+            if (is_selected)
+                ImGui::SetItemDefaultFocus();
         }
         ImGui::EndCombo();
-    
     }
 
-    
-
-    if (ImGui::CollapsingHeader("Window options"))
-    {
-        if (ImGui::BeginTable("split", 3))
-        {
-            ImGui::SameLine(); 
-            ImGui::TableNextColumn(); ImGui::Checkbox("Bordered", &style_titlebar);
-            ImGui::TableNextColumn(); ImGui::Checkbox("Fullscreen", &this->state_data->gfxsettings->fullscreen);
-            ImGui::TableNextColumn(); ImGui::Checkbox("vertical sync", &vertical_sync);
+    if (ImGui::CollapsingHeader("Window options")) {
+        if (ImGui::BeginTable("split", 3)) {
+            ImGui::SameLine();
+            ImGui::TableNextColumn();
+            ImGui::Checkbox("Bordered", &style_titlebar);
+            ImGui::TableNextColumn();
+            ImGui::Checkbox("Fullscreen", &this->state_data->gfxsettings->fullscreen);
+            ImGui::TableNextColumn();
+            ImGui::Checkbox("vertical sync", &vertical_sync);
             ImGui::EndTable();
         }
-        
     }
-    
 
-    ImGui::Separator(); 
-   // ImGui::SliderFloat("Music Volume", &this->music_volume, 0.0f, 100.0f, "ratio = %.3");
-    //this->state_data->music->set_volume(this->music_volume); 
+    ImGui::Separator();
+    // ImGui::SliderFloat("Music Volume", &this->music_volume, 0.0f, 100.0f, "ratio = %.3");
+    // this->state_data->music->set_volume(this->music_volume);
 
-    
+    // ImGui::SetItemDefaultFocus();
 
-       
-        //ImGui::SetItemDefaultFocus();
-       
-        if (ImGui::Button("Apply Changes") && this->selection_temp != "")
-        {
-            std::cout << this->current_item << std::endl; 
-            this->state_data->gfxsettings->resolution = this->modes[this->selection_temp];
-            
-            ///Changes are stored as static bool within the update function. Changed values are passed on to the graphics settings object here.
-            ///changes are applied. The graphics settings are saved, and then the window is recreated. 
-         
-            this->state_data->gfxsettings->vsync = &vertical_sync;
-            this->state_data->gfxsettings->saveToFile("Config/Window.cfg");
-            this->state_data->gfxsettings->loadFromFile("Config/Window.cfg");
-            if (vertical_sync)
-            {
+    if (ImGui::Button("Apply Changes") && this->selection_temp != "") {
+        std::cout << this->current_item << std::endl;
+        this->state_data->gfxsettings->resolution = this->modes[this->selection_temp];
 
-            }
+        /// Changes are stored as static bool within the update function. Changed values are passed on to the graphics settings object here.
+        /// changes are applied. The graphics settings are saved, and then the window is recreated.
 
-            if (this->state_data->gfxsettings->fullscreen) 
-            {
-                //LOG(INFO) << "creating new render window with resolution " << this->state_data->gfxsettings->resolution.width << "x" << this->state_data->gfxsettings->resolution.height; 
-                this->window->create(this->state_data->gfxsettings->resolution, this->state_data->gfxsettings->title, sf::Style::Fullscreen);
-                this->window->setIcon(icon.width, icon.height, icon.data); 
-            }
-            else 
-            {
-                //LOG(INFO) << "creating new render window with resolution " << this->state_data->gfxsettings->resolution.width << "x" << this->state_data->gfxsettings->resolution.height;
-                this->window->create(this->state_data->gfxsettings->resolution, this->state_data->gfxsettings->title);
-                this->window->setIcon(icon.width, icon.height, icon.data);
-            }
-
+        this->state_data->gfxsettings->vsync = &vertical_sync;
+        this->state_data->gfxsettings->saveToFile("Config/Window.cfg");
+        this->state_data->gfxsettings->loadFromFile("Config/Window.cfg");
+        if (vertical_sync) {
         }
 
-
-        if(ImGui::Button("Exit"))
-        {
-
-            this->endState();
-            //LOG(INFO) << "Main"
-        
+        if (this->state_data->gfxsettings->fullscreen) {
+            // LOG(INFO) << "creating new render window with resolution " << this->state_data->gfxsettings->resolution.width << "x" << this->state_data->gfxsettings->resolution.height;
+            this->window->create(this->state_data->gfxsettings->resolution, this->state_data->gfxsettings->title, sf::Style::Default, sf::State::Fullscreen);
+            this->window->setIcon(sf::Vector2u(icon.width, icon.height), icon.data);
+        } else {
+            // LOG(INFO) << "creating new render window with resolution " << this->state_data->gfxsettings->resolution.width << "x" << this->state_data->gfxsettings->resolution.height;
+            this->window->create(this->state_data->gfxsettings->resolution, this->state_data->gfxsettings->title);
+            this->window->setIcon(sf::Vector2u(icon.width, icon.height), icon.data);
         }
-    
+    }
+
+    if (ImGui::Button("Exit")) {
+
+        this->endState();
+        // LOG(INFO) << "Main"
+    }
 
     ImGui::End();
 
-    for (auto & it: this->buttons)
-    {
+    for (auto& it : this->buttons) {
         it.second->update(this->MousePosWindow);
     }
-
-    
 }
 
 void SettingsState::updateView()
 {
-   // this->view.setSize(sf::Vector2f(GUI::calcCharSize(this->state_data->gfxsettings->resolution, 2), GUI::calcCharSize(this->state_data->gfxsettings->resolution, 2)));
+    // this->view.setSize(sf::Vector2f(GUI::calcCharSize(this->state_data->gfxsettings->resolution, 2), GUI::calcCharSize(this->state_data->gfxsettings->resolution, 2)));
 }
-
-

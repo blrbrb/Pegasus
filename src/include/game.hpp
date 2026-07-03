@@ -1,90 +1,80 @@
 
 #include "MainMenuState.hpp"
+#include "easylogging++.h"
 #include "icon.h"
-#include "imgui.h"
 #include "imgui-SFML.h"
-#include <boost/config.hpp> 
+#include "imgui.h"
+
+#include <cmath>
 #include <deque>
+#include <filesystem>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <list>
 #include <map>
 #include <memory>
-#include <vector>
-#include <list>
+#include <mutex>
+#include <random>
+#include <sstream>
 #include <stack>
 #include <string>
-#include <sstream>
-#include <fstream>
-#include <cmath>
-#include <filesystem>
-#include <iostream>
-#include <iomanip>
 #include <string_view>
-#include <mutex>
-#include "easylogging++.h"
-#include <random>
-#include <memory>
-#include <GL/freeglut.h>
+#include <vector>
 
 #ifndef Game_hpp
 #define Game_hpp
 
-
-
 class Game {
 public:
-    
-    
-     Game();
+    Game();
     ~Game();
-    
-    //Misc
+
+    // Misc
     void endApplication();
     void resizeWindow();
     void setFullScreen();
     void log(const std::string& stat);
-    
-    //Final Render
+
+    // Final Render
     void render();
-    
-    //To Main loop
+
+    // To Main loop
     void running();
-    
-    //Update Functions 
+
+    // Update Functions
     void UpdateEvents();
     void UpdateDT();
     void Update();
-    
-    std::ofstream* outfile; 
-    
+
+    std::ofstream* outfile;
+
 private:
-  
-    ///All of the mappable keyboard keys for user input.
+    /// All of the mappable keyboard keys for user input.
     std::map<std::string, int> supported_keys;
-    sf::Joystick joystick; 
+    // sf::Joystick joystick;
 
+    sf::RenderWindow* window;
 
-    sf::RenderWindow* window; 
-    
-  
-    
-    Sound::MusicPlayer* music_player; 
     sf::Event event;
     sf::Vector2f gridSize;
     bool fullscreen;
-    
+
     sf::Clock dtClock;
-    sf::Clock ImGuiClock; 
-    ///Delta Time
+    sf::Clock ImGuiClock;
+    /// Delta Time
     float dt;
-    ///Elapsed Time 
+    /// Elapsed Time
     float elapsedTime;
-    
-    ///The State Mechanism, stored in a stack of "State" objects
-    ///The State Mechanism, stored in a stack of "State" objects
+
+    /// The State Mechanism, stored in a stack of "State" objects
+    /// The State Mechanism, stored in a stack of "State" objects
     std::stack<State*> states;
+
     StateData state_data;
-    GraphicsSettings* gfxsettings; 
-    //std::ostream* ostream;
-    //init functions
+    GraphicsSettings* gfxsettings;
+    // std::ostream* ostream;
+    // init functions
     void load();
     void initWindow();
     void initGTK();
@@ -94,10 +84,7 @@ private:
     void initVariables();
     void initGraphicsSettings();
     void initStateData();
-    void initWindowIcon(); 
-  
-    
+    void initWindowIcon();
 };
-
 
 #endif /* Game_hpp */

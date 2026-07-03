@@ -9,17 +9,16 @@
 
 #include "include/Enemy.hpp"
 
-
-Enemy::Enemy(EnemySpawner& spawnertile) :EnemySpawnerTile(spawnertile)
+Enemy::Enemy(EnemySpawner& spawnertile, sf::Texture* texture)
+    : EnemySpawnerTile(spawnertile)
+    , Entity(*texture)
 {
-    //if this->initVariables(); is missing here, it's probably the reason why battlestate gets stuck in a loop
+    // if this->initVariables(); is missing here, it's probably the reason why battlestate gets stuck in a loop
     this->initVariables();
-   
 }
 
 Enemy::~Enemy()
 {
-    
 }
 
 void Enemy::initVariables()
@@ -29,10 +28,7 @@ void Enemy::initVariables()
 
 void Enemy::initanimations()
 {
-    
 }
-
-
 
 void Enemy::generateAttributes(const unsigned level)
 {
@@ -41,41 +37,35 @@ void Enemy::generateAttributes(const unsigned level)
 
 void Enemy::loseHP(const int hp)
 {
-    if (this->attributes)
-    {
+    if (this->attributes) {
         this->attributes->loseHP(hp);
     }
-
 }
-const unsigned & Enemy::getGainExp() const
+const unsigned& Enemy::getGainExp() const
 {
     return this->gainExp;
 }
 
-
-EnemySpawner & Enemy::getEnemySpawnerTile()
+EnemySpawner& Enemy::getEnemySpawnerTile()
 {
-        return this->EnemySpawnerTile;
+    return this->EnemySpawnerTile;
 }
-
 
 const bool Enemy::isDead() const
 {
-    if (this->attributes)
-    {
-       // std::cout << "enemy attribs working" << std::endl;
+    if (this->attributes) {
+        // std::cout << "enemy attribs working" << std::endl;
         return this->attributes->isdead();
     }
 
     return false;
 }
 
-const StatusComponet * Enemy::getStatusComponent() const
+const StatusComponet* Enemy::getStatusComponent() const
 {
     if (this->attributes)
         return this->attributes;
-    else
-    {
+    else {
         std::cout << "ERROR::ENEMY::STATUSCOMPONENT IS NOT INITIALIZED" << "\n";
         return nullptr;
     }
@@ -83,28 +73,12 @@ const StatusComponet * Enemy::getStatusComponent() const
 
 void Enemy::updateAnimation(const float& dt)
 {
-   
-
-      
-        
 }
-
-
-
 
 void Enemy::update(const float& dt, sf::Vector2f& MousePosView)
 {
-   
-  
-    
-  
-    
-    
 }
 
-void Enemy::render(sf::RenderTarget &target, sf::Shader* shader, const sf::Vector2f &light, const bool render_hitbox)
+void Enemy::render(sf::RenderTarget& target, sf::Shader* shader, const sf::Vector2f& light, const bool render_hitbox)
 {
-  
-    
 }
-

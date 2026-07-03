@@ -6,60 +6,51 @@
 //  Copyright © 2020 Eli Reynolds. Apache License .
 //
 
-
 #ifndef EnemyEditorMode_hpp
 #define EnemyEditorMode_hpp
 
-#include "EditorModes.hpp" 
+#include "EditorModes.hpp"
 
-
-class EnemyEditorMode : public EditorModes
-{
+class EnemyEditorMode : public EditorModes {
 public:
-    
     EnemyEditorMode(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata);
     virtual ~EnemyEditorMode();
-    
-    
+
     void updateInput(const float& dt);
-    
+
     void update(const float& dt);
-    
+
     void updateGUI(const float& dt);
-    
+
     void renderGUI(sf::RenderTarget& target);
     void render(sf::RenderTarget& target);
-    
-    
+
 private:
-        //GUI variables
-         sf::Text cursortext;
-         sf::Text controls;
-         sf::RectangleShape select_Rect;
-         sf::RectangleShape sidebar;
-         sf::RectangleShape sidebar_texture;
-         sf::RectangleShape controlsContainer; 
-         sf::RectangleShape text_container;
-         sf::IntRect TextureRect;
-    
+    // GUI variables
+    sf::Text* cursortext;
+    sf::Text* controls;
+    sf::RectangleShape select_Rect;
+    sf::RectangleShape sidebar;
+    sf::RectangleShape sidebar_texture;
+    sf::RectangleShape controlsContainer;
+    sf::RectangleShape text_container;
+    sf::IntRect TextureRect;
+
     int layer;
     int type;
-    
-    //Tile variables
+
+    // Tile variables
     int Enemytype;
     int Enemyamount;
     int spawn_timer;
     float maxDistance;
-    
-    //initalizer functions
+
+    // initalizer functions
     void initGUI();
     void initvariables();
     void inittext();
-    sf::Sprite enemy_GUI_sprite; 
-    sf::Texture enemy_texture; 
-
-    
-    
+    sf::Sprite* enemy_GUI_sprite;
+    sf::Texture enemy_texture;
 };
 
 #endif /* EnemyEditorMode_hpp */

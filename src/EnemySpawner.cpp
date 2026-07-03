@@ -8,12 +8,12 @@
 #
 #include "include/EnemySpawner.hpp"
 
-
-EnemySpawner::EnemySpawner(float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, int type, int amount, sf::Int32 time_to_spawn, float max_distance) : Tile(TileTypes::SPAWNER, x, y, gridsize_f, texture, texturerect, false)
+EnemySpawner::EnemySpawner(float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture, const sf::IntRect& texturerect, int type, int amount, std::int32_t time_to_spawn, float max_distance)
+    : Tile(TileTypes::SPAWNER, x, y, gridsize_f, texture, texturerect, false)
 {
-    //Init variables
+    // Init variables
     this->Enemy_type = type;
-   
+
     this->Enemy_amount = amount;
     this->Enemy_counter = 0;
     this->timer = time_to_spawn;
@@ -21,73 +21,60 @@ EnemySpawner::EnemySpawner(float x, float y, sf::Vector2f gridsize_f, sf::Textur
     this->Spawned = false;
     this->maxDistance = max_distance;
     this->SpawnTimer.restart();
-    
-     
 }
- 
+
 EnemySpawner::~EnemySpawner()
 {
-    
-    
-
 }
 
 void EnemySpawner::clear()
 {
-    
 }
 
 void EnemySpawner::update(const float& dt)
 {
-    
+
     if (this->canSpawn())
-    this->Spawned = false; 
+        this->Spawned = false;
 }
 
-void EnemySpawner::render(sf::RenderTarget& target, sf::Shader* shader,sf::Vector2f LightPosition)
+void EnemySpawner::render(sf::RenderTarget& target, sf::Shader* shader, sf::Vector2f LightPosition)
 {
 
-    if (shader)
-    {
-       
+    if (shader) {
+
         shader->setUniform("lightPos", LightPosition);
- 
+        // target.draw(1,2,3)
         target.draw(this->rect, shader);
 
     }
 
-    else
-    {
+    else {
         target.draw(this->rect);
     }
 }
 
-
-
-const std::string EnemySpawner::asString() const 
+const std::string EnemySpawner::asString() const
 {
     std::stringstream ss;
 
-    std::cout << std::hex << "timer " <<  this->timer << std::endl;
-   // std::cout << "writing an Enemy Spawaner Tile... " << std::endl; 
-    ss << std::hex << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->Enemy_type
+    std::cout << std::hex << "timer " << this->timer << std::endl;
+    // std::cout << "writing an Enemy Spawaner Tile... " << std::endl;
+    ss << std::hex << this->type << " " << this->rect.getTextureRect().position.x << " " << this->rect.getTextureRect().position.y << " " << this->Enemy_type
        << " " << this->Enemy_amount << " " << this->timer << " " << this->maxDistance;
-    
-    //std::cout << ss.str() << std::endl;
-   // boost::hex; 
+
+    // std::cout << ss.str() << std::endl;
+    // boost::hex;
 
     return ss.str();
-    
 }
-
 
 void EnemySpawner::savetoFile(std::ofstream& out)
 {
-    
-    //DEPRECIATED
-    out << std::hex << this->type << " " << this->rect.getTextureRect().left << " " << this->rect.getTextureRect().top << " " << this->Enemy_type
-        << " " << this->Enemy_amount << " " << this->timer << " " << this->maxDistance << " "; 
 
+    // DEPRECIATED
+    out << std::hex << this->type << " " << this->rect.getTextureRect().position.x << " " << this->rect.getTextureRect().position.y << " " << this->Enemy_type
+        << " " << this->Enemy_amount << " " << this->timer << " " << this->maxDistance << " ";
 }
 
 void EnemySpawner::SetSpawned(const bool spawned)
@@ -100,19 +87,19 @@ void EnemySpawner::add_object(short type, sf::Vector2f& object_position)
 {
 }
 
-const bool &EnemySpawner::getSpawned() const
+const bool& EnemySpawner::getSpawned() const
 {
-    return this->Spawned; 
+    return this->Spawned;
 }
 
-const int & EnemySpawner::getEnemyCounter() const
+const int& EnemySpawner::getEnemyCounter() const
 {
     return this->Enemy_counter;
 }
 
 const float& EnemySpawner::getMaxDistance() const
 {
-    return this->maxDistance; 
+    return this->maxDistance;
 }
 
 const int& EnemySpawner::getEnemyType() const
@@ -120,15 +107,14 @@ const int& EnemySpawner::getEnemyType() const
     return this->type;
 }
 
-const sf::Int32& EnemySpawner::getTime() const
+const std::int32_t& EnemySpawner::getTime() const
 {
-    return this->timer; 
+    return this->timer;
 }
 
 const bool EnemySpawner::canSpawn() const
 {
-    if (this->SpawnTimer.getElapsedTime().asSeconds() >= this->timer)
-    {
+    if (this->SpawnTimer.getElapsedTime().asSeconds() >= this->timer) {
 
         return true;
     }
@@ -151,9 +137,7 @@ void EnemySpawner::decreaseEnemyCounter()
         --this->Enemy_counter;
 }
 
-const int &EnemySpawner::getEnemyAmount() const
+const int& EnemySpawner::getEnemyAmount() const
 {
     return this->Enemy_amount;
 }
-
-

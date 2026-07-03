@@ -10,62 +10,54 @@
 #define DefaultMode_hpp
 #include "EditorModes.hpp"
 
-//nclude "Componets/GUI/GUI.hpp"
+// nclude "Componets/GUI/GUI.hpp"
 
 class State;
 class EditorModes;
 class StateData;
-class EditorStateData; 
+class EditorStateData;
 
-class DefaultMode : public EditorModes
-{
-    
+class DefaultMode : public EditorModes {
+
 private:
-        
-        //Graphical interface sfml objects
-          sf::Text cursortext;
-          sf::Text controls;
-          GUI::TextureSelector* texture_selector; 
-          GUI::TextureSelector* generation_selector; 
-          sf::RectangleShape select_Rect;
-          sf::RectangleShape sidebar;
-          sf::RectangleShape sidebar_texture;
-          sf::Sprite texturesample;
-          sf::RectangleShape texturesample_container; 
-          sf::RectangleShape text_container;
-          sf::RectangleShape controlsContainer; 
-          sf::IntRect TextureRect;
-          sf::Sprite gui_sprite1; 
+    // Graphical interface sfml objects
+    sf::Text* cursortext;
+    sf::Text* controls;
+    GUI::TextureSelector* texture_selector;
+    GUI::TextureSelector* generation_selector;
+    sf::RectangleShape select_Rect;
+    sf::RectangleShape sidebar;
+    sf::RectangleShape sidebar_texture;
+    sf::Sprite* texturesample;
+    sf::RectangleShape texturesample_container;
+    sf::RectangleShape text_container;
+    sf::RectangleShape controlsContainer;
+    sf::IntRect TextureRect;
+    // sf::Sprite gui_sprite1;
 
-      
-            
-     
-        //Tile variables
+    // Tile variables
     bool collision;
     short type;
     int layer;
     bool showgrid;
-    //initalizer functions
+    // initalizer functions
     void initvariables();
     void inittext();
     void initGUI();
-    void initgrid(); 
+    void initgrid();
     std::vector<sf::RectangleShape> grid;
-    
+
 public:
-    
-    DefaultMode(StateData* statedata,TileMap* tilemap, EditorStateData* editorstatedata);
+    DefaultMode(StateData* statedata, TileMap* tilemap, EditorStateData* editorstatedata);
     virtual ~DefaultMode();
-    
-    //Functions
-   
+
+    // Functions
+
     void updateInput(const float& dt);
     void update(const float& dt);
     void updateGUI(const float& dt);
     void renderGUI(sf::RenderTarget& target);
     void render(sf::RenderTarget& target);
-    
-    
 };
 
 #endif /* DefaultMode_hpp */

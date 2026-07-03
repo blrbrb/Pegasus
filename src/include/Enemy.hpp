@@ -8,50 +8,42 @@
 
 #ifndef Enemy_hpp
 #define Enemy_hpp
-#include "Entity.hpp" 
 #include "EnemySpawner.hpp"
+#include "Entity.hpp"
 
 class Entity;
 
-class Enemy : public Entity
-{
+class Enemy : public Entity {
 public:
-    
-    Enemy(EnemySpawner& spawnertile);
+    Enemy(EnemySpawner& spawnertile, sf::Texture* texture);
     virtual ~Enemy();
-    
-    
+
     virtual const StatusComponet* getStatusComponent() const;
-    
+
     virtual void generateAttributes(const unsigned level);
     virtual void update(const float& dt, sf::Vector2f& MousePosView) = 0;
     virtual void updateAnimation(const float& dt) = 0;
 
-    //Functions
+    // Functions
     virtual void loseHP(const int hp);
-    
-    //Accessors
+
+    // Accessors
     virtual const bool isDead() const;
     EnemySpawner& getEnemySpawnerTile();
     const unsigned& getGainExp() const;
-    
-    virtual void render(sf::RenderTarget& target, sf::Shader* shader = nullptr, const sf::Vector2f &light = sf::Vector2f(), const bool render_hitbox = false) = 0;
- 
-protected:
 
-    //child class variables
-       std::string name;
-       EnemySpawner& EnemySpawnerTile;
-     
-    
+    virtual void render(sf::RenderTarget& target, sf::Shader* shader = nullptr, const sf::Vector2f& light = sf::Vector2f(), const bool render_hitbox = false) = 0;
+
+protected:
+    // child class variables
+    std::string name;
+    EnemySpawner& EnemySpawnerTile;
+
 private:
-    //initalizer functions
-   virtual void initVariables();
-   virtual void initanimations() = 0;
-   unsigned gainExp;
-    
-  
-   
+    // initalizer functions
+    virtual void initVariables();
+    virtual void initanimations() = 0;
+    unsigned gainExp;
 };
 
 #endif /* Enemy_hpp */
