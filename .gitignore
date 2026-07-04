@@ -4,14 +4,12 @@
 #raw object files 
 **/.o 
 
-
-
 #Application Resources 
-**/.png
+*.png
 **/.PNG
 **/.wav
 **/.jpeg. 
-**/.ttf
+*.ttf
 **/.tif
 **/.pdb
 
@@ -36,6 +34,13 @@
 **/.smod
 Data/
 
+#CMake build deps
+**/_deps
+
+#CMake Files
+**/cmake_install.cmake
+**/CMakeFiles
+
 # Compiled Static libraries
 **.lai
 **/.la
@@ -46,6 +51,11 @@ Data/
 *.exe
 *.out
 *.app
+
+# Editor Configs
+**/.vscode
+*.kdev4
+**/.kate
 
 #Library Dependencies 
 Imgui/ 
@@ -70,3 +80,4 @@ Imgui/
 packages/
 include/boost/
 include/Imgui/
+
