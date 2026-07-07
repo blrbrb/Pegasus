@@ -42,6 +42,10 @@ Tile::Tile(short type, float x, float y, sf::Vector2f gridsizeF, sf::Texture& te
 
     this->type = type;
 
+
+
+    this->calcGid(texturerect.position,texturerect.size,texture.getSize());
+
     this->object_type = object_type;
 
     this->rect.setTexture(texture);
@@ -53,30 +57,65 @@ Tile::Tile(short type, float x, float y, sf::Vector2f gridsizeF, sf::Texture& te
     this->collison_enabled = collisionEnabled;
 }
 
-Tile::Tile(short type, float x, float y, sf::Vector2f gridsizeF, sf::Texture& texture, bool collision_enabled)
-    : rect(texture)
+Tile::Tile(short type,int gid, sf::Vector2f gridsizeF, sf::Texture& texture, bool collision_enabled)
+    : rect(texture),type(type),gid(gid)
 {
 
-    //
-    sf::Vector2f gridPosition = sf::Vector2f(gridsizeF.x * x, gridsizeF.y * y);
-    this->rect.setPosition(sf::Vector2f(x, y));
+    //sf::Vector2i position(0,0);
 
-    // this->rect.setTextureRect(textureRect);
+    //std::cout << "setting tile GID -> " << gid << std::endl;
+    int columns = static_cast<int>(this->rect.getTexture().getSize().x) / static_cast<int>(gridsizeF.x);
+    int rows = static_cast<int>(this->rect.getTexture().getSize().y) / static_cast<int>(gridsizeF.y);
+   // int column = gid % columns;
+   // int row = gid / columns;
+    //int posX = column * static_cast<int>(gridsizeF.x);
+   // int posY = row * static_cast<int>(gridsizeF.y);
+
+    //this->calcGid(gridsizeF);
     this->collison_enabled = collision_enabled;
-    short fart;
-    fart = type;
-    this->type = fart;
 
-    if (object_type) {
-        this->object_type = object_type;
-    }
-    // this->rect.get
+
+    //if (object_type) {
+     //   this->object_type = object_type;
+    //}
+     //calculate the Tile's GID within the texture (tmx stuff)
+     int tilesX = 10;//static_cast<int>(texture.getSize().x) / static_cast<int>(gridsizeF.x);
+     //std::cout << "number of horizontal tiles " << tilesX << std::endl;
+    int col =  static_cast<int>(rect.getGlobalBounds().size.x) / static_cast<int>(gridsizeF.x);
+   //  std::cout << "number of columns " << col << std::endl;
+    int row = static_cast<int>(rect.getGlobalBounds().size.y)  / static_cast<int>(gridsizeF.y);
+   // std::cout << "number of rows " << row << std::endl;
+   // this->gid = (row * tilesX) + col;
+    //this->rect.setTextureRect(this->calcRect(gid,sf::Vector2i(static_cast<int>(gridsizeF.x),static_cast<int>(gridsizeF.y))));
+
 }
 
 Tile::~Tile()
     = default;
 
 // Functions
+
+void Tile::calcGid(sf::Vector2i tileCoords, sf::Vector2i tileSize, sf::Vector2u textureSize)
+{
+
+    int columns = static_cast<int>(this->rect.getTexture().getSize().x) / static_cast<int>(tileSize.x);
+    //int rows = static_cast<int>(this->rect.getTexture().getSize().y) / static_cast<int>(tileSize.y);
+    int cellX = tileCoords.x / tileSize.x;
+    int cellY = tileCoords.y / tileSize.y;
+    int gridIndex = (cellY * columns) + cellX;
+
+    this->gid = gridIndex; //tileCoords.x + (tileCoords.y * columns) + 1;
+    //std::string debug = std::format("Grid Position -> X ({}/{})={} Y ({}/{})={}", textureSize.x,tileCoords.x,((textureSize.x - tileCoords.x) / tileSize.x),textureSize.y, tileCoords.y, (tileCoords.y / tileSize.y));
+    //std::cout << "tile gid -> " << this->gid << std::endl;
+
+}
+
+const unsigned& Tile::getGid() const
+{
+
+    return this->gid;
+
+}
 
 const sf::Vector2f& Tile::getPosition() const
 {

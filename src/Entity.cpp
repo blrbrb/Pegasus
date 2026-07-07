@@ -74,7 +74,7 @@ Entity::~Entity()
     delete this->physicsComponents;
     delete this->animationcomponet;
     delete this->attributes;
-    delete this->skillcomponent;
+
 }
 
 void Entity::initVariables()
@@ -83,7 +83,7 @@ void Entity::initVariables()
     this->hitbox = nullptr;
     this->attributes = nullptr;
     this->physicsComponents = nullptr;
-    this->skillcomponent = nullptr;
+
 }
 
 void Entity::setTexture(sf::Texture& texture)
@@ -223,10 +223,7 @@ void Entity::stopVelocityY()
         this->physicsComponents->stopVelocityY();
 }
 
-void Entity::addSkillComponent()
-{
-    this->skillcomponent = new SkillComponent();
-}
+
 
 void Entity::setRotation(float rot)
 {

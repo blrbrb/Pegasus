@@ -44,7 +44,6 @@ void Player::initComponents()
     this->addPhysicsComponent(100.f, 20000.f, 200.f);
     this->addHitboxComponent(this->sprite, 0, 0, 52.f, 42.f);
 
-    this->addSkillComponent();
     this->addAttributeComponent(1);
 }
 

@@ -24,7 +24,6 @@ private:
     sf::Text* cursortext;
     sf::Text* controls;
     GUI::TextureSelector* texture_selector;
-    GUI::TextureSelector* generation_selector;
     sf::RectangleShape select_Rect;
     sf::RectangleShape sidebar;
     sf::RectangleShape sidebar_texture;
@@ -32,6 +31,7 @@ private:
     sf::RectangleShape texturesample_container;
     sf::RectangleShape text_container;
     sf::RectangleShape controlsContainer;
+
     sf::IntRect TextureRect;
     // sf::Sprite gui_sprite1;
 

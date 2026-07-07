@@ -36,6 +36,7 @@ Data/
 
 #CMake build deps
 **/_deps
+**/build
 
 #CMake Files
 **/cmake_install.cmake

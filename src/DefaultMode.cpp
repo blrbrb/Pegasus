@@ -27,72 +27,42 @@ DefaultMode::~DefaultMode()
 void DefaultMode::updateInput(const float& dt)
 {
 
-    this->TextureRect = this->texture_selector->getTextureRect();
+   // this->TextureRect = this->texture_selector->getTextureRect();
 
     if ((sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && this->getkeytime()) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter) && this->getkeytime())) {
 
         // if the user's mouse is not on the sidebar
-        std::cout << this->texture_selector->getActive() << " texture selector state " << std::endl;
+       // std::cout << this->texture_selector->getActive() << " texture selector state " << std::endl;
         // if the texure selector is not active
         if (!this->texture_selector->getActive()) {
-            if (this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer) > -1) {
+
                 // if adding tiles is locked to one layer
-
-                if (this->tilemap->lock_layer) {
-                    if (this->tilemap->TileEmpty(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, 0)) {
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::M)) {
-                            this->tilemap->addTile(this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, 0, this->TextureRect, collision, this->type);
-                            // this->levels[curr_level]->addTile(this->editorStateData->mousePosView->x, this->editorStateData->mousePosView->y, 0, this->TextureRect, collision, this->type);
-                        }
-                        this->tilemap->addTile(this->editorstatedata->mousePosView->x, this->editorstatedata->mousePosView->y, this->layer, this->TextureRect, collision, this->type);
+                if (this->tilemap->lock_layer)
+                {
+                    if (this->tilemap->TileEmpty(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, 0))
+                    {
+                        this->tilemap->addTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, this->TextureRect, collision, this->type);
                         // this->tilemap->addTile(this->editorStateData->mousePosView->x, this->editorStateData->mousePosView->y, this->layer, this->TextureRect, collision, this->type);
-
-                        std::cout << "LOCKED: Tile Added" << std::endl;
-                    } else {
-                        // LOG(INFO) << "editor tried to place more than one tile on a locked layer";
+                       // std::cout << "LOCKED: Tile Added" << std::endl;
                     }
 
+
                 }
-                // else if adding tiles is not locked to one layer
-                else if (!this->tilemap->lock_layer) {
-
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
-
-                        for (int x = 0; x < this->tilemap->getMaxSizeGrid().x; x++) {
-                            for (int y = 0; y < this->tilemap->getMaxSizeGrid().y; y++) {
-                                this->tilemap->addTile(x, y, this->layer, this->TextureRect, collision, this->type);
-                                // this->tilemap->addTile(x, y, this->layer, this->TextureRect, collision, this->type);
-                            }
-                        }
-
-                        // this->tilemap->addTile(this->editorStateData->mouseposGrid->x + (t * this->statedata->gridSize->x) ,this->editorStateData->mouseposGrid->y + (i * this->statedata->gridSize->y), this->layer, this->TextureRect, collision, type);
-
-                        // this->tilemap->addTile(this->editorstatedata->mouseposGridI->x + i, this->editorstatedata->mouseposGridI->y, this->layer, this->TextureRect, collision, type);
-
-                    } else
-                        this->tilemap->addTile(this->editorstatedata->mouseposGridI->x++, this->editorstatedata->mouseposGridI->y++, this->layer, this->TextureRect, collision, this->type);
-                    // this->tilemap->addTile(this->editorStateData->mouseposGridI->x++, this->editorStateData->mouseposGridI->y++, this->layer, this->TextureRect, collision, this->type);
-                    std::cout << "Tile Added" << std::endl;
+                // else if the cursor is not within the texture selector
+                else
+                {
+                    this->tilemap->addTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, this->TextureRect, collision, this->type);
+                    //std::cout << "TILE ADDED " << std::endl;
                 }
-
-            }
-
-            // else play UI invalid sound for invalid tile placement
-
-            else if (this->tilemap->getLayerSize(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer) == -1) {
-                // LOG(INFO) << "editor tried to place tile on invalid tile Space";
-            }
         }
-        // else set the selection rect to the texture the user's mouse is on in the texture selector
-        else {
-
+        else
+        {
             this->TextureRect = this->texture_selector->getTextureRect();
-            if (this->type == TileTypes::OBJECT) {
-                this->TextureRect = sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(11, 16));
-            }
+
         }
 
     }
+
 
     // Remove a tile
     else if ((sf::Mouse::isButtonPressed(sf::Mouse::Button::Right) && this->getkeytime()) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Delete) && this->getkeytime())) {
@@ -105,7 +75,7 @@ void DefaultMode::updateInput(const float& dt)
                 if (this->tilemap->lock_layer) {
                     if (!this->tilemap->TileEmpty(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer)) {
                         this->tilemap->RemoveTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, TileTypes::DEFAULT);
-                        std::cout << "LOCKED: Tile Removed" << std::endl;
+                        //std::cout << "LOCKED: Tile Removed" << std::endl;
                     } else {
                         // LOG(INFO) << "editor tried to place more than one tile on a locked layer";
                     }
@@ -120,7 +90,7 @@ void DefaultMode::updateInput(const float& dt)
 
                     this->tilemap->RemoveTile(this->editorstatedata->mouseposGridI->x, this->editorstatedata->mouseposGridI->y, this->layer, TileTypes::DEFAULT);
 
-                    std::cout << "Tile Removed" << std::endl;
+                    //std::cout << "Tile Removed" << std::endl;
                 }
 
             }
@@ -206,10 +176,11 @@ void DefaultMode::update(const float& dt)
 void DefaultMode::updateGUI(const float& dt)
 {
     // std::cout << "default mode updating the GUI" << std::endl;
-    this->select_Rect.setTextureRect(this->texture_selector->getTextureRect());
+    this->texture_selector->update(*this->editorstatedata->mousePosWindow, dt);
+    //this->select_Rect.setTextureRect(this->texture_selector->getTextureRect());
 
     ImGui::Begin("Map Editor", NULL, ImGuiWindowFlags_NoMove);
-    this->texture_selector->update(*this->editorstatedata->mousePosWindow, dt);
+
     this->texturesample->setTextureRect(sf::IntRect(sf::Vector2i(static_cast<int>(this->statedata->gridSize.x), static_cast<int>(this->statedata->gridSize.y)), sf::Vector2i(0, 0)));
 
     if (!this->texture_selector->getActive()) {
@@ -222,7 +193,7 @@ void DefaultMode::updateGUI(const float& dt)
 
     this->select_Rect.setOrigin(sf::Vector2f(this->select_Rect.getLocalBounds().size.x, this->select_Rect.getLocalBounds().size.y) / 2.f);
 
-    this->select_Rect.setTextureRect(this->texture_selector->getTextureRect());
+    //this->select_Rect.setTextureRect(this->texture_selector->getTextureRect());
     this->texturesample->setTextureRect(this->TextureRect);
     // std::stringstream cursor_text;
     //  cursor_text << "MouseX: " << this->editorstatedata->mousePosView->x << "\n"
@@ -328,17 +299,17 @@ void DefaultMode::initGUI()
 
     // this->select_Rect.setOrigin(sf::Vector2f(this->select_Rect.getGlobalBounds().size.x / 2.f / this->statedata->gridSize - static_cast<float>(this->editorstatedata->mouseposGridF->x), this->select_Rect.getGlobalBounds().size.y / 2.f / this->statedata->gridSize - static_cast<float>(this->editorstatedata->mouseposGridF->y)));
 
-    //  sf::IntRect fart = this->texture_selector->getTextureRect();
+
     this->select_Rect.setSize(sf::Vector2f(statedata->gridSize.x, statedata->gridSize.y));
     this->select_Rect.setTexture(tilemap->getTileSheet());
 
-    // this->texturesample.setSize(sf::Vector2f(64, 64));
+
     this->texturesample = new sf::Sprite(*this->select_Rect.getTexture(), this->select_Rect.getTextureRect());
     this->texturesample->setScale(sf::Vector2f(3, 3));
 
     // this->texturesample.setPosition(GUI::pixelpercentX(100, vm), GUI::pixelpercentY(20, vm));
 
-    // this->texture_selector = new GUI::TextureSelector();
+
     this->texture_selector = new GUI::TextureSelector(100.f, 20.f, 798.f, 798.f, this->statedata->gridSize, this->tilemap->getTileSheet(), *this->editorstatedata->font, "X");
 }
 

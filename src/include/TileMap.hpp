@@ -9,14 +9,14 @@
 #ifndef TileMap_hpp
 #define TileMap_hpp
 
-#include "Blrb.hpp"
-#include "EnemySystem.hpp"
+
+
 #include "Entity.hpp"
 #include "NormalTile.hpp"
 #include "ObjectTile.hpp"
-#include "TMXExport.hpp"
 #include "Tile.hpp"
 #include "easylogging++.h"
+#include "tinyxml2.h"
 // TO DO
 // create an object that dynamically and randomly creates a new tilemap using some kind of noise, then save it as a slmp, load it.
 
@@ -25,9 +25,6 @@ class Tile;
 class NormalTile;
 
 class Entity;
-
-enum Level_Types { OVERWORLD = 0,
-    DUNGEON };
 
 class TileMap {
 private:
@@ -42,8 +39,6 @@ private:
 
     // tile_gridS tile_grid[];
     int layers;
-    TMXExport* Exporter;
-    short level_type;
     sf::Vector2i gridsizeI;
     sf::Vector2f grid_sizeF;
     sf::Vector2u grid_sizeU;
@@ -61,7 +56,6 @@ private:
     // TileMap vector
     std::vector<std::vector<std::vector<std::vector<Tile*>>>> Map;
 
-    int level_index;
 
     sf::Font font;
     sf::Texture tileTextureSheet;
@@ -76,10 +70,9 @@ private:
     void clear();
     void initobjecthandler();
     void initgeometry();
-    // void init_object_textures();
     void initvariables();
     void initloggingthread();
-    void initExporter();
+
 
     // tile culling
     int FromX;
@@ -150,6 +143,9 @@ public:
     /// <returns>const int how many layers</returns>
     const int getLayerSize(const int x, const int y, const int layer) const;
 
+
+    const std::vector<int> getLayer(const int& layer) const;
+
     /// <summary>
     /// Helper function. Get the Maximum size of the tilemap in tiles
     /// </summary>
@@ -164,41 +160,35 @@ public:
 
     const sf::Vector2f get_objectTile();
 
-    const sf::Texture* getGenerationSheet() const;
-
-    const std::string getLevelType() const;
-
-    int getLevelIndex();
-
     // render functions
     void render(sf::RenderTarget& target, const sf::View& view, const sf::Vector2i& gridposition, const bool render_collision = false, sf::Shader* shader = NULL, const sf::Vector2f PlayerPosition = sf::Vector2f());
     void DefferedRender(sf::RenderTarget& target, sf::Shader* shader = NULL, const sf::Vector2f PlayerPosition = sf::Vector2f());
 
     // Modifiers
     void addTile(const int x, const int y, const int z, const sf::IntRect texture_rect, const bool& collision, const short& type);
-    void addTile(const int x, const int y, const int z, const sf::IntRect texture_rect, const int enemytype, const int enemyamount, const int timeToSpawn, const int MaxDistance);
     void addTile(const int x, const int y, const int z, float obX, float obY, const short type);
     void addObject(const short type, const int x, const int y);
-    void setLevelIndex(int index);
-    void setType(short level_type);
+    sf::IntRect calcTileRect(const int& gid, sf::Vector2i tileSize);
+
+
 
     void RemoveTile(const int x, const int y, const int z, const int type);
     bool saveToFile(const std::string& filename, bool json = false);
 
     bool exportTMX(const std::string& filename);
+    bool importTMX(const std::string& filename);
 
     bool loadFromFile(const std::string filename, bool json = false);
-    void addGenerationTexture(const std::string texture_filename);
 
+    const std::vector<Tile*>& getLayer();
     // update functions
     void update(Entity* entity, const float& dt);
     void updateWorldBoundsCollision(Entity* entity, const float& dt);
-    void updateTiles(Entity* entity, const float& dt, EnemySystem& enemysystem);
+    void updateTiles(Entity* entity, const float& dt);
     void updateTileCollision(Entity* entity, const float& dt);
 
     // testing functions
-    void randomGeneration();
-    Tile* genTile(int x, int y, int z);
+
 };
 
 #endif /* TileMap_hpp */

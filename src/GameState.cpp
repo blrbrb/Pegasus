@@ -20,12 +20,11 @@ GameState::GameState(StateData* state_data)
         this->initfonts();
         this->inittextures();
         this->initpausemenu();
-        // this->initshaders();
+        //this->initshaders();
 
         this->initplayerGUI();
-        this->initenemysystem();
+
         this->initTileMap();
-        // this->initdialougesystem();
 
     } catch (std::exception& e) {
 
@@ -35,8 +34,6 @@ GameState::GameState(StateData* state_data)
         // this->handletilemap();
     }
 
-    // this->activEnemies.push_back(new Blrb(500.f, 800.f,this->textures["ENEMY_SHEET"]));
-    // //this->activEnemies.push_back(new Blrb(100.f, 300.f, this->textures["ENEMY_SHEET"]));
 }
 
 GameState::~GameState()
@@ -46,11 +43,7 @@ GameState::~GameState()
     delete this->pMenu;
     delete this->playerGUI;
     delete this->Tilemap;
-    delete this->enemysystem;
 
-    for (size_t i = 0; i < this->activEnemies.size(); i++) {
-        delete this->activEnemies[i];
-    }
 }
 
 void GameState::initvariables()
@@ -226,7 +219,7 @@ void GameState::update(const float& dt)
         this->updateTileMap(dt);
         this->updatePlayer(dt);
 
-        this->updateEnemies(dt);
+        ;
 
     } else // Update while Paused
     {
@@ -255,7 +248,7 @@ void GameState::updateTileMap(const float& dt)
     this->Tilemap->update(this->player, dt);
     this->Tilemap->updateWorldBoundsCollision(this->player, dt);
     this->Tilemap->updateTileCollision(this->player, dt);
-    this->Tilemap->updateTiles(this->player, dt, *this->enemysystem);
+    this->Tilemap->updateTiles(this->player, dt);
 }
 
 void GameState::updateButtons()
@@ -383,9 +376,7 @@ void GameState::render(sf::RenderTarget* target)
     // target->mapPixelToCoords(static_cast<sf::Vector2i>(this->player->getCenter()));
     this->player->render(*this->rendertexture);
 
-    for (auto* i : this->activEnemies) {
-        i->render(*this->rendertexture);
-    }
+
 
     this->Tilemap->DefferedRender(*this->rendertexture);
 
@@ -428,30 +419,7 @@ void GameState::updatePlayer(const float& dt)
     this->player->update(dt, this->MousePosView);
 }
 
-void GameState::updateEnemies(const float& dt)
-{
 
-    unsigned index = 0;
-    for (auto* enemy : this->activEnemies) {
-        enemy->update(dt, this->MousePosView);
-
-        enemy->move_rand(dt, rand() % 3);
-
-        this->Tilemap->updateWorldBoundsCollision(enemy, dt);
-        this->Tilemap->updateTileCollision(enemy, dt);
-
-        this->updateEncounter(enemy, index, dt);
-
-        if (enemy->isDead()) {
-
-            this->enemysystem->RemoveEnemy(index);
-            this->battleState = nullptr;
-
-            --index;
-        }
-    }
-    ++index;
-}
 
 const bool GameState::savegame() const
 {
@@ -475,25 +443,8 @@ const bool GameState::savegame() const
     return true;
 }
 
-void GameState::updateEncounter(Enemy* enemy, const int index, const float& dt)
-{
 
-    if (enemy->getGlobalBounds().contains(sf::Vector2f(this->player->getPosition().x, this->player->getPosition().y))) {
-        // this->player->attributes->loseHP(1);
-        if (this->playerGUI->getTabsOpen()) {
-            this->playerGUI->toggleCharacterTab();
-        }
-    }
 
-    if (enemy->isDead()) {
-        std::cout << "Farted" << std::endl;
-    }
-}
-
-void GameState::initenemysystem()
-{
-    this->enemysystem = new EnemySystem(this->activEnemies, this->textures);
-}
 
 void GameState::handletilemap()
 {

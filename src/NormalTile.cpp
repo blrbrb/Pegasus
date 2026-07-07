@@ -14,10 +14,11 @@ NormalTile::NormalTile(short type, float x, float y, sf::Vector2f gridsize_f, sf
 {
 }
 
-NormalTile::NormalTile(short type, float x, float y, sf::Vector2f gridsize_f, sf::Texture& texture, bool collision_enabled)
-    : Tile(type, x, y, gridsize_f, texture, collision_enabled)
+NormalTile::NormalTile(short int type,short guid, sf::Vector2f gridsize_f, sf::Texture& texture, bool collision_enabled) : Tile(type,guid,gridsize_f,texture,collision_enabled)
 {
+
 }
+
 
 NormalTile::~NormalTile()
 {

@@ -12,6 +12,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Mouse.hpp>
 
+
 /* BEGIN BUTTON */
 
 /**
@@ -41,6 +42,8 @@
  * @details i.e  when it is clicked or activated by the user.
  * @param ID The unique identifier for the button. It is used to distinguish this button from other buttons in the GUI.
  */
+
+
 GUI::Button::Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned character_size, sf::Color idle_color, sf::Color hover_color, sf::Color active_color, sf::Color text_idle_color, sf::Color text_hover_color, sf::Color text_active_color, sf::Color outline_active_color, sf::Color outline_idle_color, sf::Color outline_hover_color, short unsigned ID)
     : hover(false)
     , pressed(false)
@@ -674,8 +677,8 @@ void GUI::TextureSelector::update(const sf::Vector2i& MousePosWindow, const floa
             this->MousePosGrid.x = (MousePosWindow.x - static_cast<int>(this->bounds.getPosition().x)) / static_cast<unsigned>(this->gridSize.x);
             this->MousePosGrid.y = (MousePosWindow.y - static_cast<int>(this->bounds.getPosition().y)) / static_cast<unsigned>(this->gridSize.y);
 
-            this->selector.setPosition({ this->bounds.getPosition().x + static_cast<float>(this->MousePosGrid.x) * this->gridSize.x,
-                this->bounds.getPosition().y + static_cast<float>(this->MousePosGrid.y) * this->gridSize.y });
+            this->selector.setPosition({ this->bounds.getPosition().x + static_cast<float>(this->MousePosGrid.x * this->gridSize.x),
+            this->bounds.getPosition().y + static_cast<float>(this->MousePosGrid.y * this->gridSize.y) });
 
             // Update the Texture Rectangle
 
@@ -684,6 +687,7 @@ void GUI::TextureSelector::update(const sf::Vector2i& MousePosWindow, const floa
 
             //this->texture_rects.push_back(this->textureRect);
         }
+
 
     }
 }
@@ -1020,7 +1024,7 @@ void GUI::GradientElement::initVertexArray(sf::Vector2f size, sf::Vector2f posit
     // std::cout << "left= " << position.x << std::endl << "top= " << position.y << std::endl;
     // std::cout << "width= " << size.x << std::endl << "height= " << size.y << std::endl;
 
-    this->geom = sf::VertexArray(sf::PrimitiveType::Triangles, 4);
+    this->geom = sf::VertexArray(sf::PrimitiveType::TriangleFan, 4);
 
     this->geom[0].position = this->_core.getPoint(0);
 
@@ -1281,3 +1285,4 @@ const bool& GUI::PillButton::isPressed()
 
     return false;
 }
+

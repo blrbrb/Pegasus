@@ -31,7 +31,7 @@ public:
     /// The Status Component
     StatusComponet* attributes { };
     /// The Skill Component
-    SkillComponent* skillcomponent { };
+
 
     /// Sprites for visual effects, deffered rendering, body parts etc
     std::map<std::string, sf::Sprite*> sprites;
@@ -111,8 +111,6 @@ public:
     /// @param level const unsigned level to start the entity out on
     void addAttributeComponent(const unsigned level);
 
-    /// Generate the entity's skill component.
-    void addSkillComponent();
 
     // Modifiers
     virtual void setRotation(float rot);

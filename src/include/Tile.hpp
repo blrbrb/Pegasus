@@ -10,7 +10,7 @@
 #define Tile_hpp
 
 #include "GUI.hpp"
-#include "TMXExport.hpp"
+
 // enum TileTypes {DEFAULT=0, UNPASSABLE, OBJECT, SPAWNER, LIGHT, NORMAL};
 static const char* EnumStrings[] = { "Default", "Unpassable", "Object", "Spawner", "Light", "Stop", "YOU FOOL", "NO" };
 /**
@@ -36,11 +36,12 @@ protected:
     sf::Sprite rect;
     short type;
     short object_type;
+    unsigned gid;
 
 public:
     Tile(sf::Texture* texture = nullptr);
     Tile(short type, float x, float y, sf::Vector2f gridsizeF, sf::Texture& texture, const sf::IntRect& textureRect, bool collisionEnabled = false);
-    Tile(short type, float x, float y, sf::Vector2f gridsizeF, sf::Texture& texture, bool collision_enabled = false);
+    Tile(short type, int gid, sf::Vector2f gridsizeF, sf::Texture& texture, bool collision_enabled = false);
     virtual ~Tile();
 
     // Accessors
@@ -55,6 +56,10 @@ public:
     virtual const sf::Vector2i getTextureCoords() const;
     virtual const short& getObjectType() const;
     virtual void savetoFile(std::ofstream& out) = 0;
+    virtual const unsigned& getGid() const;
+    virtual void calcGid(sf::Vector2i tileCoords, sf::Vector2i tileSize, sf::Vector2u textureSize);
+
+
 
     // Functions
     virtual void update(const float& dt) = 0;

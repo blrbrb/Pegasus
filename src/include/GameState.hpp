@@ -13,7 +13,7 @@ engineFramework
 #ifndef GameState_hpp
 #define GameState_hpp
 
-#include "EnemySystem.hpp"
+
 #include "PauseMenu.hpp"
 #include "PlayerGUI.hpp"
 #include "State.hpp"
@@ -62,10 +62,6 @@ public:
     /// @param dt Delta-Time
     void updatePlayer(const float& dt);
 
-    /// Check for an encounter between the player, and an enemy
-    /// @param dt Delta-Time
-    void updateEncounter(Enemy* enemy, const int index, const float& dt);
-
     /// Update the State
     void update(const float& dt);
     /// Check for a user-requested quit from the state
@@ -81,7 +77,6 @@ public:
 
     void updateDialouge(const float& dt);
 
-    void updateEnemies(const float& dt);
 
     // Modifiers
     const bool savegame() const;
@@ -101,7 +96,6 @@ private:
     PauseMenu* pMenu;
     TileMap* Tilemap;
 
-    EnemySystem* enemysystem;
 
     sf::Font font;
     sf::RenderTexture* rendertexture;
@@ -113,13 +107,11 @@ private:
     sf::Shader lantern_shader;
     float shadertime;
 
-    // Sounds
-    // sf::SoundBuffer buffer;
-    // sf::Sound sound;
+
     sf::Vector2i ViewGridPosition;
 
-    // Enemies
-    std::vector<Enemy*> activEnemies;
+
+
 
     GameStateData gamestatedata;
 
@@ -129,12 +121,11 @@ private:
     void initkeybinds();
     void inittextures();
     void initplayers();
+    void initshaders();
     void initplayerGUI();
     void initfonts();
     void initpausemenu();
     void initTileMap();
-    void initshaders();
-    void initenemysystem();
     void initgamestatedata();
     void initvariables();
     void initdialougesystem();

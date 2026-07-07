@@ -11,9 +11,10 @@ EditorState::EditorState(StateData* state_data)
     , pMenu(nullptr)
     , Tilemap(nullptr)
     , str_size(0)
-    , animations(nullptr)
 
 {
+
+
     this->initEditorStateData();
     this->initFonts();
     this->initTileMap();
@@ -22,16 +23,14 @@ EditorState::EditorState(StateData* state_data)
     // this->initEditorStateData();
     this->initModes();
 
-    // this->initShader();
+
     this->initView();
 
     this->initPauseMenu();
     this->initButtons();
 
-    // this->initLevels();
-    // this->initbg();
     this->initRenderSprite();
-    // this->initGUI();
+
 
     this->activeMode = EDITOR_MODES::DEFAULT_MODE;
 }
@@ -63,11 +62,14 @@ void EditorState::initVariables()
 // initalizer functions
 void EditorState::initButtons()
 {
+    const sf::VideoMode& vm = this->state_data->gfxsettings->resolution;
+    this->buttons["Save"] = new GUI::Button(GUI::pixelpercentX(10.f,vm), GUI::pixelpercentY(10.f, vm), GUI::pixelpercentX(2.f,vm), GUI::pixelpercentY(2.f, vm), &this->font, "save", GUI::calcCharSize(vm));
 }
 
 void EditorState::initTileMap()
 {
     this->Tilemap = new TileMap(this->gridSize, 100, 100, "Resources/Assets/Tiles/sheet.png");
+    //this->Tilemap->importTMX();
 }
 
 void EditorState::initView()
@@ -108,7 +110,8 @@ void EditorState::updatePauseMenuButtons()
         // handle TileMap saving errors
         try {
 
-            this->Tilemap->saveToFile("Data/TileMap/text.slmp");
+            //this->Tilemap->saveToFile("Data/TileMap/text.slmp");
+            //this->Tilemap->exportTMX("Data/TileMap/test.")
         }
 
         catch (std::runtime_error& e) {
@@ -120,7 +123,8 @@ void EditorState::updatePauseMenuButtons()
     // Load the TileMap
     if (this->pMenu->isButtonPressed("Editor_Pause_Load_Button")) {
         try {
-            this->Tilemap->loadFromFile("Data/TileMap/text.slmp");
+            this->Tilemap->importTMX("Data/TileMap/test.tmx");
+            //this->Tilemap->loadFromFile("Data/TileMap/text.slmp");
         }
 
         catch (std::runtime_error& e) {
@@ -154,17 +158,11 @@ void EditorState::initModes()
 {
     // INIT LEVELS MUST ALWAYS, ALWAYS BE CALLED FIRST FOR THIS FUNCTION TO WORK!!!!!!!!!!!
     this->modes.push_back(new DefaultMode(this->state_data, this->Tilemap, &this->editorStateData));
-    this->modes.push_back(new EnemyEditorMode(this->state_data, this->Tilemap, &this->editorStateData));
-    this->modes.push_back(new EnviornmentalMode(this->state_data, this->Tilemap, &this->editorStateData));
-    // this->modes.push_back(new LevelManagerMode(this->state_data, this->Tilemap, &this->editorStateData, this->levels));
-    // this->modes.push_back(new ShaderEditorMode(this->state_data, this->Tilemap, &this->editorStateData, this->levels));
+
 
     this->activeMode = EDITOR_MODES::DEFAULT_MODE;
 }
 
-void EditorState::initLevels()
-{
-}
 
 void EditorState::handleFonts()
 {
@@ -197,24 +195,8 @@ void EditorState::initGUI()
 {
 }
 
-void EditorState::initbg()
-{
-
-    // sf::FloatRect screen = sf::FloatRect(0, 0, this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height);
-    // this->bg.setSize(sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height));
-    // this->bg.setSize(sf::Vector2f(this->state_data->gfxsettings->resolution.width, this->state_data->gfxsettings->resolution.height));
-    // this->bg_interior.setSize(this->Tilemap->getMaxSize());
-    // this->bg_interior.setPosition(sf::Vector2f(0.f, 0.f));
-    // this->bg_interior.setFillColor(sf::Color::Black);
-    // this->bg.setFillColor(sf::Color(250.f, 0.f, 0.f, 90.f));
-}
-
 /* Initalizer Functions */
 
-bool EditorState::initShader()
-{
-    return true;
-}
 
 void EditorState::initRenderSprite()
 {
@@ -244,9 +226,6 @@ void EditorState::initFonts()
     }
 }
 
-void EditorState::initbackground()
-{
-}
 
 void EditorState::initEditorStateData()
 {
@@ -298,14 +277,12 @@ void EditorState::updateInput(const float& dt)
         return;
     else
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
         this->mainView.move(sf::Vector2f(this->cameraSpeed * dt, 0.f));
-        this->Tilemap->saveToFile("Data/text.slmp");
-        //  std::cout << "camera right" << std::endl;
-        //   std::cout << "Map Saved" << std::endl;
+       // this->Tilemap->exportTMX("Data/TileMap/test.tmx");
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
         this->mainView.move(sf::Vector2f(-this->cameraSpeed * dt, 0.f));
     }
 
@@ -325,33 +302,7 @@ void EditorState::updateInput(const float& dt)
             this->Tilemap->lock_layer = true;
     }
 
-    /**std::cout << sf::Keyboard::L << std::endl;
-    std::cout << "A = "<< " "<< sf::Keyboard::A << std::endl;
-    std::cout << "B = "<< " "<< sf::Keyboard::B << std::endl;
-    std::cout << "C = "<< " "<< sf::Keyboard::C << std::endl;
-    std::cout << "D = "<< " "<< sf::Keyboard::D << std::endl;
-    std::cout << "E = "<< " "<< sf::Keyboard::E << std::endl;
-    std::cout << "F = "<< " "<< sf::Keyboard::F << std::endl;
-    std::cout << "G = "<< " "<< sf::Keyboard::G << std::endl;
-    std::cout << "H = "<< " "<< sf::Keyboard::H << std::endl;
-    std::cout << "I = "<< " "<< sf::Keyboard::I << std::endl;
-    std::cout << "G = "<< " "<< sf::Keyboard::J << std::endl;
-    std::cout << "K = "<< " "<< sf::Keyboard::K << std::endl;
-    std::cout << "L = "<< " "<< sf::Keyboard::L << std::endl;
-    std::cout << "M = "<< " "<< sf::Keyboard::M << std::endl;
-    std::cout << "N = "<< " "<< sf::Keyboard::N << std::endl;
-    std::cout << "O = "<< " "<< sf::Keyboard::O << std::endl;
-    std::cout << "P = "<< " "<< sf::Keyboard::P << std::endl;
-    std::cout << "Q = "<< " "<< sf::Keyboard::Q << std::endl;
-    std::cout << "R = "<< " "<< sf::Keyboard::R << std::endl;
-    std::cout << "S = "<< " "<< sf::Keyboard::S << std::endl;
-    std::cout << "T = "<< " "<< sf::Keyboard::T << std::endl;
-    std::cout << "U = "<< " "<< sf::Keyboard::U << std::endl;
-    std::cout << "V = "<< " "<< sf::Keyboard::V << std::endl;
-    std::cout << "W = "<< " "<< sf::Keyboard::W << std::endl;
-    std::cout << "X = "<< " "<< sf::Keyboard::X << std::endl;
-    std::cout << "Y = "<< " "<< sf::Keyboard::Y << std::endl;
-    std::cout << "Z = "<< " "<< sf::Keyboard::Z << std::endl; */
+
 
     // Zoom the World Builder View in or out
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::O)) {
@@ -395,6 +346,8 @@ void EditorState::updateButtons()
     for (auto& it : this->buttons) {
         it.second->update(this->MousePosWindow);
     }
+
+
 }
 
 void EditorState::updateEditorInput(const float& dt)
@@ -411,7 +364,7 @@ void EditorState::updateEditorInput(const float& dt)
 
 void EditorState::updateGUI(const float& dt)
 {
-    static char str0[128] = "New_Map.cfg";
+    static char str0[128] = "My Island";
     static char str1[128] = "New Area";
     static int switchTabs;
     static bool p_open = NULL;
@@ -422,7 +375,14 @@ void EditorState::updateGUI(const float& dt)
     static bool edit;
     static bool load;
     // ImGui::ShowDemoWindow();
+    std::string ofilename(str0);
+    std::replace(ofilename.begin(), ofilename.end(), ' ', '-');
 
+
+    std::transform(ofilename.begin(), ofilename.end(), ofilename.begin(), [](unsigned char c) {
+        return std::tolower(c);
+    });
+    ofilename += ".tmx";
     ImGui::Begin("Map Editor", &p_open, ImGuiWindowFlags_MenuBar);
     // is there any way to set the window flags from within this loop?
     // that would be pretty poggers, I think
@@ -430,36 +390,6 @@ void EditorState::updateGUI(const float& dt)
     // if (ImGui::Button(view_is_local ? "Local###ViewMode" : "Global###ViewMode"))
     if (ImGui::BeginMenuBar()) {
 
-        if (ImGui::BeginMenu("File")) {
-            ImGui::MenuItem("Save", NULL, &save);
-            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal)) {
-                ImGui::BeginTooltip();
-                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-                ImGui::TextUnformatted("Save the current map");
-                ImGui::PopTextWrapPos();
-                ImGui::EndTooltip();
-            }
-            ImGui::MenuItem("Save As", NULL, &save_as);
-            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal)) {
-                ImGui::BeginTooltip();
-                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-                ImGui::TextUnformatted("Save the current map to a new file");
-                ImGui::PopTextWrapPos();
-                ImGui::EndTooltip();
-            }
-            ImGui::MenuItem("Open", NULL, &load);
-            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal)) {
-                ImGui::BeginTooltip();
-                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-                ImGui::TextUnformatted("Open a recently saved map file");
-                ImGui::PopTextWrapPos();
-                ImGui::EndTooltip();
-            }
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("Edit")) {
-            ImGui::EndMenu();
-        }
         if (ImGui::BeginMenu("View")) {
             if (ImGui::MenuItem("Zoom In") && this->getKeyTime()) {
                 this->mainView.zoom(0.5);
@@ -506,17 +436,18 @@ void EditorState::updateGUI(const float& dt)
     }
     ImGui::EndMenuBar();
     ImGui::SameLine(0.0, 8.0f);
-    if (ImGui::Button("Load Saved Map", sf::Vector2f(125.f, 25.f))) {
+    if (ImGui::Button("Load Island", sf::Vector2f(125.f, 25.f))) {
+        this->Tilemap->importTMX(ofilename);
         // LOG(INFO) << "attempting to load tilemap data from " << "Data/TileMap/" + GUI::convertToString(str0, this->str_size);
         // this->Tilemap->loadFromFile("Data/TileMap/" + GUI::convertToString(str0, this->str_size), false);
-        this->Tilemap->loadFromFile("Data/Tilemap/text.slmp", false);
+
     }
     ImGui::SameLine(0.0, 8.f);
     ImGui::InputText("New File", str0, IM_ARRAYSIZE(str0));
     if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal)) {
         ImGui::BeginTooltip();
         ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-        ImGui::TextUnformatted("Leave default text to save to an existing file, or save to a new file");
+        ImGui::TextUnformatted("Load a previously saved island");
         ImGui::PopTextWrapPos();
         ImGui::EndTooltip();
     }
@@ -524,110 +455,14 @@ void EditorState::updateGUI(const float& dt)
 
     ImGui::Separator();
 
-    // ImGui::ShowDemoWindow();
-    //
-    // ImGui::SameLine(0.0, 2.0f);
+        if (ImGui::Button("Save", sf::Vector2f(150.f, 25.f))) {
+            std::cout << "saving map.." << std::endl;
+            this->Tilemap->exportTMX(ofilename);
 
-    if (save) {
-    }
 
-    if (save_as) {
-        if (ImGui::BeginChild("Save As", sf::Vector2f(static_cast<int>(this->state_data->gfxsettings->resolution.size.x) / 4, static_cast<int>(this->state_data->gfxsettings->resolution.size.y / 4)))) {
-            ImGui::InputText("New File", str0, IM_ARRAYSIZE(str0));
-            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal)) {
-                ImGui::BeginTooltip();
-                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-                ImGui::TextUnformatted("Leave default text to save to New_Map.cfg, or save to a new file");
-                ImGui::PopTextWrapPos();
-                ImGui::EndTooltip();
-            }
-
-            ImGui::Text("Maps can be saved in one of two formats, json like objects, or raw data");
-            if (ImGui::Button("Save", sf::Vector2f(125.f, 25.f))) {
-
-                this->Tilemap->saveToFile(GUI::convertToString(str0, this->str_size));
-                save_as = false;
-            }
-
-            ImGui::EndChild();
         }
-    }
 
-    if (load) {
-        this->Tilemap->loadFromFile("Data/TileMap/text.slmp", false);
-        load = false;
-    }
-    if (ImGui::Button("Tiles", sf::Vector2f(50.f, 0.f))) {
-        switchTabs = 0;
-    }
-    if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal)) {
-        ImGui::BeginTooltip();
-        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-        ImGui::TextUnformatted("Enter the Default TileMap Editor");
-        ImGui::PopTextWrapPos();
-        ImGui::EndTooltip();
-    }
     ImGui::SameLine(0.0, 2.0f);
-    if (ImGui::Button("Enemies", sf::Vector2f(100.0f, 0.0f))) {
-        switchTabs = 1;
-    }
-    if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal)) {
-        ImGui::BeginTooltip();
-        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-        ImGui::TextUnformatted("Place Enemy Spawner Tiles");
-        ImGui::PopTextWrapPos();
-        ImGui::EndTooltip();
-    }
-    ImGui::SameLine(0.0, 2.0f);
-    if (ImGui::Button("Enviornmental Tiles", sf::Vector2f(150.0f, 0.0f))) {
-        switchTabs = 2;
-    }
-    if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal)) {
-        ImGui::BeginTooltip();
-        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-        ImGui::TextUnformatted("Place objects / enviornment tiles");
-        ImGui::PopTextWrapPos();
-        ImGui::EndTooltip();
-    }
-    ImGui::SameLine(0.0, 2.0f);
-    if (ImGui::Button("Level Manager", sf::Vector2f(150.0f, 0.0f))) {
-        switchTabs = 3;
-    }
-    ImGui::SameLine(0.0, 2.0f);
-    if (ImGui::Button("Shader Editor", sf::Vector2f(100.f, 0.0f))) {
-        switchTabs = 4;
-        std::cout << "switching to shader editor mode" << std::endl;
-    }
-
-    switch (switchTabs) {
-    case 0:
-
-        this->activeMode = 0;
-
-        break;
-    case 1:
-
-        this->activeMode = 1;
-
-        break;
-    case 2:
-
-        this->activeMode = 2;
-
-        break;
-
-    case 3:
-        this->activeMode = 3;
-
-        break;
-
-    case 4:
-        this->activeMode = 4;
-        break;
-
-    default:
-        break;
-    }
 
     std::stringstream cursor_text;
     cursor_text << "MouseX: " << this->MousePosView.x << "\n"
@@ -647,37 +482,29 @@ void EditorState::updateGUI(const float& dt)
 
 void EditorState::render(sf::RenderTarget* target)
 {
+
     if (!target)
         target = this->window;
-    // target->draw(this->bg);
+
     target->setView(this->mainView);
     this->Tilemap->render(*target, this->mainView, this->MousePosGridI);
     this->Tilemap->DefferedRender(*target);
-    //  this->renderTexture->clear();
 
-    // this->renderTexture->setView(this->mainView);
-
-    // Tilemap Camera (same as game camera)
     this->window->setView(this->mainView);
-    // target->draw(this->bg_interior);
 
-    // this->renderTexture->setView(this->renderTexture->getDefaultView());
-    //  Buttons Camera
     this->window->setView(this->window->getDefaultView());
     // this->renderTexture->display();
     // target->draw(*this->renderSprite);
     this->renderModes(*target);
-    this->renderButtons(*target);
+
 
     if (this->paused) {
         this->window->setView(this->window->getDefaultView());
         this->pMenu->render(*target);
     }
 
-    if (this->buffering) {
         this->window->setView(this->window->getDefaultView());
-        // target->draw(this->loading_sprite);
-    }
+        this->renderButtons(*target);
 }
 
 void EditorState::renderGUI(sf::RenderTarget& target)
