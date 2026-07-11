@@ -29,9 +29,9 @@ PauseMenu::PauseMenu(sf::VideoMode& vm, sf::Font& font)
 
     // test
 
-    this->pillbutt = new GUI::RoundedRectangleShape(sf::Vector2f(200.f, 200.f), 45.f, 20);
-    this->pillbutt->setPosition(sf::Vector2f(this->container.getPosition().x + this->container.getSize().x / 2.f - this->menutext->getGlobalBounds().size.x / 2.f,
-        this->container.getPosition().y + GUI::pixelpercentY(4, vm)));
+    //this->pillbutt = new GUI::RoundedRectangleShape(sf::Vector2f(200.f, 200.f), 45.f, 20);
+    //this->pillbutt->setPosition(sf::Vector2f(this->container.getPosition().x + this->container.getSize().x / 2.f - this->menutext->getGlobalBounds().size.x / 2.f,
+       // this->container.getPosition().y + GUI::pixelpercentY(4, vm);
 }
 
 PauseMenu::~PauseMenu()
@@ -64,7 +64,7 @@ void PauseMenu::render(sf::RenderTarget& target)
     target.draw(*this->menutext);
 
     // GUI Pill Button render test
-    target.draw(*this->pillbutt);
+
 }
 
 std::map<std::string, GUI::Button*>& PauseMenu::getButtons()

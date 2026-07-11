@@ -36,73 +36,106 @@ public:
     sf::Font* font;
 };
 
-/// The Main GameState, containing the main gameplay elements
+
 class GameState : public State {
 
 public:
     GameState(StateData* state_data);
     virtual ~GameState();
 
-    /// Control the area the Player is able to see on screen.
-    /// @param dt Delta-Time
-    ///@discussion This function works by setting the center of the sf::View to the center of the Player's sprite, and then constantly checking to see if the view's bounding rectangle around the player has exceeded the maximum size of the tilemap and correcting by reseting the center of the view.
+
+    /////////////////////////////////////////////////
+    /// \brief keep the view centered on the player as the player moves
+    ///
+    /// \param dt const float&
+    /// \return void
+    ///
+    /////////////////////////////////////////////////
     void updateView(const float& dt);
 
     void updateShaders(const float& dt);
 
-    /// Update the basic controls for the Player
-    /// @param dt Detla-Time
+    /////////////////////////////////////////////////
+    /// \brief update player controls
+    ///
+    /// \param dt const float&
+    /// \return void
+    ///
+    /////////////////////////////////////////////////
     void updatePlayerInput(const float& dt);
 
-    /// Update the User's GUI, HP, coin counter etc
-    /// @param dt Delta-Time
-    void updatePlayerGUI(const float& dt);
+    void updateMapEditor(const float& dt);
 
-    /// Update components associated with the Player. e.g, updating the Animations, and hitbox.
-    /// @param dt Delta-Time
+
+    /////////////////////////////////////////////////
+    /// \brief update the player's animations, hitbox, physics
+    ///
+    /// \param dt const float&
+    /// \return void
+    ///
+    /////////////////////////////////////////////////
     void updatePlayer(const float& dt);
 
-    /// Update the State
+    void updateMapEditorInput(const float& dt);
+
+    /////////////////////////////////////////////////
+    /// \brief  final update
+    ///
+    /// \param dt const float&
+    /// \return void
+    ///
+    /////////////////////////////////////////////////
     void update(const float& dt);
-    /// Check for a user-requested quit from the state
+
     void checkforendstate();
-    /// Update user input, e.g close the window
+
+    /////////////////////////////////////////////////
+    /// \brief update SFML events (window close, resize, etc)
+    ///
+    /// \param dt const float&
+    /// \return void
+    ///
+    /////////////////////////////////////////////////
     void updateInput(const float& dt);
-    /// Update the Buttons
+
     void updateButtons();
-    /// Update the Tile Map, shaders, etc
+
     void updateTileMap(const float& dt);
-    /// Render all of the Gamestate elements
+
+
     void render(sf::RenderTarget* target);
+
+
+
+    void renderMapEditor(sf::RenderTarget* target);
 
     void updateDialouge(const float& dt);
 
-
-    // Modifiers
     const bool savegame() const;
 
 private:
-    // View and Camera
+
     sf::View view;
     float cameraspeed;
-    class BattleState* battleState;
-    // sf::Color debug;
-    float debug1;
-    sf::Color debug;
-    ImVec4 selection_color_Imgui;
 
+    int editor_layer;
+    short editor_type;
+    bool editor_collision;
     Player* player;
-    PlayerGUI* playerGUI;
     PauseMenu* pMenu;
     TileMap* Tilemap;
-
+    sf::Text* cursortext;
+    GUI::TextureSelector* texture_selector;
 
     sf::Font font;
     sf::RenderTexture* rendertexture;
     sf::Sprite* rendersprite;
     sf::Color selection_color;
+    sf::RectangleShape select_Rect;
+    std::map<std::string,GUI::Button*> buttons;
+    sf::IntRect TextureRect;
     ImVec4 Selection_colorImGui;
-    // Shaders
+
     sf::Shader core_shader;
     sf::Shader lantern_shader;
     float shadertime;
@@ -115,23 +148,23 @@ private:
 
     GameStateData gamestatedata;
 
-    // Init Functions
+
     void initdeferedrender();
     void initview();
     void initkeybinds();
     void inittextures();
     void initplayers();
+    void initbuttons();
     void initshaders();
-    void initplayerGUI();
     void initfonts();
     void initpausemenu();
     void initTileMap();
     void initgamestatedata();
     void initvariables();
-    void initdialougesystem();
-    void initworldbounds();
 
-    // Exception handler Functions
+    void initworldbounds();
+    void initmapeditor();
+
     void handletilemap();
     void handleshader();
     void handlekeybinds();

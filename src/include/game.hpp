@@ -54,8 +54,8 @@ private:
     std::map<std::string, int> supported_keys;
     // sf::Joystick joystick;
 
-    sf::RenderWindow* window;
-
+    //sf::RenderWindow* window;
+    std::shared_ptr<std::_NonArray<sf::RenderWindow>> window;
     sf::Event event;
     sf::Vector2f gridSize;
     bool fullscreen;
@@ -68,13 +68,15 @@ private:
     float elapsedTime;
 
     /// The State Mechanism, stored in a stack of "State" objects
-    /// The State Mechanism, stored in a stack of "State" objects
     std::stack<State*> states;
 
+    const float virtualWidth = 1920.0f;
+    const float virtualHeight = 1080.0f;
     StateData state_data;
-    GraphicsSettings* gfxsettings;
-    // std::ostream* ostream;
-    // init functions
+
+    std::shared_ptr<std::_NonArray<GraphicsSettings>> gfxsettings;
+
+
     void load();
     void initWindow();
     void initGTK();

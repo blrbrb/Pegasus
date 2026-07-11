@@ -31,10 +31,10 @@ Game::Game()
 Game::~Game()
 {
 
-    delete this->window;
+    //delete this->window;
 
     while (!this->states.empty()) {
-        delete this->states.top();
+
         this->states.pop();
         // LOG(INFO) << "deleting..." << " " << states.size() << " " << "in Game.cpp";
     }
@@ -95,7 +95,7 @@ void Game::initStates()
 void Game::initGraphicsSettings()
 {
 
-    this->gfxsettings = new GraphicsSettings();
+    this->gfxsettings = std::make_unique<GraphicsSettings>();
 
     this->gfxsettings->loadFromFile("Config/Window.cfg");
 }
@@ -118,11 +118,11 @@ void Game::initWindow()
         // it might be a good idea to assign the hanging window1 pointer a value, and then use the newer .create method
         // this->window1 = new sf::RenderWindow();
 
-        this->window = new sf::RenderWindow(this->gfxsettings->resolution, this->gfxsettings->title, sf::Style::Resize | sf::Style::Close, sf::State::Windowed);
+        this->window = std::make_shared<sf::RenderWindow>(this->gfxsettings->resolution, this->gfxsettings->title, sf::Style::Resize | sf::Style::Close, sf::State::Windowed);
     }
 
     else
-        this->window = new sf::RenderWindow(this->gfxsettings->resolution, this->gfxsettings->title, sf::Style::Resize | sf::Style::Close, sf::State::Windowed);
+        this->window = std::make_shared<sf::RenderWindow>(sf::RenderWindow(this->gfxsettings->resolution, this->gfxsettings->title, sf::Style::Resize | sf::Style::Close, sf::State::Windowed));
     //   assert(this->gfxsettings->resolution.isValid());
 
     // this->window1->create(this->gfxsettings->resolution, this->gfxsettings->title, sf::Style::Titlebar, this->gfxsettings->windowSettings);
@@ -147,7 +147,7 @@ void Game::initGTK()
 void Game::initStateData()
 {
     this->state_data.window = this->window;
-    this->state_data.gfxsettings = this->gfxsettings;
+    this->state_data.gfxsettings = this->gfxsettings.get();
     this->state_data.supportedKeys = &this->supported_keys;
     this->state_data.states = &this->states;
     this->state_data.gridSize = this->gridSize;
@@ -166,7 +166,7 @@ void Game::initStateData()
         std::cout << "unable to initalize graphics settings state data" << "/n";
         // LOG(INFO) << "Unable to initalize Keys into State Data";
     }
-    if (this->state_data.states == nullptr) {
+    if (this->state_data.states->empty()) {
         std::cout << "unable to initalize graphics settings state data" << "/n";
         // LOG(INFO) << "Unable to initalize States into State Data";
     }
@@ -232,6 +232,33 @@ void Game::Update()
 
 void Game::UpdateEvents()
 {
+  auto updateViewport = [&](sf::Vector2u newSize, sf::View view) {
+    float windowRatio = static_cast<float>(newSize.x) / static_cast<float>(newSize.y);
+    float viewRatio = virtualWidth / virtualHeight;
+
+    float sizeX = 1.0f;
+    float sizeY = 1.0f;
+    float posX = 0.0f;
+    float posY = 0.0f;
+
+    // Letterbox: Window is wider than the target aspect ratio
+    if (windowRatio > viewRatio) {
+      sizeX = viewRatio / windowRatio;
+      posX = (1.0f - sizeX) / 2.0f;
+    }
+    // Pillarbox: Window is taller than the target aspect ratio
+    else {
+      sizeY = windowRatio / viewRatio;
+      posY = (1.0f - sizeY) / 2.0f;
+    }
+
+    view.setViewport(sf::FloatRect({posX, posY}, {sizeX, sizeY}));
+    window->setView(view);
+  };
+
+  // Initialize with the starting window size
+  updateViewport(window->getSize(), this->window->getView());
+
 
     while (const std::optional event = this->window->pollEvent()) {
         ImGui::SFML::ProcessEvent(*this->window, *event);
@@ -240,6 +267,11 @@ void Game::UpdateEvents()
             if (!this->states.empty()) {
                 // LOG(INFO) << "destroying window...";
                 this->window->close();
+            }
+
+            if (const auto* resized = event->getIf<sf::Event::Resized>())
+            {
+               updateViewport(resized->size,this->window->getView());
             }
         }
     }

@@ -6,10 +6,10 @@
 //  Copyright © 2020 Eli Reynolds. Apache License .
 //
 
-#
-#include "include/AnimationComponet.hpp"
 
-AnimationComponet::AnimationComponet(sf::Sprite& sprite, sf::Texture& texturesheet)
+#include "include/AnimationManager.hpp"
+
+AnimationManager::AnimationManager (sf::Sprite& sprite, sf::Texture& texturesheet)
     : sprite(sprite)
     , texturesheet(texturesheet)
     , lastAnimation(NULL)
@@ -17,7 +17,7 @@ AnimationComponet::AnimationComponet(sf::Sprite& sprite, sf::Texture& textureshe
 {
 }
 
-AnimationComponet::~AnimationComponet()
+AnimationManager::~AnimationManager()
 {
 
     for (auto& i : this->animations) {
@@ -26,14 +26,13 @@ AnimationComponet::~AnimationComponet()
 }
 
 //*Functions*
-void AnimationComponet::add_animation(const std::string& key, float animationtimer, int start_x, int start_y, int end_x, int end_y, int width, int height)
+void AnimationManager::add_animation(const std::string& key, float animationtimer, int start_x, int start_y, int end_x, int end_y, int width, int height)
 {
     this->animations[key] = new Animation(this->texturesheet, this->sprite, animationtimer, start_x, start_y, end_x, end_y, width, height);
-    // this->Animations.insert(animation(key, new Animation(this->texturesheet, this->sprite, animationtimer, start_x, start_y, end_x, end_y, width, height)));
-    // this->names.push_back(this->Animations.right.at(this->animations[key]));
+
 }
 
-const bool& AnimationComponet::play(const std::string& key, const float& dt, const bool priority)
+const bool& AnimationManager::play(const std::string& key, const float& dt, const bool priority)
 {
 
     if (this->priorityAnimation) //*if a priority animation exists, play it first
@@ -81,7 +80,7 @@ const bool& AnimationComponet::play(const std::string& key, const float& dt, con
     return this->animations[key]->getDone();
 }
 
-const bool& AnimationComponet::play(const std::string& key, const float& dt, const float& speed, const float& speed_max, const bool priority)
+const bool& AnimationManager::play(const std::string& key, const float& dt, const float& speed, const float& speed_max, const bool priority)
 {
     if (this->priorityAnimation) //*if a priority animation exists, play it first
     {
@@ -128,12 +127,12 @@ const bool& AnimationComponet::play(const std::string& key, const float& dt, con
 //*End Functions*
 
 //*Accessors*
-const bool& AnimationComponet::getDone(const std::string& key)
+const bool& AnimationManager::getDone(const std::string& key)
 {
     return this->animations[key]->getDone();
 }
 
-const std::string& AnimationComponet::getName(int index)
+const std::string& AnimationManager::getName(int index)
 {
     if (this->names.empty())
         return "empty";

@@ -124,7 +124,11 @@ TileMap::TileMap(sf::Vector2f gridsize, int width, int height, std::string textu
         }
     }
 
-    this->tileTextureSheet.loadFromFile(texture_file);
+
+   if(!this->tileTextureSheet.loadFromFile(texture_file))
+    {
+      std::cerr << "unable to load tiles" << '\n';
+    };
 
     this->physicsrect.setSize(sf::Vector2f(grid_sizeF.x, grid_sizeF.y));
     this->physicsrect.setFillColor(sf::Color::Transparent);
@@ -231,13 +235,7 @@ void TileMap::render(sf::RenderTarget& target, const sf::View& view, const sf::V
                     }
                 }
 
-                if (this->Map[x][y][this->layer][k]->gettype() == TileTypes::SPAWNER) {
-                    this->physicsrect.setPosition(this->Map[x][y][this->layer][k]->getPosition());
-                    this->physicsrect.setFillColor(sf::Color(50, 20, 10, 100));
-                    this->physicsrect.setFillColor(sf::Color::Red);
-                    this->physicsrect.setOutlineThickness(1.f);
-                    target.draw(this->physicsrect);
-                }
+
             }
         }
     }
@@ -245,36 +243,15 @@ void TileMap::render(sf::RenderTarget& target, const sf::View& view, const sf::V
 
 void TileMap::addTile(const int x, const int y, const int z, const sf::IntRect texture_rect, const bool& collision, const short& type)
 {
-    std::cout << "regular function called" << std::endl;
-    /*!
-     @brief  Add a tile to the TileMap
-
-     @param   const int   x   The X-value (relative to the Tilemap vector) to place a tile on. e.g. TileMap[x]
-
-     @param   const int   y   The Y-value (relative to the Tilemap vector) to place a tile on. e.g. TileMap[x][y]
-
-     @param   const int   z   The Z-value (relative to the Tilemap vector) to place a tile on e.g. TileMap[x][y][z]
-
-     @param   const sf::IntRect   texture_rect    The texture rectangle from the TileSheet texture to paste.
-
-     @param   const bool&   collision   The boolean value that controlls wether or not a placed tile will have collision.
-
-     @param   const short&   type    The enumerator value representing the type of tile placed.
-
-     @return void
-
-
-       */
 
     if (x < this->MaxSizeWorldGrid.x && x >= 0
         && y < this->MaxSizeWorldGrid.y && y >= 0
         && z < this->layers && z >= 0) {
         /*if okay to add tile*/
-        // and if the type of tile is NORMAL add normal til
 
         this->Map[x][y][z].push_back(new NormalTile(type, x, y, this->grid_sizeF, this->tileTextureSheet, texture_rect, collision));
 
-    } // this->Map[x][y][z](new NormalTile(type, x, y, this->grid_sizeF, this->tileTextureSheet, texture_rect, collision));
+    }
 }
 
 void TileMap::addObject(const short type, const int x, const int y)
@@ -285,7 +262,7 @@ void TileMap::addObject(const short type, const int x, const int y)
 
 
 
-void TileMap::RemoveTile(const int x, const int y, const int z, const int type)
+void TileMap::removeTile(const int x, const int y, const int z, const int type)
 {
 
     if (x < this->MaxSizeWorldGrid.x && x >= 0 && y < this->MaxSizeWorldGrid.y && y >= 0 && z < this->layers && z >= 0) {
@@ -312,115 +289,12 @@ const sf::Texture* TileMap::getTileSheet() const
     return &this->tileTextureSheet;
 }
 
-bool TileMap::saveToFile(const std::string& filename, bool json)
+bool TileMap::saveToFile(const std::string& filename)
 {
-    // assert(json);
-    //std::cout << json << std::endl;
-    /*!
-      @brief  Saves a vector of tiles as a string of integers to a document.
-
-      @param   const std::string filename   the name of the file to create and save to.
-
-      @discussion
-            Maxsize of the Vector:
-            Size of the tile grid:
-            texture rect value of the tiles at position x, y, z:
-            collision value of the tiles at position x, y, z:
-            type of the tiles at position x, y, z:
-
-      @return void
-        */
-    // int string_size1 = this->texture_file.length();
-    // std::cout << string_size1 << std::endl;
-
-    if (json) {
-
-        // pt.put("Map.Config.MaxSizeWorldGrid.x", this->MaxSizeWorldGrid.x);
-        // pt.put("Map.Config.MaxSizeWorldGrid.y", this->MaxSizeWorldGrid.y);
-        // pt.put("Map.Config.GridsizeI.x", this->gridsizeI.x);
-        // pt.put("Map.Config.GridsizeI.y", this->gridsizeI.y);
-        // pt.put("Map.Config.layers", this->layers);
-        // pt.put("Map.Config.level_type", this->level_type);
-        // pt.put("Map.Config.level_index", this->level_index);
-        // pt.put("Map.Config.texture", this->texture_file);
-
-        /// I hate white people.
-        // boost::property_tree::ptree tiles_node;
-        int index = 0;
-        // This is a four dimensional tilemap vector...
-        // please just make it easier on yourself. there is no other way to do this
-
-        // for (int x = 0; x < this->MaxSizeWorldGrid.x; x++) {
-
-        // for (int y = 0; y < this->MaxSizeWorldGrid.y; y++) {
-
-        // for (int z = 0; z < this->layers; z++) {
-
-        //   if (!this->Map[x][y][z].empty()) {
-
-        //  for (size_t k = 0; k < this->Map[x][y][z].size(); k++) {
-
-        //   index++;
-
-        //  tiles_node.put(std::to_string(index) + ".x", x);
-        // tiles_node.put(std::to_string(index) + ".y", y);
-        // tiles_node.put(std::to_string(index) + ".z", z);
-
-        // tiles_node.put(std::to_string(index) + ".xFloat", this->Map[x][y][z][k]->getPosition().x);
-        // tiles_node.put(std::to_string(index) + ".yFloat", this->Map[x][y][z][k]->getPosition().y);
-
-        // tiles_node.put(std::to_string(index) + ".texture_rect.position.y",
-        //     this->Map[x][y][z][k]->getTextureRect().position.y);
-        // tiles_node.put(std::to_string(index) + ".texture_rect.size.x",
-        //     this->Map[x][y][z][k]->getTextureRect().size.x);
-        // tiles_node.put(std::to_string(index) + ".texture_rect.size.y",
-        //    this->Map[x][y][z][k]->getTextureRect().size.y);
-        // tiles_node.put(std::to_string(index) + ".type", this->Map[x][y][z][k]->gettype());
-        // tiles_node.put(std::to_string(index) + ".collision", this->Map[x][y][z][k]->getCollision());
-        // tiles_node.put(std::to_string(index) + ".texture_rect.position.x",
-        // this->Map[x][y][z][k]->getTextureRect().position.x);
-
-        // std::cout << "Object Type: " <<  this->Map[x][y][z][k]->gettype() << std::endl;
-
-        // if (this->Map[x][y][z][k]->gettype() == TileTypes::OBJECT) {
-
-        // tiles_node.put(std::to_string(index) + ".object_type",
-        //  this->Map[x][y][z][k]->getObjectType());
-
-        // }
-
-        // else if (this->Map[x][y][z][k]->gettype() == TileTypes::SPAWNER) {
-
-        // downcasting required to access data members in EnemySpawner
-        // EnemySpawner* enemy_spawner = (EnemySpawner*)this->Map[x][y][z][k];
-
-        // if (enemy_spawner) {
-
-        //   tiles_node.put(std::to_string(index) + ".enemy_amount", enemy_spawner->getEnemyAmount());
-        //   tiles_node.put(std::to_string(index) + ".enemy_type", enemy_spawner->getEnemyType());
-        //   tiles_node.put(std::to_string(index) + ".timer", enemy_spawner->getTime());
-        //   tiles_node.put(std::to_string(index) + ".maxDistance", enemy_spawner->getMaxDistance());
-        // }
-        // }
-        // }
-        //}
-        //}
-        //}
-        //}
-
-        // this->pt.put_child("tiles", tiles_node);
-
-        // boost::property_tree::json_parser::write_json("Data/TileMap/" + filename, this->pt);
-        // return true;
-    } else {
 
         std::ofstream out(filename);
 
-        // this->randomGeneration();
-       // out.open(filename, std::ios::out);
-
         if (out.is_open()) {
-            // DONT CHANGE THIS SHIT
 
             std::cout << std::hex << this->MaxSizeWorldGrid.x << " " << this->MaxSizeWorldGrid.y << "\n"
             << this->gridsizeI.x << " " << this->gridsizeI.y << "\n"
@@ -448,12 +322,13 @@ bool TileMap::saveToFile(const std::string& filename, bool json)
                 }
             }
 
+
         }
 
         else {
              std::cerr << "Error: [TileMap::savetoFile() 468] " << std::strerror(errno) << std::endl;
             // LOG(FATAL) << "Throwing runtime exception on line 647...";
-            //throw std::runtime_error("ERROR CODE TILEMAP:392 || TILEMAP::SAVETOFILE || COULD NOT SAVE");
+
              out.close();
             return false;
         }
@@ -461,9 +336,6 @@ bool TileMap::saveToFile(const std::string& filename, bool json)
         out.close();
 
         return true;
-    }
-    // Create a catch handler wherever this function is called, since the scope of the throw statement
-    // makes it so that it's destroyed immediatley after the function has returned a value.
 }
 
 const std::vector<int> TileMap::getLayer(const int& layer) const{
@@ -486,7 +358,7 @@ for (int x = 0; x < this->MaxSizeWorldGrid.x; x++)
 return tiledata;
 }
 
-bool TileMap::exportTMX(const std::string& filename)
+bool TileMap::exportTMX(const std::filesystem::path& filename)
 {
     tinyxml2::XMLDocument doc;
 
@@ -578,7 +450,7 @@ bool TileMap::exportTMX(const std::string& filename)
 
 }
 
-bool TileMap::importTMX(const std::string& filename)
+bool TileMap::importTMX(const std::filesystem::path& filename)
 {
 
     tinyxml2::XMLDocument doc;
@@ -723,86 +595,17 @@ sf::IntRect TileMap::calcTileRect(const int& gid, sf::Vector2i tileSize)
     rect.size.y = tileSize.y;
     return rect;
 }
-bool TileMap::loadFromFile(const std::string filename, bool json)
+
+//Depreciated see TileMap::importTMX
+bool TileMap::loadFromFile(const std::string filename)
 {
 
-    if (json) {
-        // this->grid_sizeF.x = this->pt.get<float>("Map.Config.GridsizeI.x");
-        //
-        //
-        // this->grid_sizeF.y = this->pt.get<float>("Map.Config.GridsizeI.y");
 
-        // boost::property_tree::json_parser::read_json(filename, this->pt);
-        // this->gridsizeI = sf::Vector2i(this->pt.get<int>("Map.Config.GridsizeI.x"), this->pt.get<int>("Map.Config.GridsizeI.y"));
-        // this->grid_sizeF.x = static_cast<float>(this->gridsizeI.x);
-        // this->grid_sizeF.y = static_cast<float>(this->gridsizeI.y);
-        // this->MaxSizeWorldGrid.x = this->pt.get<int>("Map.Config.MaxSizeWorldGrid.x");
-        // this->MaxSizeWorldGrid.y = this->pt.get<int>("Map.Config.MaxSizeWorldGrid.y");
-        // this->MaxSizeWorld_F.x = static_cast<float>(this->MaxSizeWorldGrid.x * gridsizeI.x);
-        // this->MaxSizeWorld_F.y = static_cast<float>(this->MaxSizeWorldGrid.y * gridsizeI.y);
-        // this->layers = this->pt.get<short>("Map.Config.layers");
-        // this->level_index = this->pt.get<short>("Map.Config.level_index");
-        // this->level_index = level_type;
-        // this->texture_file = this->pt.get<std::string>("Map.Config.texture");
-
-        // std::cout << gridsizeI.x << " " << gridsizeI.y << " current gridsie"
-
-        this->clear();
-
-        this->Map.resize(this->MaxSizeWorldGrid.x, std::vector<std::vector<std::vector<Tile*>>>());
-
-        for (int x = 0; x < this->MaxSizeWorldGrid.x; x++) {
-
-            for (int y = 0; y < this->MaxSizeWorldGrid.y; y++) {
-                this->Map[x].resize(this->MaxSizeWorldGrid.y, std::vector<std::vector<Tile*>>());
-
-                for (int z = 0; z < this->layers; z++) {
-                    this->Map[x][y].resize(this->layers, std::vector<Tile*>());
-                }
-            }
-        }
-
-        int total = 0;
-        // for (boost::property_tree::ptree::value_type& tile : pt.get_child("tiles")) {
-
-        //  total++;
-        // std::cout << "Tile NO:" << tile.first << std::endl;
-        // std::cout << "Tile data " <<  tile.second.data()<< std::endl;
-        // std::cout << "position x " << tile.second.get<int>("x") << std::endl;
-        // std::cout << "position y " << tile.second.get<int>("y") << std::endl;
-        // std::cout << "position z " << tile.second.get<int>("z") << std::endl;
-
-        // if the tile is an object tile (2), call the object tile constructor
-        //  if (tile.second.get<unsigned>("type") == TileTypes::OBJECT) {
-        //     this->Map[tile.second.get<int>("x")][tile.second.get<int>("y")][tile.second.get<int>("z")].push_back(new ObjectTile(tile.second.get<int>("x"), tile.second.get<int>("y"), this->grid_sizeF, this->tileTextureSheet, sf::IntRect(tile.second.get<unsigned>("texture_rect.position.x"), tile.second.get<unsigned>("texture_rect.position.y"), this->gridsizeI.x, this->gridsizeI.y), tile.second.get<short>("object_type")));
-        // }
-        // if the tile is an enemy spawner tile (3), call the enemy spawner tile constructor
-        // if (tile.second.get<unsigned>("type") == TileTypes::SPAWNER) {
-        //     this->Map[tile.second.get<int>("x")][tile.second.get<int>("y")][tile.second.get<int>("z")].push_back(new EnemySpawner(tile.second.get<int>("x"), tile.second.get<int>("y"), this->grid_sizeF, this->tileTextureSheet, //sf::IntRect(tile.second.get<unsigned>("texture_rect.position.x"), tile.second.get<unsigned>("texture_rect.position.y"), this->gridsizeI.x, this->gridsizeI.y), tile.second.get<int>("enemy_type"), tile.second.get<int>("enemy_amount"), tile.second.get<sf::Int32>("timer"), tile.second.get<float>("maxDistance")));
-
-        // }
-
-        // else
-        // std::cout << "pushing back new normal tile at postion " << tile.second.get<int>("x") << tile.second.get<int>("y") << tile.second.get<int>("z") << std::endl;
-        // this->Map[tile.second.get<int>("x")][tile.second.get<int>("y")][tile.second.get<int>("z")].push_back(new NormalTile(TileTypes::NORMAL, tile.second.get<int>("x"), tile.second.get<int>("y"), this->grid_sizeF, this-//>tileTextureSheet, sf::IntRect(tile.second.get<unsigned>("texture_rect.position.x"), tile.second.get<unsigned>("texture_rect.position.y"), this->gridsizeI.x, this->gridsizeI.y), tile.second.get<bool>("collision")));
-        //}
-        // std::cout << "total tiles: " << total << std::endl;
-
-        // if (!this->tileTextureSheet.loadFromFile(texture_file)) {
-        //  LOG(WARNING) << "Unable to read data from texture file '" << texture_file << "'";
-        //  LOG(FATAL) << "Throwing runtime exception on line 761...";
-
-        // throw std::runtime_error("ERROR CODE TILEMAP:458 || LOADFROMFILE || Reason: UNABLE_TO_OPEN_FILE");
-        //}
-
-        // return true;
-    } else {
         std::ifstream in;
 
         in.open(filename, std::ios::in);
 
         if (in.is_open())
-
         {
             sf::Vector2i size;
             // int gridSize = 0;
@@ -896,18 +699,14 @@ bool TileMap::loadFromFile(const std::string filename, bool json)
                     this->Map[x][y][z].push_back(new NormalTile(TileTypes::NORMAL, x, y, grid_sizeF, this->tileTextureSheet, sf::IntRect(sf::Vector2i(static_cast<int>(textureX), static_cast<int>(textureY)), sf::Vector2i(this->gridsizeI.x, this->gridsizeI.y)), collision));
                 }
             }
-
+             in.close();
             return true;
         } else {
             std::cout << "ERROR CODE TILEMAP:3 || LOADFROMFILE || UNABLE TO READ TILEMAP DATA" << std::endl;
             in.close();
              return false;
-            //throw std::runtime_error("ERROR CODE TILEMAP:3 || LOADFROMFILE || UNABLE TO READ TILEMAPDATA");
-
         }
 
-        in.close();
-    }
     return false;
 }
 
@@ -921,19 +720,7 @@ void TileMap::update(Entity* entity, const float& dt)
 
 const int TileMap::getLayerSize(const int x, const int y, const int layer) const
 {
-    /*!
-     @breif   Get the number of tiles placed on one grid position.
 
-     @param   const int   x   The X-value (relative to the Tilemap vector) to place a tile on. e.g. TileMap[x]
-
-     @param   const int   y   The Y-value (relative to the Tilemap vector) to place a tile on. e.g. TileMap[x][y]
-
-     @param   const int   z   The Z-value (relative to the Tilemap vector) to place a tile on e.g. TileMap[x][y][z]
-
-     @return  const int   The Number Of tiles Placed on a grid.
-
-     @return  unsigned    Outside of the Tilemap bounds if the return value from this function is negative.
-    */
 
     if (x >= 0 && x < static_cast<int>(this->Map.size())) {
         if (y >= 0 && y < static_cast<int>(this->Map[x].size())) {
@@ -946,7 +733,7 @@ const int TileMap::getLayerSize(const int x, const int y, const int layer) const
     return -1;
 }
 
-void TileMap::DefferedRender(sf::RenderTarget& target, sf::Shader* shader, const sf::Vector2f PlayerPosition)
+void TileMap::defferedRender(sf::RenderTarget& target, sf::Shader* shader, const sf::Vector2f PlayerPosition)
 {
 
     /*!   @brief Renders certian elements of the tilemap behind the main view.
@@ -1022,7 +809,7 @@ const bool TileMap::TileEmpty(const int x, const int y, const int z) const
         return false;
     }
 
-    else if (!x || !y || !z) {
+    else {
         throw std::invalid_argument("Invalid Argument: Tile does not exist");
     }
 }
@@ -1107,14 +894,15 @@ void TileMap::updateTiles(Entity* entity, const float& dt)
 
                 this->Map[x][y][this->layer][k]->update(dt);
 
-                if (this->Map[x][y][this->layer][k]->gettype() == TileTypes::SPAWNER) {
+                //if (this->Map[x][y][this->layer][k]->gettype() == TileTypes::WHATEVER) {
                     //TileYouWant* t = dynamic_cast<TileClass*>(this->Map[x][y][this->layer][k]);
                     //
-                        }
-                    }
+                        // t->update()
+                        //}
+                   // }
                 }
             }
-}
+}}
 
 
 

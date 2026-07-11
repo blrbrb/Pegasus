@@ -53,7 +53,8 @@ EditorState::~EditorState()
     }
 }
 
-// initialization functions
+
+
 void EditorState::initVariables()
 {
     this->cameraSpeed = 200.f;
@@ -234,11 +235,10 @@ void EditorState::initEditorStateData()
     this->editorStateData.keytime = &this->keyTime;
     this->editorStateData.ketyimeMax = &this->keyTimeMax;
 
-    this->editorStateData.mouseposGridI = &this->MousePosGridI;
+    this->editorStateData.mouseposGrid = &this->MousePosGrid;
     this->editorStateData.mousePosView = &this->MousePosView;
     this->editorStateData.mousePosWindow = &this->MousePosWindow;
     this->editorStateData.mousePosScreen = &this->MousePosScreen;
-    this->editorStateData.mouseposGridF = &this->MousePosGridF;
     this->editorStateData.view = &this->mainView;
     this->editorStateData.font = &this->font;
     std::cout << "keytime max editor state data EditorState.cpp | 319" << this->editorStateData.ketyimeMax << std::endl;
@@ -346,7 +346,7 @@ void EditorState::updateButtons()
     for (auto& it : this->buttons) {
         it.second->update(this->MousePosWindow);
     }
-
+//
 
 }
 
@@ -442,6 +442,9 @@ void EditorState::updateGUI(const float& dt)
         // this->Tilemap->loadFromFile("Data/TileMap/" + GUI::convertToString(str0, this->str_size), false);
 
     }
+
+
+    //ImGui::EndChild();
     ImGui::SameLine(0.0, 8.f);
     ImGui::InputText("New File", str0, IM_ARRAYSIZE(str0));
     if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal)) {
@@ -475,6 +478,8 @@ void EditorState::updateGUI(const float& dt)
 
     this->str_size = sizeof(str0) / sizeof(char);
 
+
+
     ImGui::End();
 }
 
@@ -487,8 +492,8 @@ void EditorState::render(sf::RenderTarget* target)
         target = this->window;
 
     target->setView(this->mainView);
-    this->Tilemap->render(*target, this->mainView, this->MousePosGridI);
-    this->Tilemap->DefferedRender(*target);
+    this->Tilemap->render(*target, this->mainView, this->MousePosGrid);
+    this->Tilemap->defferedRender(*target);
 
     this->window->setView(this->mainView);
 
@@ -504,7 +509,7 @@ void EditorState::render(sf::RenderTarget* target)
     }
 
         this->window->setView(this->window->getDefaultView());
-        this->renderButtons(*target);
+
 }
 
 void EditorState::renderGUI(sf::RenderTarget& target)
@@ -513,9 +518,7 @@ void EditorState::renderGUI(sf::RenderTarget& target)
 
 void EditorState::renderButtons(sf::RenderTarget& target)
 {
-    for (auto& it : this->buttons) {
-        it.second->render(target);
-    }
+
 }
 
 void EditorState::updateModes(const float& dt)

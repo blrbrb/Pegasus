@@ -228,26 +228,7 @@ GUI::Button::Button(float x, float y, float width, float height, const std::stri
     // this->rectangle.setTextureRect(static_cast<sf::IntRect>(this->rectangle.getGlobalBounds()));
 }
 
-/**
- * @brief initalizes a GUI::Button() with text and a specified font
- * @overload GUI::Button()
- *
- * @namespace GUI
- * @class Button
- *
- *
- * @param x The x on-screen coordinate of the button's position.
- * @param y The y on-screen coordinate of the button's position.
- * @param width The horizontal size of the button
- * @param height The vertical size of the button
- * @param font Pointer to an`sf::Font` object.
- * @details This font is used to set the text style for the button's text content. It defines
- * the font family, size, color, and other text properties for the displayed
- * @param text string thatrepresents the text to be rendered on to the button.
- * @details  In the provided code snippet, this text is being set to the `sf::Text` object associated with the button. The text will be displayed using
- * @param character_size unsigned int representing how large the text glyph will be rendered
- * @param ID The unique identifier for the button. It is used to distinguish this button from other buttons in the GUI.
- */
+
 GUI::Button::Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned int character_size, short unsigned ID)
     : hover(false)
     , pressed(false)
@@ -277,20 +258,7 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font* font,
     this->text->setPosition({ this->rectangle->getPosition().x + this->rectangle->getPosition().x / 2.f - this->rectangle->getPosition().x / 2.f, this->rectangle->getPosition().y + this->rectangle->getSize().y / 2.f });
 }
 
-/**
- * @brief Initializes a GUI button with specified parameters and default textures. Accepting only coordinates, and size parameters
- * @namespace GUI
- * @class Button
- * @name Button
- * @overload GUI::Button()
- * @addtogroup GUI
- * @param x The x on-screen coordinate of the button's position.
- * @param y The y on-screen coordinate of the button's position.
- * @param width The horizontal size of the button
- * @param height The vertical size of the button
- * @param ID The unique identifier for the button. It is used to distinguish this button from
- * other buttons in the GUI.
- */
+
 GUI::Button::Button(float x, float y, float width, float height, short unsigned ID)
     : hover(false)
     , pressed(false)
@@ -586,7 +554,7 @@ void GUI::DropDownList::updateKeyTime(const float& dt)
 /* BEGIN TEXTURE SELECTOR*/
 
 // this Is NOT the version of the texture Selector being called in EditorState
-GUI::TextureSelector::TextureSelector(float x, float y, float width, float height, sf::Vector2f gridSize, const sf::Texture* texture_sheet, sf::Font& font, const std::string& text, bool using_imgui)
+GUI::TextureSelector::TextureSelector(float x, float y, float width, float height, sf::Vector2f gridSize, const sf::Texture* texture_sheet, const std::string& text, bool using_imgui)
     : keyTime(0.f)
     , keyTimeMax(2.f)
     , multi_select(false)
@@ -609,15 +577,16 @@ GUI::TextureSelector::TextureSelector(float x, float y, float width, float heigh
      */
     sf::Vector2f offset = gridSize;
 
-    this->using_imgui = using_imgui;
-    this->bounds.setSize(sf::Vector2f(width, height));
-    this->bounds.setPosition({ x + offset.x, y + offset.y });
+
+
+    this->bounds.setPosition({ x + offset.x, y });
     this->bounds.setFillColor(sf::Color(50, 50, 50, 100));
     this->bounds.setOutlineThickness(1.f);
     this->bounds.setOutlineColor(sf::Color(255, 255, 255, 200));
     this->textureSheet = *texture_sheet;
     this->size = texture_sheet->getSize();
-    this->sheet.setPosition({ x + offset.x, y + offset.y });
+     this->bounds.setSize(sf::Vector2f(static_cast<float>(this->textureSheet.getSize().x),static_cast<float>(this->textureSheet.getSize().y)));
+    this->sheet.setPosition({ x + offset.x, y  });
 
     if (this->sheet.getGlobalBounds().size.x > this->bounds.getGlobalBounds().size.x) {
         this->sheet.setTextureRect(sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(static_cast<int>(this->bounds.getGlobalBounds().size.x), static_cast<int>(this->sheet.getGlobalBounds().size.y))));
@@ -642,11 +611,11 @@ GUI::TextureSelector::TextureSelector(float x, float y, float width, float heigh
 
     this->hide = new GUI::Button(x, y, gridSize.x, gridSize.y);
 
-    // debug
-    // std::cout << this->bounds.getGlobalBounds().width << std::endl;
+
+
 }
 
-// Functions
+
 
 GUI::TextureSelector::~TextureSelector()
 {
@@ -677,15 +646,15 @@ void GUI::TextureSelector::update(const sf::Vector2i& MousePosWindow, const floa
             this->MousePosGrid.x = (MousePosWindow.x - static_cast<int>(this->bounds.getPosition().x)) / static_cast<unsigned>(this->gridSize.x);
             this->MousePosGrid.y = (MousePosWindow.y - static_cast<int>(this->bounds.getPosition().y)) / static_cast<unsigned>(this->gridSize.y);
 
-            this->selector.setPosition({ this->bounds.getPosition().x + static_cast<float>(this->MousePosGrid.x * this->gridSize.x),
-            this->bounds.getPosition().y + static_cast<float>(this->MousePosGrid.y * this->gridSize.y) });
+            this->selector.setPosition({ this->bounds.getPosition().x + this->MousePosGrid.x * this->gridSize.x,
+            this->bounds.getPosition().y + this->MousePosGrid.y * this->gridSize.y });
 
             // Update the Texture Rectangle
 
             this->textureRect.position.x = static_cast<int>(this->selector.getPosition().x - this->bounds.getPosition().x);
             this->textureRect.position.y = static_cast<int>(this->selector.getPosition().y - this->bounds.getPosition().y);
 
-            //this->texture_rects.push_back(this->textureRect);
+
         }
 
 
@@ -744,75 +713,7 @@ const sf::Vector2u& GUI::TextureSelector::getMaxSize() const
 
 /*END TEXTURE SELECTOR*/
 
-/*BEGIN CHECKBOX*/
 
-GUI::CheckBox::CheckBox(float x, float y)
-    : BoxState(0)
-    , checked(false)
-    , hovering(false)
-{
-    // HARD CODED CHECK BOX TEXTURES
-    this->idle_box.loadFromFile("Resources/GUI/TickBox/Grey/grey_box.png");
-    this->active_box.loadFromFile("Resources/GUI/TickBox/Orange/red_boxCheckmark.png");
-
-    this->box.setSize(sf::Vector2f(static_cast<float>(this->idle_box.getSize().x), static_cast<float>(this->idle_box.getSize().y)));
-}
-
-GUI::CheckBox::~CheckBox() = default;
-void GUI::CheckBox::update(const sf::Vector2i& MousePos)
-{
-
-    this->BoxState = IDLE_BOX;
-
-    if (this->box.getGlobalBounds().contains(static_cast<sf::Vector2f>(MousePos))) {
-
-        this->BoxState = HOVER_BOX;
-
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-            this->BoxState = PRESSED_BOX;
-        }
-    }
-
-    switch (this->BoxState) {
-
-    case IDLE_BUTTON: // the Box is not being interacted with by the user
-
-        this->box.setTexture(&idle_box);
-        break;
-
-    case HOVER: // the user's cursor is hovering over the box
-
-        this->box.setTexture(&hover_box);
-        break;
-
-    case PRESSED: // the button has been interacted with
-
-        this->box.setTexture(&active_box);
-        break;
-
-    default:
-        // will appear if something is wrong with the initalizaiton of the checkbox texture.
-        this->box.setFillColor(sf::Color::Red);
-        this->box.setFillColor(sf::Color::Green);
-        this->box.setOutlineColor(sf::Color::Blue);
-        std::cout << "ERROR_CODE GUI:630 || CHECKBOX::UPDATE || UNABLE TO LOAD CHECKBOX FROM TEXTURE FILE CHECK CONSTRUCTOR" << std::endl;
-        break;
-    }
-}
-
-bool GUI::CheckBox::isPressed() const
-{
-    if (this->BoxState == PRESSED_BOX)
-        return true;
-
-    return false;
-}
-
-void GUI::CheckBox::render(sf::RenderTarget& target)
-{
-    target.draw(this->box);
-}
-/*END CHECKBOX */
 
 /*BEGIN MISC*/
 unsigned int GUI::calcCharSize(const sf::VideoMode& vm, const unsigned int& modifier)
@@ -1089,200 +990,5 @@ void GUI::GradientElement::draw(sf::RenderTarget& target, sf::RenderStates state
     target.draw(this->geom, states);
 }
 
-GUI::RoundedRectangleShape::RoundedRectangleShape(const sf::Vector2f& size, float radius, unsigned int cornerPointCount)
-{
-    this->size = size;
-    this->radius = radius;
-    this->cornerpointCount = cornerPointCount;
-    update();
-}
 
-////////////////////////////////////////////////////////////
-void GUI::RoundedRectangleShape::setSize(const sf::Vector2f& size)
-{
-    this->size = size;
-    update();
-}
-
-////////////////////////////////////////////////////////////
-const sf::Vector2f& GUI::RoundedRectangleShape::getSize() const
-{
-    return this->size;
-}
-
-////////////////////////////////////////////////////////////
-void GUI::RoundedRectangleShape::setCornersRadius(float radius)
-{
-    this->radius = radius;
-    update();
-}
-
-////////////////////////////////////////////////////////////
-float GUI::RoundedRectangleShape::getCornersRadius() const
-{
-    return this->radius;
-}
-
-////////////////////////////////////////////////////////////
-void GUI::RoundedRectangleShape::setCornerPointCount(unsigned int count)
-{
-    this->cornerpointCount = count;
-    update();
-}
-
-////////////////////////////////////////////////////////////
-std::size_t GUI::RoundedRectangleShape::getPointCount() const
-{
-    return this->cornerpointCount * 4;
-}
-
-////////////////////////////////////////////////////////////
-sf::Vector2f GUI::RoundedRectangleShape::getPoint(std::size_t index) const
-{
-    if (index >= this->cornerpointCount * 4)
-        return sf::Vector2f(0, 0);
-
-    float deltaAngle = 90.0f / (this->cornerpointCount - 1);
-    sf::Vector2f center;
-    unsigned int centerIndex = index / this->cornerpointCount;
-    static const float pi = 3.141592654f;
-
-    switch (centerIndex) {
-    case 0:
-        center.x = this->size.x - this->radius;
-        center.y = this->radius;
-        break;
-    case 1:
-        center.x = this->radius;
-        center.y = this->radius;
-        break;
-    case 2:
-        center.x = this->radius;
-        center.y = this->size.y - this->radius;
-        break;
-    case 3:
-        center.x = this->size.x - this->radius;
-        center.y = this->size.y - this->radius;
-        break;
-    }
-
-    return sf::Vector2f(this->radius * cos(deltaAngle * (index - centerIndex) * pi / 180) + center.x,
-        -this->radius * sin(deltaAngle * (index - centerIndex) * pi / 180) + center.y);
-}
-
-GUI::PillButton::PillButton(float x, float y, float width, float height, unsigned cornerCount, sf::Font* font)
-    : text(*font)
-{
-    this->b_geom.setSize(sf::Vector2f(width, height));
-    this->b_geom.setPosition(sf::Vector2f(x, y));
-    this->b_geom.setFillColor(sf::Color(255, 190, 111));
-}
-
-GUI::PillButton::PillButton(float x, float y, float width, float height, unsigned cornerCount, sf::Font& font, const std::string& text)
-    : text(font, text)
-{
-    this->b_geom.setSize(sf::Vector2f(width, height));
-    this->b_geom.setPosition(sf::Vector2f(x, y));
-    this->b_geom.setFillColor(sf::Color(255, 190, 111));
-
-    this->font = &font;
-    this->text.setString(text);
-
-    this->text.setPosition(sf::Vector2f(this->b_geom.getPosition().x + this->b_geom.getPosition().x / 2.f + 20.f - this->b_geom.getPosition().x / 2.f, this->b_geom.getPosition().y + this->b_geom.getSize().y / 2.f - 20.f));
-}
-
-GUI::PillButton::~PillButton()
-{
-}
-
-void GUI::PillButton::update(const sf::Vector2i& Mousepos)
-{
-    this->b_state = IDLE_BUTTON;
-
-    if (this->b_geom.getGlobalBounds().contains(static_cast<sf::Vector2f>(Mousepos))) {
-
-        this->b_state = HOVER;
-
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-            this->b_state = PRESSED;
-            this->pressed = true;
-        }
-    }
-
-    switch (this->b_state) {
-
-    case IDLE_BUTTON: // the Button is not being interacted with by the user
-
-        // this->b_geom.setTexture(&idle);
-
-        // if the button is not given a texture with one of the overload constructors, give it a fill color
-
-        // if(this->b_geom.getTexture() == nullptr)
-        //{
-        // this->b_geom.setFillColor(this->idleColor);
-        this->text.setFillColor(sf::Color::White);
-        this->b_geom.setFillColor(sf::Color(246, 2, 0));
-        //  this->b_geom.setOutlineColor(this->outline_idleColor);
-        //}
-
-        break;
-
-    case HOVER: // the user's cursor is hovering over the button
-
-        // this->b_geom.setTexture(&hover_texture);
-
-        // if (this->b_geom.getTexture() == nullptr)
-        //{
-        // this->b_geom.setFillColor(this->hoverColor);
-        this->text.setFillColor(sf::Color::White);
-        this->b_geom.setFillColor(sf::Color(200, 10, 10, 255));
-        //  this->b_geom.setOutlineColor(this->outline_hoverColor);
-        //}
-
-        break;
-
-    case PRESSED: // the button has been interacted with
-
-        // this->b_geom.setTexture(&clicked);
-
-        // if (this->b_geom.getTexture() == nullptr)
-        //{
-        // this->b_geom.setFillColor(this->activeColor);
-
-        this->text.setFillColor(sf::Color::White);
-        this->b_geom.setFillColor(sf::Color(246, 64, 64));
-        // this->b_geom.setOutlineColor(this->outline_activeColor);
-        //}
-
-        break;
-
-    default:
-        // will appear if something is wrong with the initalizaiton of the button texture.
-        // this->b_geom.setFillColor(sf::Color::Red);
-
-        this->b_geom.setFillColor(sf::Color(246, 64, 64));
-        // this->b_geom.setOutlineColor(sf::Color::Blue);
-        std::cout << "ERROR CODE BUTTON:210 || GUI::BUTTON::UPDATE || UNABLE TO LOAD BUTTON FROM TEXTURE FILE CHECK BUTTON CONSTRUCTOR" << std::endl;
-        break;
-    }
-}
-
-void GUI::PillButton::render(sf::RenderTarget& target)
-{
-    target.draw(this->b_geom);
-}
-
-void GUI::PillButton::setCharacterSize(const unsigned& characterSize)
-{
-
-    this->text.setCharacterSize(characterSize);
-}
-
-const bool& GUI::PillButton::isPressed()
-{
-    if (this->b_state == PRESSED)
-        return true;
-
-    return false;
-}
 

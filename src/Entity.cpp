@@ -9,12 +9,13 @@
 #include "include/Entity.hpp"
 #include <SFML/System/Angle.hpp>
 
-Entity::Entity(sf::Texture& texture)
+Entity::Entity(const sf::Texture& texture)
     : sprite(texture)
 {
+    //this->sprite.setPosition({0.f,10.f});
     this->initVariables();
 }
-const sf::Vector2f& Entity::getPosition() const
+ const sf::Vector2f  Entity::getPosition() const
 {
     /*!
 
@@ -32,9 +33,8 @@ const sf::Vector2f& Entity::getPosition() const
 
      */
 
-    if (this->hitbox) {
+    if (this->hitbox)
         return this->sprite.getPosition();
-    }
 
     return this->sprite.getPosition();
 }
@@ -69,17 +69,12 @@ void Entity::update(const float& dt, sf::Vector2f& MousePosView)
 
 Entity::~Entity()
 {
-
-    delete this->hitbox;
-    delete this->physicsComponents;
-    delete this->animationcomponet;
-    delete this->attributes;
-
+   // delete this->hitbox;
 }
 
 void Entity::initVariables()
 {
-    this->texture = nullptr;
+
     this->hitbox = nullptr;
     this->attributes = nullptr;
     this->physicsComponents = nullptr;
@@ -115,13 +110,13 @@ void Entity::setScale(float scale_x, float scale_y)
 void Entity::addPhysicsComponent(const float maxVelocity, const float Acceleration, const float Deceleration)
 {
 
-    this->physicsComponents = new PhysicsComponents(this->sprite, maxVelocity, Acceleration, Deceleration);
+    this->physicsComponents = std::make_unique<PhysicsComponents>(this->sprite, maxVelocity, Acceleration, Deceleration);
 }
 
 void Entity::addAnimationComponent(sf::Texture& texturesheet)
 {
 
-    this->animationcomponet = new AnimationComponet(this->sprite, texturesheet);
+    this->animationcomponet = std::make_unique<AnimationManager>(this->sprite, texturesheet);
 }
 
 void Entity::setPosition(const float& x, const float& y)
@@ -152,13 +147,13 @@ void Entity::move(const float& dt, const float& x, const float& y)
 
 void Entity::addAttributeComponent(const unsigned level)
 {
-    this->attributes = new StatusComponet(level);
+    this->attributes = std::make_unique<StatusComponet>(level);
 }
 
 void Entity::addHitboxComponent(sf::Sprite& sprite, float offset_x, float offset_y, float width, float height)
 {
 
-    this->hitbox = new HitBoxComponet(sprite, offset_x, offset_y, width, height);
+    this->hitbox = std::make_unique<HitBoxComponet>(sprite, offset_x, offset_y, width, height);
 }
 
 const sf::FloatRect Entity::getGlobalBounds() const

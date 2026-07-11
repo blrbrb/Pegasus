@@ -11,27 +11,23 @@
 GameState::GameState(StateData* state_data)
     : State(state_data)
 {
-    try {
-        this->initvariables();
+    try {  this->inittextures();
         this->initplayers();
-        this->initdeferedrender();
+
         this->initview();
+        this->initdeferedrender();
         this->initkeybinds();
         this->initfonts();
-        this->inittextures();
         this->initpausemenu();
-        //this->initshaders();
-
-        this->initplayerGUI();
-
         this->initTileMap();
+        this->initmapeditor();
+         this->initvariables();
 
     } catch (std::exception& e) {
 
         std::cerr << e.what() << std::endl;
 
-        // this->handlefonts();
-        // this->handletilemap();
+
     }
 
 }
@@ -41,7 +37,6 @@ GameState::~GameState()
 
     delete this->player;
     delete this->pMenu;
-    delete this->playerGUI;
     delete this->Tilemap;
 
 }
@@ -51,15 +46,24 @@ void GameState::initvariables()
     this->name = "Game";
     this->state_ID = this->states->size();
     this->shadertime = 0.f;
+    this->select_Rect.setSize(sf::Vector2f(this->state_data->gridSize.x, this->state_data->gridSize.y));
+    this->select_Rect.setTexture(this->Tilemap->getTileSheet());
+    this->TextureRect = sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 24));
+    this->editor_layer = 0;
+    this->editor_collision = 0;
+    this->cursortext = new sf::Text(this->font);
+
+    this->cursortext->setCharacterSize(12);
+   this->cursortext->setFillColor(sf::Color::White);
+   this->cursortext->setOutlineThickness(2.f);
+   this->cursortext->setOutlineColor(sf::Color::Black);
 }
 
-void GameState::initdialougesystem()
+
+
+void GameState::initbuttons()
 {
-    // LOG(INFO) << "creating new dialouge system object...";
-    // this->dialougeSystem = new DialougeSystem("Resources/Assets/Fonts/OpenSans-Variable.ttf", this->state_data->gfxsettings->resolution);
-    // this->dialougeSystem->addTextbox(DEBUG_TAG);
-    // this->dialougeSystem->addTextbox(DIALOUGE, "Welcome to the tutorial/demo.\n This is a debug demonstration generic\n dialouge window. Please Enter the Key\n 'z' to obscure this message");
-    // this->dialougeSystem->addTextbox(DIALOUGE, "Hmmmm, it would appear that\n I can safley fit about twenty or so\n characters onto the screen before\n I begin to spill over out of the dialougebox\n");
+    this->buttons["MAP_EDITOR_CLOSE"] = new GUI::Button(GUI::pixelpercentX(23.f,this->state_data->gfxsettings->resolution),GUI::pixelpercentY(20.f,this->state_data->gfxsettings->resolution),GUI::pixelpercentX(20.f,this->state_data->gfxsettings->resolution),GUI::pixelpercentY(2.f, this->state_data->gfxsettings->resolution),&this->font,"Close Editor",0,1);
 }
 
 void GameState::initdeferedrender()
@@ -84,7 +88,7 @@ void GameState::initdeferedrender()
 
     );
 }
-
+//
 void GameState::initworldbounds()
 {
 }
@@ -134,16 +138,13 @@ void GameState::initkeybinds()
     ifs.close();
 }
 
-void GameState::initplayerGUI()
-{
-    this->playerGUI = new PlayerGUI(this->player, this->state_data->gfxsettings->resolution);
-}
+
 
 void GameState::inittextures()
 {
 
-    if (!this->textures["PLAYER_SHEET"].loadFromFile("Resources/Assets/Entity/PlayerSheets/character_sheet4.png")) {
-        // LOG(WARNING) << "unable to load default player spritesheet/s Resources/Assets/Entity/PlayerSheets/character_sheet4.png";
+    if (!this->textures["PLAYER_SHEET"].loadFromFile(std::filesystem::path("Resources/Assets/Entity/PlayerSheets/test.png"))) {
+       // LOG(WARNING) << "std::optional<sf::Texture> could not find whatever";
 
         throw std::runtime_error("ERROR Could not load Player Sheet texture GameState lin 168");
     }
@@ -164,6 +165,12 @@ void GameState::initfonts()
     }
 }
 
+void GameState::initmapeditor()
+{
+    const sf::VideoMode& vm = this->state_data->gfxsettings->resolution;
+
+    this->texture_selector = new GUI::TextureSelector(GUI::pixelpercentX(30.f,vm),GUI::pixelpercentY(60.f,vm),GUI::pixelpercentY(30.f,vm),GUI::pixelpercentY(40.f,vm),this->state_data->gridSize, this->Tilemap->getTileSheet(), "X");
+}
 void GameState::initplayers()
 {
 
@@ -193,7 +200,7 @@ void GameState::initTileMap()
 {
     this->Tilemap = new TileMap(this->state_data->gridSize, 100, 100, "Resources/Assets/Tiles/sheet.png");
 
-    this->Tilemap->loadFromFile("Data/TileMap/test.dat", false);
+    this->Tilemap->importTMX("my-island.tmx");
 
     std::cout << "init gamestate tilemap" << std::endl;
 }
@@ -201,10 +208,9 @@ void GameState::initTileMap()
 void GameState::update(const float& dt)
 {
 
-    this->updateShaders(dt);
 
-    srand(static_cast<unsigned>(time(nullptr)));
 
+    this->updateView(dt);
     this->updateMousePosition(&this->view);
     this->updateKeyTime(dt);
     this->updateInput(dt);
@@ -212,12 +218,11 @@ void GameState::update(const float& dt)
     if (!this->paused) // Update while unpaused
     {
 
-        this->updateView(dt);
 
-        this->updatePlayerGUI(dt);
         this->updatePlayerInput(dt);
         this->updateTileMap(dt);
         this->updatePlayer(dt);
+        this->updateMapEditor(dt);
 
         ;
 
@@ -241,7 +246,9 @@ void GameState::updateInput(const float& dt)
         else
             this->unpause();
     }
+    this->updateMapEditorInput(dt);
 }
+
 
 void GameState::updateTileMap(const float& dt)
 {
@@ -253,6 +260,11 @@ void GameState::updateTileMap(const float& dt)
 
 void GameState::updateButtons()
 {
+
+    for (auto& it : this->buttons) {
+        it.second->update(this->MousePosWindow);
+    }
+
     if (this->pMenu->isButtonPressed("Pause_Quit_Button")) {
         this->endState();
         this->endState();
@@ -261,8 +273,8 @@ void GameState::updateButtons()
 
 void GameState::updateView(const float& dt)
 {
-    std::cout << this->state_data->gfxsettings->resolution.size.y << std::endl;
-    std::cout << "player position: " << this->player->getPosition().x << std::endl;
+   // std::cout << this->state_data->gfxsettings->resolution.size.y << std::endl;
+//    std::cout << "player position: " << this->player->getPosition().x << std::endl;
     this->view.setCenter(sf::Vector2f(std::floor(this->player->getPosition().x + static_cast<float>(this->state_data->gfxsettings->resolution.size.x / 20)), std::floor(this->player->getPosition().y + static_cast<float>(this->state_data->gfxsettings->resolution.size.y / 20))));
 
     if (this->Tilemap->getMaxSize().x >= this->view.getSize().x) {
@@ -276,7 +288,7 @@ void GameState::updateView(const float& dt)
         }
     }
 
-    std::cout << "update view gamestate" << std::endl;
+    //std::cout << "update view gamestate" << std::endl;
     if (this->Tilemap->getMaxSize().y >= this->view.getSize().y) {
 
         if (this->view.getCenter().y - this->view.getSize().y / 2.f < 0.f) {
@@ -305,17 +317,116 @@ void GameState::updateShaders(const float& dt)
     // this->core_shader.setUniform("time", sf::Vector2f(shadertime, 0.f));
 }
 
-void GameState::updatePlayerGUI(const float& dt)
+
+void GameState::updateMapEditorInput(const float& dt)
 {
-    this->playerGUI->update(dt);
+    //sf::Vector2i test = {this->ViewGridPosition.x -this->MousePosGrid.x ,this->MousePosGrid.y};
+    if ((sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))) {
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F) && this->getKeyTime()) {
-        this->playerGUI->toggleCharacterTab();
+        // if the user's mouse is not on the sidebar
+        // std::cout << this->texture_selector->getActive() << " texture selector state " << std::endl;
+        // if the texure selector is not active
+        if (!this->texture_selector->getActive()) {
+
+            // if adding tiles is locked to one layer
+            if (this->Tilemap->lock_layer)
+            {
+                if (this->Tilemap->TileEmpty(this->MousePosGrid.x, this->MousePosGrid.y, 0))
+                {
+                    this->Tilemap->addTile(this->MousePosGrid.x, this->MousePosGrid.y, this->editor_layer, this->TextureRect, this->editor_collision, this->editor_type);
+                    // this->Tilemap->addTile(this->editorStateData->mousePosView->x, this->editorStateData->mousePosView->y, this->editor_layer, this->TextureRect, this->editor_this->editor_collision, this->type);
+                    // std::cout << "LOCKED: Tile Added" << std::endl;
+                }
+
+
+            }
+
+            else
+            {
+                this->Tilemap->addTile(this->MousePosGrid.x, this->MousePosGrid.y, this->editor_layer, this->TextureRect, this->editor_collision, this->editor_type);
+                //std::cout << "TILE ADDED " << std::endl;
+            }
+        }
+        else
+        {
+            this->TextureRect = this->texture_selector->getTextureRect();
+
+        }
+
     }
 
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z) && this->getKeyTime()) {
-        // this->dialougeSystem->advance();
+
+    // Remove a tile
+    else if ((sf::Mouse::isButtonPressed(sf::Mouse::Button::Right)) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Delete))) {
+
+        // if the user's mouse is not inside the texture selector
+        if (!this->texture_selector->getActive() ) {
+            // if the cursor is over a valid tile, ok to place
+            if (this->Tilemap->getLayerSize(this->MousePosGrid.x, this->MousePosGrid.y, this->editor_layer) != -1) {
+
+                if (this->Tilemap->lock_layer) {
+                    if (!this->Tilemap->TileEmpty(this->MousePosGrid.x, this->MousePosGrid.y, this->editor_layer)) {
+                        this->Tilemap->removeTile(this->MousePosGrid.x, this->MousePosGrid.y, this->editor_layer, TileTypes::NORMAL);
+                        //std::cout << "LOCKED: Tile Removed" << std::endl;
+                    } else {
+                        // LOG(INFO) << "editor tried to place more than one tile on a locked layer";
+                    }
+
+                }
+
+                else {
+                    this->TextureRect = this->texture_selector->getTextureRect();
+                }
+                // else if adding tiles is not locked to one layer
+                if (!this->Tilemap->lock_layer) {
+
+                    this->Tilemap->removeTile(this->MousePosGrid.x, this->MousePosGrid.y, 1, TileTypes::NORMAL);
+
+                    //std::cout << "Tile Removed" << std::endl;
+                }
+
+            }
+
+            else if (this->Tilemap->getLayerSize(this->MousePosGrid.x, this->MousePosGrid.y, this->editor_layer) == -1) {
+                std::cerr << "tried to place tile on invalid layer" << '\n';
+            }
+        }
     }
+    this->cursortext->setPosition({this->MousePosWindow.x + 100.f, this->MousePosWindow.y - 50.f});
+    std::stringstream ss;
+    ss << "Mouse Position View:" << this->MousePosView.x << " " << this->MousePosView.y <<
+    "\n" << "Mouse Position Grid: "<< this->MousePosGrid.x<< " " << this->MousePosGrid.y <<
+    "\n" << "View Position Grid: " << this->ViewGridPosition.x << " " << this->ViewGridPosition.y <<
+    "\n" << this->select_Rect.getSize().x << " " << this->select_Rect.getSize().y <<
+    "\n" << "Collision: " << this->editor_collision <<
+    "\n" << "Type: " << this->editor_type <<
+    "\n" << "Tiles: " << this->Tilemap->getLayerSize(this->MousePosGrid.x, this->MousePosGrid.y, this->editor_layer);
+
+
+    this->cursortext->setString(ss.str());
+
+}
+void GameState::updateMapEditor(const float &dt)
+{
+
+    this->texture_selector->update(this->MousePosWindow, dt);
+    //this->select_Rect.setTextureRect(this->texture_selector->getTextureRect());
+
+
+   // this->texturesample->setTextureRect(sf::IntRect(sf::Vector2i(static_cast<int>(this->statedata->gridSize.x), static_cast<int>(this->statedata->gridSize.y)), sf::Vector2i(0, 0)));
+
+    if (!this->texture_selector->getActive()) {
+
+        this->select_Rect.setTextureRect(this->TextureRect);
+        //this->texturesample->setTextureRect(this->TextureRect);
+        this->select_Rect.setPosition(sf::Vector2f(this->MousePosWindow.x, this->MousePosWindow.y));
+    }
+    //this->texturesample->setTexture(*this->select_Rect.getTexture());
+
+   // this->select_Rect.setOrigin(sf::Vector2f(this->select_Rect.getLocalBounds().size.x, this->select_Rect.getLocalBounds().size.y) / 2.f);
+
+    //this->select_Rect.setTextureRect(this->texture_selector->getTextureRect());
+    //this->texturesample->setTextureRect(this->TextureRect);
 }
 
 void GameState::updatePlayerInput(const float& dt)
@@ -345,9 +456,7 @@ void GameState::updatePlayerInput(const float& dt)
     }
 
     // hide the player's inventory
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E) && this->getKeyTime()) {
-        this->playerGUI->HideInventory();
-    }
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl) && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
         this->player->saveToFile("Data/new_pony.json");
     }
@@ -356,11 +465,7 @@ void GameState::updatePlayerInput(const float& dt)
 void GameState::render(sf::RenderTarget* target)
 {
 
-    // There is clearly a render layering issue here, the tilemap refuses to render at all. Possible causes:
-    // There's something fucky with the defered render
-    // there's something fucky with the actual renderSprite.
-    // There's something fucky with the order that the renders are being called, and assigned to the renderSprite.
-    // The renderTexture is broken.
+
     if (!target)
         target = this->window;
 
@@ -368,22 +473,20 @@ void GameState::render(sf::RenderTarget* target)
 
     this->rendertexture->setView(this->view);
 
-    // target->mapPixelToCoords(this->Tilemap->getMaxSizeGrid());
+
+
     this->Tilemap->render(*this->rendertexture, this->view, this->ViewGridPosition, false);
     // this->Tilemap->render()
     // this->Tilemap->renderlighttile(this->renderTexture, &this->core_shader);
 
     // target->mapPixelToCoords(static_cast<sf::Vector2i>(this->player->getCenter()));
+    this->Tilemap->defferedRender(*this->rendertexture);
+
     this->player->render(*this->rendertexture);
-
-
-
-    this->Tilemap->DefferedRender(*this->rendertexture);
-
     this->rendertexture->setView(this->rendertexture->getDefaultView());
 
-    this->playerGUI->render(*this->rendertexture);
-
+    this->renderMapEditor(this->rendertexture);
+    //this->test_button->render(*this->rendertexture);
     // the dialouge system needs to be rendered with the view set to the PlayerGUI's view, that way attached dialouge will fill the screen correctly.
     // this->dialougeSystem->render(this->renderTexture);
 
@@ -395,8 +498,22 @@ void GameState::render(sf::RenderTarget* target)
     this->rendertexture->display();
     this->rendersprite->setTexture(this->rendertexture->getTexture());
     target->draw(*this->rendersprite);
+
 }
 
+void GameState::renderMapEditor(sf::RenderTarget* target)
+{
+
+    if (!this->texture_selector->getActive()) {
+        //this->view =
+        //target->setView(this->rendertexture->getDefaultView());
+        target->draw(this->select_Rect);
+    }
+    target->draw(*this->cursortext);
+    //target->setView(this->window->getDefaultView());
+    this->texture_selector->render(*target);
+    //target->setView(this->rendertexture->getDefaultView());
+}
 void GameState::updateDialouge(const float& dt)
 {
     if (this->getKeyTime()) {

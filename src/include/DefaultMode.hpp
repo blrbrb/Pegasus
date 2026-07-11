@@ -10,7 +10,7 @@
 #define DefaultMode_hpp
 #include "EditorModes.hpp"
 
-// nclude "Componets/GUI/GUI.hpp"
+
 
 class State;
 class EditorModes;
@@ -27,11 +27,11 @@ private:
     sf::RectangleShape select_Rect;
     sf::RectangleShape sidebar;
     sf::RectangleShape sidebar_texture;
-    sf::Sprite* texturesample;
+    //sf::Sprite* texturesample;
     sf::RectangleShape texturesample_container;
     sf::RectangleShape text_container;
     sf::RectangleShape controlsContainer;
-
+    std::shared_ptr<std::_NonArray<sf::Sprite>> texturesample;
     sf::IntRect TextureRect;
     // sf::Sprite gui_sprite1;
 
@@ -40,7 +40,7 @@ private:
     short type;
     int layer;
     bool showgrid;
-    // initalizer functions
+
     void initvariables();
     void inittext();
     void initGUI();

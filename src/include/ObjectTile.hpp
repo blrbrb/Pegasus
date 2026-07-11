@@ -3,7 +3,7 @@
 #define ObjectTile_hpp
 #include "Tile.hpp"
 
-#include "AnimationComponet.hpp"
+#include "AnimationManager.hpp"
 enum ObjectTypes { LANTERN = 64,
 };
 
@@ -28,7 +28,7 @@ public:
     // void add_object(short type, sf::Vector2f& object_position);
 protected:
     // sf::Sprite object_rect;
-    AnimationComponet* animationcomponent;
+    AnimationManager* animationcomponent;
 
 private:
     void create_animation_componet();

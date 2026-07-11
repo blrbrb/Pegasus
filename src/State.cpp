@@ -13,7 +13,7 @@ State::State(StateData* state_data)
 {
 
     this->state_data = state_data;
-    this->window = state_data->window;
+    this->window = state_data->window.get();
     this->supportedKeys = state_data->supportedKeys;
     this->states = state_data->states;
     this->quit = false;
@@ -23,6 +23,7 @@ State::State(StateData* state_data)
     this->gridSize = state_data->gridSize;
 
     // std::cout << this->state_data->window->getSize();
+   // auto test = std::make_unique<std::stack<int>>;
 }
 
 State::~State()
@@ -74,14 +75,12 @@ void State::updateMousePosition(sf::View* view)
     if (view)
         this->window->setView(*view);
 
-    this->MousePosView = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window));
+     this->MousePosView = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window));
 
-    if (this->state_data->gridSize.y)
-        this->MousePosGridI = sf::Vector2i(static_cast<int>(this->MousePosView.x) / static_cast<int>(this->gridSize.x),
-            static_cast<int>(this->MousePosView.y) / static_cast<int>(this->gridSize.y));
+     this->MousePosGrid = sf::Vector2i(std::floor(this->MousePosView.x / this->gridSize.x),
+          std::floor(this->MousePosView.y / this->gridSize.y));
 
-    this->MousePosGridF = sf::Vector2f(this->MousePosView.x / static_cast<int>(this->gridSize.x),
-        this->MousePosView.y / static_cast<int>(this->gridSize.y));
+
 
     /*else
     this->MousePosGrid = sf::Vector2i(static_cast<int>(this->MousePosView.x) / static_cast<int>(this->gridSize.x),

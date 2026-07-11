@@ -18,71 +18,91 @@ private:
     void initVariables();
     void initComponents();
     void initAnimations();
-    void initSounds();
+
     void initInventory();
-    void initLight();
-
-    sf::Color default_color;
-
-    // spotlight* render_light;
-
-    std::vector<sf::SoundBuffer> sounds;
 
 public:
-    /// <summary>
-    /// Default Player constructor. Overrides Entity() inherits abstracts
-    /// </summary>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    /// <param name="textureSheet"></param>
-    /// <param name="level"></param>
+
+    /////////////////////////////////////////////////
+    /// \brief player
+    ///
+    /// \param x float
+    /// \param y float
+    /// \param textureSheet sf::Texture&
+    ///
+    /////////////////////////////////////////////////
     Player(float x, float y, sf::Texture& textureSheet);
 
     virtual ~Player();
 
-    /// <summary>
-    /// Load Player data from file, Entity info is constructed from saved data
-    /// </summary>
-    /// <param name="save_file"></param>
+
+    /////////////////////////////////////////////////
+    /// \brief read saved player config from disk (unimplemented)
+    /// \overload
+    /// \param save_file const std::string&
+    /// \param textureSheet sf::Texture&
+    ///
+    /////////////////////////////////////////////////
     Player(const std::string& save_file, sf::Texture& textureSheet);
 
-    // Accessors
 
-    /// <summary>
-    /// Fetch a pointer to the Player's Staus Component.
-    /// </summary>
-    /// <returns>StatusComponent*</returns>
-    /// <remarks><seealso cref="StatusComponent"/></remarks>
-    /// <remarks><seealso cref="Entity"/></remarks>
+    /////////////////////////////////////////////////
+    /// \brief the player's status component
+    ///
+    ///
+    /// \return StatusComponet*
+    ///
+    /////////////////////////////////////////////////
     StatusComponet* getStatusComponent();
 
+    /////////////////////////////////////////////////
+    /// \brief stream player config in plaintext (unimplemented)
+    /// \return const std::string&
+    ///
+    /////////////////////////////////////////////////
     const std::string& toString() const;
 
+    /////////////////////////////////////////////////
+    /// \brief write player config to disk (unimplemented)
+    ///
+    /// \param filename const std::string&
+    /// \return void
+    ///
+    /////////////////////////////////////////////////
     void saveToFile(const std::string& filename);
+
+    /////////////////////////////////////////////////
+    /// \brief read player config from disk (unimplemented)
+    ///
+    /// \param filename const std::string&
+    /// \return void
+    ///
+    /////////////////////////////////////////////////
     void loadFromFile(const std::string& filename);
 
-    /// <summary>
-    /// Update the player (Calls all other Player class update functions)
-    /// </summary>
-    /// <param name="dt"></param>
-    /// <param name="MousePosView"></param>
+
+    /////////////////////////////////////////////////
+    /// \brief final update
+    ///
+    /// \param dt const float&
+    /// \param MousePosView sf::Vector2f&
+    /// \return void
+    ///
+    /////////////////////////////////////////////////
     void update(const float& dt, sf::Vector2f& MousePosView);
 
     void updateLighting(const float& dt);
+    void mirrorAnimation(sf::Texture& texture);
 
-    /// <summary>
-    /// Update the Player's animation
-    /// </summary>
-    /// <param name="dt"></param>
+    /////////////////////////////////////////////////
+    /// \brief update the player's animations
+    ///
+    /// \param dt const float&
+    /// \return void
+    ///
+    /////////////////////////////////////////////////
     void updateAnimation(const float& dt);
 
-    /// <summary>
-    /// Render the Player's sprite to the active context
-    /// </summary>
-    /// <param name="target"></param>
-    /// <param name="shader"></param>
-    /// <param name="light"></param>
-    /// <param name="render_hitbox"></param>
     void render(sf::RenderTarget& target, sf::Shader* shader = nullptr, const sf::Vector2f& light = sf::Vector2f(), const bool render_hitbox = false);
 };
 

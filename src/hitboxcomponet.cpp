@@ -130,7 +130,7 @@ const sf::FloatRect& HitBoxComponet::getNextPosition(const sf::Vector2f& velocit
  *
  * @return A constant reference to a `sf::Vector2f` representing the position of the hitbox component.
  */
-const sf::Vector2f& HitBoxComponet::getPosition() const
+const sf::Vector2f HitBoxComponet::getPosition() const
 {
     return this->hitbox.getPosition();
 }

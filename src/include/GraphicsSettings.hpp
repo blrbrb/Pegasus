@@ -33,25 +33,29 @@ public:
     unsigned minor_OpenGL_version;
     unsigned ppi;
 
-    // Constructors/Destructors
+
     GraphicsSettings();
 
-    /// saveToFile
-    /// @brief Save the current graphics settings to a file to acess later.
-    /// @param path to the file to write on
+
+    /////////////////////////////////////////////////
+    /// \brief write the current window config to disk
+    ///
+    /// \param path const std::string&
+    /// \return void
+    ///
+    /////////////////////////////////////////////////
     void saveToFile(const std::string& path);
 
-    /// loadFromFile
-    /// @brief Load saved graphics settings from a file.
-    /// @param path to the file to read from
+
+    /////////////////////////////////////////////////
+    /// \brief load window config from disk
+    ///
+    /// \param path const std::string&
+    /// \return void
+    ///
+    /////////////////////////////////////////////////
     void loadFromFile(const std::string& path);
 
-    // Modifiers
-
-    // windowtitle
-    //@breif Set the Title of the current Window \n
-    //(window must be re-created with sfml window.create() for changes to apply)
-    //@param title
 };
 
 #endif /* GraphicsSettings_hpp */

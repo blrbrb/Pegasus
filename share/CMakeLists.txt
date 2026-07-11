@@ -16,13 +16,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(imgui)
 
-set(JSON_BuildTests OFF CACHE INTERNAL "")
-FetchContent_Declare(json
-    GIT_REPOSITORY https://github.com/nlohmann/json
-    GIT_TAG v3.12.0
-)
-FetchContent_MakeAvailable(json)
-
 FetchContent_Declare(
   imgui-sfml
   GIT_REPOSITORY https://github.com/SFML/imgui-sfml.git

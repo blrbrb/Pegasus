@@ -31,11 +31,11 @@ public:
     // Render Functions
     void renderbuttons(sf::RenderTarget& target);
 
-    /// Render the Main Menu, and all associated elements
+
     void render(sf::RenderTarget* target = nullptr);
 
 private:
-    // Private initalizer Functions
+
     void initkeybinds();
     void initFonts();
     void initGUI();

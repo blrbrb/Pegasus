@@ -16,25 +16,6 @@ Tile::Tile(sf::Texture* texture)
     this->object_type = 0;
 }
 
-/**
- * @brief initializes a tile object with a specified type, position, texture, collision
- *
- * @param type The type of tile to construct
- * @param x the x-coordinate position of the tile on the map grid.
- * @details It is multiplied by the `gridsizeF.x` to determine the actual pixel position
- * of the tile on the screen.
- * @param y the y-coordinate position of the tile on the map grid.
- * @details It is multiplied by the `gridsizeF.y` to determine the actual pixel position
- * of the tile on the screen.
- * @param gridsizeF the size of each grid cell in the map.
- * @details used to calculate the position of the tile  based on its grid coordinates `(x, y)`.
- * @param texture set the texture of the tile's sprite
- * @details (`this->rect.setTexture(texture)`). The texture contains the image data that will be displayed on
- * the tile in the game
- * @param texturerect the rectangular area of the tile sheet that should be displayed on the tile.
- * @param collisionEnabled flag that indicates whether collision is enabled for this particular tile.
- * @details If `collisionEnabled` is set to `true`, it means that the tile will participate in collision detection and response within the game world. If set to `false
- */
 
 Tile::Tile(short type, float x, float y, sf::Vector2f gridsizeF, sf::Texture& texture, const sf::IntRect& texturerect, bool collisionEnabled)
     : rect(texture)
@@ -57,36 +38,9 @@ Tile::Tile(short type, float x, float y, sf::Vector2f gridsizeF, sf::Texture& te
     this->collison_enabled = collisionEnabled;
 }
 
-Tile::Tile(short type,int gid, sf::Vector2f gridsizeF, sf::Texture& texture, bool collision_enabled)
-    : rect(texture),type(type),gid(gid)
+Tile::Tile(short type,int gid, sf::Texture& texture, bool collisionEnabled)
+    : rect(texture),type(type),gid(gid),collison_enabled(collisionEnabled)
 {
-
-    //sf::Vector2i position(0,0);
-
-    //std::cout << "setting tile GID -> " << gid << std::endl;
-    int columns = static_cast<int>(this->rect.getTexture().getSize().x) / static_cast<int>(gridsizeF.x);
-    int rows = static_cast<int>(this->rect.getTexture().getSize().y) / static_cast<int>(gridsizeF.y);
-   // int column = gid % columns;
-   // int row = gid / columns;
-    //int posX = column * static_cast<int>(gridsizeF.x);
-   // int posY = row * static_cast<int>(gridsizeF.y);
-
-    //this->calcGid(gridsizeF);
-    this->collison_enabled = collision_enabled;
-
-
-    //if (object_type) {
-     //   this->object_type = object_type;
-    //}
-     //calculate the Tile's GID within the texture (tmx stuff)
-     int tilesX = 10;//static_cast<int>(texture.getSize().x) / static_cast<int>(gridsizeF.x);
-     //std::cout << "number of horizontal tiles " << tilesX << std::endl;
-    int col =  static_cast<int>(rect.getGlobalBounds().size.x) / static_cast<int>(gridsizeF.x);
-   //  std::cout << "number of columns " << col << std::endl;
-    int row = static_cast<int>(rect.getGlobalBounds().size.y)  / static_cast<int>(gridsizeF.y);
-   // std::cout << "number of rows " << row << std::endl;
-   // this->gid = (row * tilesX) + col;
-    //this->rect.setTextureRect(this->calcRect(gid,sf::Vector2i(static_cast<int>(gridsizeF.x),static_cast<int>(gridsizeF.y))));
 
 }
 
@@ -153,14 +107,7 @@ const sf::IntRect Tile::getTextureRect() const
     return this->rect.getTextureRect();
 }
 
-const sf::Vector2i Tile::getTextureCoords() const
-{
-    sf::Vector2i test;
-    test.x = this->rect.getTextureRect().position.x;
-    test.y = this->rect.getTextureRect().position.y;
 
-    return test;
-}
 
 const short& Tile::getObjectType() const
 {

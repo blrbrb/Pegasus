@@ -31,65 +31,122 @@ public:
     //
     sf::Vector2f gridSize;
     /// Pointer to the RenderWindow
-    sf::RenderWindow* window;
-    /// Acessable keys
+    //sf::RenderWindow* window;
+    std::shared_ptr<std::_NonArray<sf::RenderWindow>> window;
+
     std::map<std::string, int>* supportedKeys;
-    /// States
+
     std::stack<State*>* states;
-    /// User-defined graphics settings
+    /// graphics and window settings
     GraphicsSettings* gfxsettings;
 
     // the sounds and music
 };
 
-class State {
+class State : public std::enable_shared_from_this<State> {
 
 public:
     State(StateData* state_data);
 
     virtual ~State();
 
-    // public variables
+
     /// Has the State been quit?
     bool quit;
-    /// Has the State been Paused?
+
     bool paused;
     // char shadow = *((&quit >> 3) + _asan_runtime_assigned_offset
 
-    // Acessors
-    /// Retrieve wether or not the user has requested to end the Application
+
+    /////////////////////////////////////////////////
+    /// \brief return true if state stack is empty, or if quit is pressed from the main menu
+    ///
+    /// \return  const bool&
+    ///
+    /////////////////////////////////////////////////
     [[nodiscard]] const bool& getQuit() const;
-    /// Retrieve wether or not the minimum allowed time between individual keystrokes has passed
+
+    /////////////////////////////////////////////////
+    /// \brief calculates the number of frames that have passed between inputs and checks to see if a minimum time value has been met
+    /// before allowing another input
+    ///
+    /// \return bool
+    ///
+    /////////////////////////////////////////////////
     bool getKeyTime();
 
     virtual void log(std::string stat, std::string log_instance);
 
-    // Modifiers
-    /// End the State, and return to either the main menu; or a previous state.
-    ///  @discussion NOTE: if there is no previou state, or if this function is accessed from the main menu you will get a  bad acess error
+    /////////////////////////////////////////////////
+    /// \brief end the state and pop from the application stack
+    ///
+    /// \return void
+    ///
+    /////////////////////////////////////////////////
     void endState();
-    /// Pause the State
+
+    /////////////////////////////////////////////////
+    /// \brief stop updating
+    ///
+    /// \return void
+    ///
+    /////////////////////////////////////////////////
     void pause();
-    /// Un-Pause the state
+
+    /////////////////////////////////////////////////
+    /// \brief resume updating
+    ///
+    /// \return void
+    ///
+    /////////////////////////////////////////////////
     void unpause();
     // Write to the Log file
 
-    // Pure Virtual/Template Update functions
+
+    /////////////////////////////////////////////////
+    /// \brief keep track of the mouse's position
+    ///
+    /// \param nullptr sf::View* view=
+    /// \return virtual void
+    ///
+    /////////////////////////////////////////////////
     virtual void updateMousePosition(sf::View* view = nullptr);
+    /////////////////////////////////////////////////
+    /// \brief handle user inputs
+    ///
+    /// \param dt const float&
+    /// \return virtual void
+    ///
+    /////////////////////////////////////////////////
     virtual void updateInput(const float& dt) = 0;
+    /////////////////////////////////////////////////
+    /// \brief final update
+    ///
+    /// \param dt const float&
+    /// \return virtual void
+    ///
+    /////////////////////////////////////////////////
     virtual void update(const float& dt) = 0;
+    /////////////////////////////////////////////////
+    /// \brief render to a sf::RenderTarget*
+    ///
+    /// \param nullptr sf::RenderTarget* target=
+    /// \return virtual void
+    ///
+    /////////////////////////////////////////////////
     virtual void render(sf::RenderTarget* target = nullptr) = 0;
     virtual void updateKeyTime(const float& dt);
 
 protected:
-    /// string ID of the state, e.g. "MainMenu", "Game"
+
     std::string name;
-    // unsigned int ID of the state
+
     unsigned state_ID;
+
     sf::RenderWindow* window;
-    // float gridSize;
+
     sf::Vector2f gridSize;
-    // std::ostream outfile;
+
     StateData* state_data;
 
     /// The cursor's position relative to the screen
@@ -100,14 +157,19 @@ protected:
     sf::Vector2f MousePosView;
     /// The cursor's position relative to the tile grid,
     //@brief  The cursor's position relative to the tile grid. Stored in a Vector of Two Integers (x, y)
-    sf::Vector2i MousePosGridI;
+    sf::Vector2i MousePosGrid;
     //@brief The cursor's position relative to the tile grid. Stored in a Vector of Two Floats (x, y)
-    sf::Vector2f MousePosGridF;
-    /// All useable keyboard keys
+
     std::map<std::string, int>* supportedKeys;
     /// Keys with a user-supplied map
     std::map<std::string, int> keyBinds;
 
+    /////////////////////////////////////////////////
+    /// \brief load keybinds and application control keys from disk
+    ///
+    /// \return virtual void
+    ///
+    /////////////////////////////////////////////////
     virtual void initkeybinds() = 0;
 
     float keyTime;

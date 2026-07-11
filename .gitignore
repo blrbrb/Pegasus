@@ -41,6 +41,8 @@ Data/
 #CMake Files
 **/cmake_install.cmake
 **/CMakeFiles
+**/CMakeCache.txt
+
 
 # Compiled Static libraries
 **.lai
@@ -57,6 +59,7 @@ Data/
 **/.vscode
 *.kdev4
 **/.kate
+**/.clang-format
 
 #Library Dependencies 
 Imgui/ 

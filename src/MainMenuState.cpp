@@ -74,22 +74,19 @@ void MainMenuState::initGUI()
 
     try {
 
-        this->buttons["NEW GAME"] = new GUI::Button(GUI::pixelpercentX(27.1, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(7.14, vm), GUI::pixelpercentY(44, vm), &this->font, "New Game", GUI::calcCharSize(vm));
-
+        this->buttons["NEW GAME"] = new GUI::Button(GUI::pixelpercentX(27.1, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(7.14, vm), GUI::pixelpercentY(44, vm), &this->font, "New Map", GUI::calcCharSize(vm));
         this->buttons["EXIT"] = new GUI::Button(GUI::pixelpercentX(27.1, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(35.7, vm), GUI::pixelpercentY(44, vm), &this->font, "Exit", GUI::calcCharSize(vm));
-
         this->buttons["EDITOR"] = new GUI::Button(GUI::pixelpercentX(27.1, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(35.7, vm), GUI::pixelpercentY(60, vm), &this->font, "Editor", GUI::calcCharSize(vm));
-        this->buttons["SETTINGS"] = new GUI::Button(GUI::pixelpercentX(27.1, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(7.14, vm), GUI::pixelpercentY(60, vm), &this->font, "Settings", GUI::calcCharSize(vm));
-        this->buttons["CHARACTER_EDITOR"] = new GUI::Button(GUI::pixelpercentX(55.1, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(24.2, vm), GUI::pixelpercentY(76, vm), &this->font, "Character Editor", GUI::calcCharSize(vm));
-        this->buttons["Info"] = new GUI::Button(GUI::pixelpercentX(3.5, vm), GUI::pixelpercentY(3.5, vm), GUI::pixelpercentX(64.2, vm), GUI::pixelpercentY(20, vm), &this->font, "Info", GUI::calcCharSize(vm));
+        this->buttons["SETTINGS"] = new GUI::Button(GUI::pixelpercentX(27.1, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(7.14, vm), GUI::pixelpercentY(60, vm), &this->font, "Export Map", GUI::calcCharSize(vm));
+
     }
 
     catch (std::invalid_argument& e) {
         std::cout << e.what() << "/";
-        // this->log("Unhandled exception: MainMenuState 120 " + std::string(e.what()), "State::Menu");
+
     }
 
-    // this->log<< this->buttons.size() << std::endl;
+
 }
 
 void MainMenuState::resetGUI()
@@ -133,7 +130,7 @@ void MainMenuState::initbackground()
 {
 
     this->background.setSize(sf::Vector2f(static_cast<float>(this->window->getSize().x), static_cast<float>(this->window->getSize().y)));
-    // WebGL default light grey background (same as ponytown)
+
     this->background.setFillColor(sf::Color(31, 31, 31, 255));
 }
 
@@ -152,7 +149,7 @@ void MainMenuState::updateInput(const float& dt)
 {
 }
 
-// Render Functions
+
 
 void MainMenuState::render(sf::RenderTarget* target)
 {
@@ -200,7 +197,7 @@ void MainMenuState::updatebuttons(const float& dt)
 
     // Exit the game
     if (this->buttons["EXIT"]->isPressed()) {
-        // this->endState();
+         //this->endState();
     }
 
     if (this->buttons["EDITOR"]->isPressed()) {
@@ -210,9 +207,6 @@ void MainMenuState::updatebuttons(const float& dt)
         this->states->push(new SettingsState(this->state_data));
     }
 
-    if (this->buttons["SETTINGS"]->isPressed()) {
-        this->states->push(new SettingsState(this->state_data));
-    }
 }
 
 void MainMenuState::reconfigure_log()
