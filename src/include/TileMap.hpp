@@ -54,12 +54,15 @@ private:
     sf::Font font;
     sf::Texture tileTextureSheet;
     sf::Texture tilegenerationSheet;
+
     //unimplemented
     std::map<std::string, sf::Texture> object_textures;
     //unimplemented
     std::map<std::string, sf::Vector2i> geometry;
 
-
+    //for saving tile collision prop reading from .tmx files
+    //TD find a better way to do this
+    std::map<int, bool> collisionGIDRegister;
     /////////////////////////////////////////////////
     /// \brief erase all data
     ///

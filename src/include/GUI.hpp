@@ -40,7 +40,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 
-#include "loading_icon.h"
+
 
 /// The three possible states for GUI Button elements to be in
 enum ButtonStates { IDLE_BUTTON = 0, ///< Button has not been interacted with
@@ -195,6 +195,7 @@ private:
 
 class Button {
 
+
 private:
     short unsigned ButtonState;
     short unsigned ID;
@@ -257,7 +258,7 @@ public:
     /// \param short unsigned ID = 0
     ///
     /////////////////////////////////////////////////
-    Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned character_size, sf::Color idle_color, sf::Color hover_color, sf::Color active_color, sf::Color text_idle_color, sf::Color text_hover_color, sf::Color text_active_color, sf::Color outline_active_color = sf::Color::Transparent, sf::Color outline_idle_color = sf::Color::Transparent, sf::Color outline_hover_color = sf::Color::Transparent, short unsigned ID = 0);
+    Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned character_size, sf::Color idle_color, sf::Color hover_color, sf::Color active_color, sf::Color text_idle_color, sf::Color text_hover_color, sf::Color text_active_color, sf::Color outline_active_color = sf::Color::Transparent, sf::Color outline_idle_color = sf::Color::Transparent, sf::Color outline_hover_color = sf::Color::Transparent);
 
     /////////////////////////////////////////////////
     /// \brief construct a button
@@ -275,9 +276,9 @@ public:
     /// \param short unsigned ID = 0
     ///
     /////////////////////////////////////////////////
-    Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned character_size, const std::string& idle_texture, const std::string& active_texture, const std::string& hover_texture, short unsigned ID = 0);
+    Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned character_size, const std::string& idle_texture, const std::string& active_texture, const std::string& hover_texture);
 
-    Button(float x, float y, float width, float height, const std::string& idle_texture, const std::string& active_texture, const std::string& hover_texture, short unsigned ID = 0, sf::Font* font = nullptr);
+    Button(float x, float y, float width, float height, const std::string& idle_texture, const std::string& active_texture, const std::string& hover_texture, sf::Font* font = nullptr);
 
     /////////////////////////////////////////////////
     /// \brief construct a button with a specified font and button text
@@ -292,7 +293,7 @@ public:
     /// \param short unsigned ID = 0
     ///
     /////////////////////////////////////////////////
-    Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned int character_size, short unsigned ID = 0);
+    Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned int character_size);
 
     /////////////////////////////////////////////////
     /// \brief construct a button with default textures
@@ -304,7 +305,7 @@ public:
     /// \param short unsigned ID = 0
     ///
     /////////////////////////////////////////////////
-    Button(float x, float y, float width, float height, short unsigned ID = 0);
+    Button(float x, float y, float width, float height);
 
     virtual ~Button();
 

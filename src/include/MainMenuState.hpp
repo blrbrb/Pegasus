@@ -48,7 +48,7 @@ private:
     sf::Font font;
     sf::RectangleShape background;
     sf::Texture backgroundTexture;
-    sf::SoundBuffer click;
+
 
     std::map<std::string, GUI::Button*> buttons;
 };

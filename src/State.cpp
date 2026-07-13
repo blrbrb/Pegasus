@@ -14,12 +14,12 @@ State::State(StateData* state_data)
 
     this->state_data = state_data;
     this->window = state_data->window.get();
+    this->quit = false;
     this->supportedKeys = state_data->supportedKeys;
     this->states = state_data->states;
-    this->quit = false;
     this->paused = false;
     this->keyTime = 0.f;
-    this->keyTimeMax = 2.3f;
+    this->keyTimeMax = 7.3f;
     this->gridSize = state_data->gridSize;
 
     // std::cout << this->state_data->window->getSize();
@@ -43,6 +43,9 @@ bool State::getKeyTime()
 
     return false;
 }
+
+
+
 
 void State::log(std::string stat, std::string log_instance)
 {
@@ -96,6 +99,10 @@ void State::updateKeyTime(const float& dt)
         this->keyTime += 10.f * dt;
     }
 }
+
+
+
+
 
 void State::initFiles()
 {

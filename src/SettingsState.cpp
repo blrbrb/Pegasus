@@ -16,14 +16,20 @@ void SettingsState::initvariables()
 {
     // sthis->current_item = NULL;
     this->selection_temp = "";
-    this->current_item = "";
+
     std::vector video_modes = sf::VideoMode::getFullscreenModes();
     for (auto& i : video_modes) {
         // std::cout << std::to_string(i.width) + 'x' + std::to_string(i.height) << std::endl;
         this->modes[std::to_string(i.size.x) + 'x' + std::to_string(i.size.y)] = i;
     }
 
-    // this->music_volume = 0.f;
+
+    this->tutorial_text = new sf::Text(this->font);
+    this->tutorial_text->setCharacterSize(GUI::calcCharSize(this->state_data->gfxsettings->resolution,200));
+    this->tutorial_text->setFillColor(sf::Color::White);
+   // this->tutorial_text->setPosition({100.f, 100.f});
+   this->tutorial_text->setPosition({GUI::pixelpercentX(1.f,this->state_data->gfxsettings->resolution) ,0.f});
+    this->tutorial_text->setString("Go to https://www.pony.town");
 }
 
 void SettingsState::initview()
@@ -54,7 +60,9 @@ void SettingsState::initGUI()
 
     sf::VideoMode& vm = this->state_data->gfxsettings->resolution;
 
-    this->buttons["RESOLUTION"] = new GUI::Button(GUI::pixelpercentX(20.f, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(5.f, vm), GUI::pixelpercentY(5.f, vm), &this->font, "Test Button", GUI::calcCharSize(vm), 12);
+    this->buttons["RESOLUTION"] = new GUI::Button(GUI::pixelpercentX(20.f, vm), GUI::pixelpercentY(9.f, vm), GUI::pixelpercentX(5.f, vm), GUI::pixelpercentY(50.f, vm), &this->font, "Import Character", GUI::calcCharSize(vm));
+
+    this->buttons["EXIT"] = new GUI::Button(GUI::pixelpercentX(20.f, vm), GUI::pixelpercentY(10.f, vm), GUI::pixelpercentX(5.f, vm), GUI::pixelpercentY(75.f, vm),&this->font, "Exit", GUI::calcCharSize(vm));
 
     this->background.setSize(sf::Vector2f(static_cast<float>(vm.size.x), static_cast<float>(vm.size.y)));
 
@@ -86,8 +94,8 @@ SettingsState::SettingsState(StateData* state_data)
     : State(state_data)
 {
     try {
-        this->initvariables();
         this->initFonts();
+         this->initvariables();
         this->initkeybinds();
         this->initGUI();
 
@@ -111,18 +119,23 @@ SettingsState::~SettingsState()
 // Functions
 void SettingsState::update(const float& dt)
 {
-
+    this->updateKeyTime(dt);
     this->updateView();
-    this->updateInput(dt);
     this->updateMousePosition();
+    this->updateInput(dt);
+
     this->updateGUI(dt);
 }
 
 void SettingsState::updateInput(const float& dt)
 {
+  if(this->buttons["EXIT"]->isPressed() && this->getKeyTime())
+  {
+    this->endState();
+  }
 }
 
-// Render Functions
+
 
 void SettingsState::render(sf::RenderTarget* target)
 {
@@ -142,6 +155,8 @@ void SettingsState::renderGUI(sf::RenderTarget& target)
     for (auto& it : this->buttons) {
         it.second->render(target);
     }
+
+    target.draw(*this->tutorial_text);
 }
 
 void SettingsState::updateevents()
@@ -151,87 +166,6 @@ void SettingsState::updateevents()
 void SettingsState::updateGUI(const float& dt)
 {
 
-    // GUI element functionality
-    static char str0[128] = "Map.dat";
-    static char str1[128] = "New Area";
-    static int switchTabs;
-    static bool p_open = NULL;
-    static bool style_titlebar = false;
-    static bool style_fullscreen = false;
-    static bool vertical_sync = false;
-    this->open = true;
-    // bool is_selected = false;
-
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-
-    ImGui::SetNextWindowSize(ImVec2(this->state_data->gfxsettings->resolution.size.x, this->state_data->gfxsettings->resolution.size.y));
-    ImGui::Begin("Settings", &this->open);
-
-    ImGui::Text("Resolution");
-    if (ImGui::BeginCombo("##Resolution", this->current_item)) {
-        for (auto& n : this->modes) {
-
-            bool is_selected = (this->current_item == n.first.c_str());
-            if (ImGui::Selectable(n.first.c_str(), is_selected))
-                this->selection_temp = n.first;
-            this->current_item = this->selection_temp.c_str();
-            if (is_selected)
-                ImGui::SetItemDefaultFocus();
-        }
-        ImGui::EndCombo();
-    }
-
-    if (ImGui::CollapsingHeader("Window options")) {
-        if (ImGui::BeginTable("split", 3)) {
-            ImGui::SameLine();
-            ImGui::TableNextColumn();
-            ImGui::Checkbox("Bordered", &style_titlebar);
-            ImGui::TableNextColumn();
-            ImGui::Checkbox("Fullscreen", &this->state_data->gfxsettings->fullscreen);
-            ImGui::TableNextColumn();
-            ImGui::Checkbox("vertical sync", &vertical_sync);
-            ImGui::EndTable();
-        }
-    }
-
-    ImGui::Separator();
-    // ImGui::SliderFloat("Music Volume", &this->music_volume, 0.0f, 100.0f, "ratio = %.3");
-    // this->state_data->music->set_volume(this->music_volume);
-
-    // ImGui::SetItemDefaultFocus();
-
-    if (ImGui::Button("Apply Changes") && this->selection_temp != "") {
-        std::cout << this->current_item << std::endl;
-        this->state_data->gfxsettings->resolution = this->modes[this->selection_temp];
-
-        /// Changes are stored as static bool within the update function. Changed values are passed on to the graphics settings object here.
-        /// changes are applied. The graphics settings are saved, and then the window is recreated.
-
-        this->state_data->gfxsettings->vsync = &vertical_sync;
-        this->state_data->gfxsettings->saveToFile("Config/Window.cfg");
-        this->state_data->gfxsettings->loadFromFile("Config/Window.cfg");
-        if (vertical_sync) {
-        }
-
-        if (this->state_data->gfxsettings->fullscreen) {
-            // LOG(INFO) << "creating new render window with resolution " << this->state_data->gfxsettings->resolution.width << "x" << this->state_data->gfxsettings->resolution.height;
-            this->window->create(this->state_data->gfxsettings->resolution, this->state_data->gfxsettings->title, sf::Style::Default, sf::State::Fullscreen);
-            this->window->setIcon(sf::Vector2u(icon.width, icon.height), icon.data);
-        } else {
-            // LOG(INFO) << "creating new render window with resolution " << this->state_data->gfxsettings->resolution.width << "x" << this->state_data->gfxsettings->resolution.height;
-            this->window->create(this->state_data->gfxsettings->resolution, this->state_data->gfxsettings->title);
-            this->window->setIcon(sf::Vector2u(icon.width, icon.height), icon.data);
-        }
-    }
-
-    if (ImGui::Button("Exit")) {
-
-        this->endState();
-        // LOG(INFO) << "Main"
-    }
-
-    ImGui::End();
-
     for (auto& it : this->buttons) {
         it.second->update(this->MousePosWindow);
     }
@@ -239,5 +173,5 @@ void SettingsState::updateGUI(const float& dt)
 
 void SettingsState::updateView()
 {
-    // this->view.setSize(sf::Vector2f(GUI::calcCharSize(this->state_data->gfxsettings->resolution, 2), GUI::calcCharSize(this->state_data->gfxsettings->resolution, 2)));
+   // this->view.setSize(sf::Vector2f(GUI::calcCharSize(this->state_data->gfxsettings->resolution, 2), GUI::calcCharSize(this->state_data->gfxsettings->resolution, 2)));
 }

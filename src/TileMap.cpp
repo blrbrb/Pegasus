@@ -360,12 +360,17 @@ return tiledata;
 
 bool TileMap::exportTMX(const std::filesystem::path& filename)
 {
-    tinyxml2::XMLDocument doc;
 
-    // 1. Add XML Declaration
+    // avoid writing blank tileset data, track the <tileset> property that's already been created to preserve tile info on save
+    tinyxml2::XMLDocument doc;
+    // write tileset elem if a tmx file of the same name already exists
+    if (doc.LoadFile(filename.c_str()) != tinyxml2::XML_SUCCESS) {
+    std::cout  << "writing a new file.." << filename << '\n';
+
+
     doc.NewDeclaration(nullptr);
 
-    // 2. Create Root Map Node
+    // root map element
     tinyxml2::XMLElement* mapNode = doc.NewElement("map");
     mapNode->SetAttribute("version", "1.10");
     mapNode->SetAttribute("tiledversion", "1.10.2");
@@ -378,29 +383,53 @@ bool TileMap::exportTMX(const std::filesystem::path& filename)
     mapNode->SetAttribute("infinite", 0);
     doc.InsertEndChild(mapNode);
 
-    // 3. Create Embedded Tileset Node
+
+    // tileset element root
     tinyxml2::XMLElement* tilesetNode = doc.NewElement("tileset");
     tilesetNode->SetAttribute("firstgid", 1);
     tilesetNode->SetAttribute("name", "main");
     tilesetNode->SetAttribute("tilewidth", 32);
     tilesetNode->SetAttribute("tileheight", 24);
 
+
+    // tileset image source
     tinyxml2::XMLElement* imageNode = doc.NewElement("image");
     imageNode->SetAttribute("source", "Resources/Assets/Tiles/sheet.png");
-    // Note: You can optionally add image width/height source properties here if known
-    tilesetNode->InsertEndChild(imageNode);
 
-    mapNode->InsertEndChild(tilesetNode);
+    for(auto & it: this->collisionGIDRegister)
+    {
 
-    // Safety Check: Ensure the map has at least one valid X column to read layer counts
+        tilesetNode = tilesetNode->InsertNewChildElement("tile");
+        tinyxml2::XMLElement* tile = tilesetNode->FirstChildElement("tile");
+        tile->SetAttribute("ID",it.first);
+        tile->InsertNewChildElement("properties");
+        tinyxml2::XMLElement* properties = tile->FirstChildElement("properties");
+        tinyxml2::XMLElement* propertyNode = properties->InsertNewChildElement("property");
+        propertyNode->SetAttribute("name","collision");
+        propertyNode->SetAttribute("type","bool");
+        propertyNode->SetAttribute("value",it.second);
+        properties->InsertEndChild(propertyNode);
+        tile->InsertEndChild(properties);
+        tilesetNode->InsertEndChild(tile);
+    }
+    }
+    std::cout << "appending save to an existing map..." << std::endl;
+    //tileset property is already a part of the current file, only need to worry about map diff
+    tinyxml2::XMLElement* map = doc.FirstChildElement("map");
+
+    // Safety Check:
     if (this->Map.empty() || this->Map[0].empty() || this->Map[0][0].empty()) {
         std::cerr << "Map container is empty or unallocated." << std::endl;
         return false;
     }
 
-    // Determine total layers dynamically based on your 4th dimension size
+    // clear the old map data
+    tinyxml2::XMLElement* layer = map->FirstChildElement("layer");
+    while(layer){
+      map->DeleteChild(layer);
+      layer = map->NextSiblingElement("layer");
+    }
 
-    // 3. Export Layer-by-Layer (Tiled expects outer structural chunks per layer)
     for (size_t layerIndex = 0; layerIndex < this->layers; ++layerIndex) {
         tinyxml2::XMLElement* layerNode = doc.NewElement("layer");
         layerNode->SetAttribute("id", static_cast<int>(layerIndex + 1));
@@ -443,7 +472,7 @@ bool TileMap::exportTMX(const std::filesystem::path& filename)
 
         dataNode->SetText(csvStream.str().c_str());
         layerNode->InsertEndChild(dataNode);
-        mapNode->InsertEndChild(layerNode);
+        map->InsertEndChild(layerNode);
     }
 
     return doc.SaveFile(filename.c_str()) == tinyxml2::XML_SUCCESS;
@@ -468,6 +497,38 @@ bool TileMap::importTMX(const std::filesystem::path& filename)
         return "";
     }
 
+    //iter through tileset data, register tiles with collision special properties etc
+    tinyxml2::XMLElement* tile_ID = tilesetElem->FirstChildElement("tile");
+
+    while(tile_ID)
+    {
+          tinyxml2::XMLElement* tileproperties = tile_ID->FirstChildElement("properties");
+          tinyxml2::XMLElement* property = tileproperties->FirstChildElement("property");
+          while(property){
+
+            std::string property_name = property->Attribute("name");
+
+          // TD: save individual tile properties, attach them to the tile ID in an std::map
+          // could also be a switch statement to handle cases where property_name == value
+          if(property_name.empty())
+          {
+            continue;
+          }
+          else if (property_name == "collision")
+          {
+            std::cout << "collision!" << '\n';
+            bool collision = tileproperties->BoolText();
+             this->collisionGIDRegister[tile_ID->IntAttribute("ID")] = collision;
+          }
+          else
+          {
+            //no property name, no need to waste cycles here
+            continue;
+          }
+            property = property->NextSiblingElement();
+          }
+          tile_ID = tile_ID->NextSiblingElement();
+    }
     tinyxml2::XMLElement* texture = tilesetElem->FirstChildElement("image");
     if (!texture) {
         std::cerr << "TMX <tileset> is missing <image> attribute" << std::endl;
@@ -558,7 +619,7 @@ bool TileMap::importTMX(const std::filesystem::path& filename)
                     sf::IntRect tilerect = this->calcTileRect(gid, this->gridsizeI);
 
                     // Push into Map[x][y][layer][tiledata]
-                    this->Map[x][y][0].push_back(new NormalTile(TileTypes::NORMAL,static_cast<float>(x), static_cast<float>(y),this->grid_sizeF,this->tileTextureSheet,tilerect));
+                    this->Map[x][y][0].push_back(new NormalTile(TileTypes::NORMAL,static_cast<float>(x), static_cast<float>(y),this->grid_sizeF,this->tileTextureSheet,tilerect,this->collisionGIDRegister[gid]));
                 }
                 tileCounter++;
         }

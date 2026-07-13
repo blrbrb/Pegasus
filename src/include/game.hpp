@@ -72,6 +72,7 @@ private:
 
     const float virtualWidth = 1920.0f;
     const float virtualHeight = 1080.0f;
+
     StateData state_data;
 
     std::shared_ptr<std::_NonArray<GraphicsSettings>> gfxsettings;

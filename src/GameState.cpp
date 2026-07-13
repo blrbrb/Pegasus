@@ -63,7 +63,7 @@ void GameState::initvariables()
 
 void GameState::initbuttons()
 {
-    this->buttons["MAP_EDITOR_CLOSE"] = new GUI::Button(GUI::pixelpercentX(23.f,this->state_data->gfxsettings->resolution),GUI::pixelpercentY(20.f,this->state_data->gfxsettings->resolution),GUI::pixelpercentX(20.f,this->state_data->gfxsettings->resolution),GUI::pixelpercentY(2.f, this->state_data->gfxsettings->resolution),&this->font,"Close Editor",0,1);
+    this->buttons["MAP_EDITOR_CLOSE"] = new GUI::Button(GUI::pixelpercentX(23.f,this->state_data->gfxsettings->resolution),GUI::pixelpercentY(20.f,this->state_data->gfxsettings->resolution),GUI::pixelpercentX(20.f,this->state_data->gfxsettings->resolution),GUI::pixelpercentY(2.f, this->state_data->gfxsettings->resolution),&this->font,"Close Editor",0);
 }
 
 void GameState::initdeferedrender()

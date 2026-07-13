@@ -12,45 +12,13 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Mouse.hpp>
 
-
-/* BEGIN BUTTON */
-
-/**
- * @brief initialize a text button with set of colors for the button's container, and text and each of their states
- *
- *
- * @namespace GUI
- * @class Button
- * @addtogroup GUI
- *
- *
- * @param x The x on-screen coordinate of the button's position.
- * @param y The y on-screen coordinate of the button's position.
- * @param width The horizontal size of the button
- * @param height The vertical size of the button
- * @param font Pointer to an`sf::Font` object.
- * @details This font is used to set the text style for the button's text content. It defines
- * the font family, size, color, and other text properties for the displayed
- * @param text string thatrepresents the text to be rendered on to the button.
- * @details  In the provided code snippet, this text is being set to the `sf::Text` object associated with the button. The text will be displayed using
- * @param character_size unsigned int representing how large the text glyph will be rendered
- * @param idle_color The color to display on the button when the button is in it's idle state.
- * @details i.e., when the button is not being interacted with by the user.
- * @param hover_color The cololr to display on the button when the button is in it's hover state.
- * @details i.e when it is being hovered over by a user's controller / pointer / mouse, but not being directly interacted with.
- * @param active_color the color to display on the button when the button is in it's active state.
- * @details i.e  when it is clicked or activated by the user.
- * @param ID The unique identifier for the button. It is used to distinguish this button from other buttons in the GUI.
- */
-
-
-GUI::Button::Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned character_size, sf::Color idle_color, sf::Color hover_color, sf::Color active_color, sf::Color text_idle_color, sf::Color text_hover_color, sf::Color text_active_color, sf::Color outline_active_color, sf::Color outline_idle_color, sf::Color outline_hover_color, short unsigned ID)
+GUI::Button::Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned character_size, sf::Color idle_color, sf::Color hover_color, sf::Color active_color, sf::Color text_idle_color, sf::Color text_hover_color, sf::Color text_active_color, sf::Color outline_active_color, sf::Color outline_idle_color, sf::Color outline_hover_color)
     : hover(false)
     , pressed(false)
     , resources_from_header(false)
 {
 
-    this->ID = ID;
+
     this->rectangle = new GUI::GradientElement(width, height, x, y);
     this->rectangle->setSize(sf::Vector2f(x, y));
 
@@ -91,46 +59,17 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font* font,
     // this->rectangle.setOutlineThickness(1.f);
 }
 
-/**
- * @brief initialize a text button using a specified set of textures.
- *
- * @overload GUI::Button()
- * @namespace GUI
- * @class Button
- * @addtogroup GUI
- *
- *
- * @param x The x on-screen coordinate of the button's position.
- * @param y The y on-screen coordinate of the button's position.
- * @param width The horizontal size of the button
- * @param height The vertical size of the button
- * @param font Pointer to an`sf::Font` object.
- * @details This font is used to set the text style for the button's text content. It defines
- * the font family, size, color, and other text properties for the displayed
- * @param text string thatrepresents the text to be rendered on to the button.
- * @details  In the provided code snippet, this text is being set to the `sf::Text` object associated with the button. The text will be displayed using
- * @param character_size unsigned int representing how large the text glyph will be rendered
- * @param idle_texture The file path to a texture that will be displayed on the button when it is in it's idle state
- * @details i.e., when the button is not being interacted with by the user.
- * @param active_texture The file path to a texture that will be displayed on the button when it is in it's active state.
- * @details i.e  when it is clicked or activated by the user.
- * @param hover_texture The file path to a texture that will be displayed on the button when it is in it's hover state.
- * @details i.e when it is being hovered over by a user's controller / pointer / mouse, but not being directly interacted with.
- * @param ID The unique identifier for the button. It is used to distinguish this button from other buttons in the GUI.
- */
-GUI::Button::Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned int character_size, const std::string& idle_texture, const std::string& active_texture, const std::string& hover_texture, short unsigned ID)
+
+GUI::Button::Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned int character_size, const std::string& idle_texture, const std::string& active_texture, const std::string& hover_texture)
     : hover(false)
     , pressed(false)
     , resources_from_header(false)
 {
-    // const int x = 1;
-    /// const sf::Uint8* test = reinterpret_cast<sf::Uint8*>(red_button00_data);
 
     this->ButtonState = IDLE_BUTTON;
-    this->ID = ID;
     this->rectangle = new GUI::GradientElement(width, height, x, y);
     this->rectangle->setSize(sf::Vector2f(x, y));
-    this->rectangle->setPosition(sf::Vector2f(width, height));
+    this->rectangle->setPosition(sf::Vector2f(x, y));
 
     // this->font = font;
     // this->text.setFont(*this->font);
@@ -187,13 +126,13 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font* font,
  * @details i.e when it is being hovered over by a user's controller / pointer / mouse, but not being directly interacted with.
  * @param ID The unique identifier for the button. It is used to distinguish this button from other buttons in the GUI.
  */
-GUI::Button::Button(float x, float y, float width, float height, const std::string& idle_texture, const std::string& active_texture, const std::string& hover_texture, short unsigned ID, sf::Font* font)
+GUI::Button::Button(float x, float y, float width, float height, const std::string& idle_texture, const std::string& active_texture, const std::string& hover_texture, sf::Font* font)
     : font(nullptr)
     , hover(false)
     , pressed(false)
     , resources_from_header(false)
 {
-
+    this->ButtonState = IDLE_BUTTON;
     this->rectangle = new GUI::GradientElement(width, height, x, y);
     this->rectangle->setSize(sf::Vector2f(x, y));
 
@@ -223,13 +162,12 @@ GUI::Button::Button(float x, float y, float width, float height, const std::stri
 
     this->ID = ID;
 
-    this->ButtonState = IDLE_BUTTON;
 
     // this->rectangle.setTextureRect(static_cast<sf::IntRect>(this->rectangle.getGlobalBounds()));
 }
 
 
-GUI::Button::Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned int character_size, short unsigned ID)
+GUI::Button::Button(float x, float y, float width, float height, sf::Font* font, const std::string& text, unsigned int character_size)
     : hover(false)
     , pressed(false)
     , resources_from_header(true)
@@ -259,7 +197,7 @@ GUI::Button::Button(float x, float y, float width, float height, sf::Font* font,
 }
 
 
-GUI::Button::Button(float x, float y, float width, float height, short unsigned ID)
+GUI::Button::Button(float x, float y, float width, float height)
     : hover(false)
     , pressed(false)
     , resources_from_header(true)
@@ -295,6 +233,7 @@ void GUI::Button::update(const sf::Vector2i& Mousepos)
         this->ButtonState = HOVER;
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+            //std::cout << "button pressed" << '\n';
             this->ButtonState = PRESSED;
         }
     }
@@ -387,7 +326,7 @@ bool GUI::Button::isPressed() const
 
 std::string GUI::Button::getText() const
 {
-    return this->text->getString();
+    return this->text->getString().toAnsiString();
 }
 
 const unsigned short& GUI::Button::getID() const
@@ -463,8 +402,8 @@ GUI::DropDownList::DropDownList(float x, float y, float width, float height, sf:
     for (unsigned i = 0; i < number_of_elements; i++) {
         this->list.push_back(new GUI::Button(x, y + ((i + 1) * height), width, height, &this->font, list[i], 14, sf::Color(255, 255, 255, 150), sf::Color(255, 255, 255, 200), sf::Color(20, 20, 20, 50),
             sf::Color(20, 20, 20, 200), sf::Color(150, 150, 150, 200), sf::Color(20, 20, 20, 200),
-            sf::Color::Black, sf::Color::Black, sf::Color::Black,
-            i));
+            sf::Color::Black, sf::Color::Black, sf::Color::Black
+            ));
     }
 }
 

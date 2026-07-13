@@ -75,6 +75,7 @@ public:
     /////////////////////////////////////////////////
     bool getKeyTime();
 
+
     virtual void log(std::string stat, std::string log_instance);
 
     /////////////////////////////////////////////////
@@ -137,6 +138,7 @@ public:
     virtual void render(sf::RenderTarget* target = nullptr) = 0;
     virtual void updateKeyTime(const float& dt);
 
+
 protected:
 
     std::string name;
@@ -174,6 +176,8 @@ protected:
 
     float keyTime;
     float keyTimeMax;
+
+
 
     virtual void initFiles();
 

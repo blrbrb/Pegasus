@@ -12,4 +12,4 @@ set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wno-return-local-addr")
 target_compile_features(Pegasus PRIVATE cxx_std_17)
 
 
-target_link_libraries(Pegasus PRIVATE ImGui-SFML::ImGui-SFML SFML::Graphics SFML::Audio SFML::Window SFML::System)
+target_link_libraries(Pegasus PRIVATE ImGui-SFML::ImGui-SFML SFML::Graphics SFML::Window SFML::System)

@@ -18,7 +18,7 @@ MainMenuState::MainMenuState(StateData* state_data)
     this->initvariables();
     this->initFonts();
     this->initkeybinds();
-    this->initGUI();
+    this->resetGUI();
 
 
     // this->resetGUI();
@@ -32,10 +32,10 @@ MainMenuState::~MainMenuState()
 
     {
         delete it->second;
-        // this->log<< " MainMenu State Buttons Deleted" << std::endl;
+
     }
 
-    // this->state_data->music->stop();
+
 }
 
 // initalization functions
@@ -140,6 +140,9 @@ void MainMenuState::update(const float& dt)
 {
 
     this->updateMousePosition();
+    this->updateKeyTime(dt);
+
+
     this->updateInput(dt);
 
     this->updatebuttons(dt);
@@ -159,16 +162,6 @@ void MainMenuState::render(sf::RenderTarget* target)
 
     target->draw(this->background);
 
-    // sf::Text mouseText;
-    // mouseText.setPosition(this->MousePosView.x, this->MousePosView.y - 50);
-    // mouseText.setFont(this->font);
-    // mouseText.setCharacterSize(12);
-
-    // std::stringstream Position;
-    // Position << this->MousePosView.x << " " << this->MousePosView.y;
-    // mouseText.setString(Position.str());
-
-    //  target->draw(mouseText);
     this->renderbuttons(*target);
 }
 
@@ -184,8 +177,8 @@ void MainMenuState::updatebuttons(const float& dt)
 
     // this->log<< "updating buttons" << std::endl;
     for (auto& it : this->buttons)
-
     {
+
         it.second->update(this->MousePosWindow);
         // this->log<< it.second << std::endl;
     }
@@ -195,15 +188,18 @@ void MainMenuState::updatebuttons(const float& dt)
         this->states->push(new GameState(this->state_data));
     }
 
-    // Exit the game
+
+    //TD: Find workaround for https://www.reddit.com/r/sfml/comments/1poyl3p/sfml_button_clicks_trigger_automatically_on/
+    // so that the window doesn't instantly close if the "exit" button was clicked on the main menu the last time the application was run
+    // SFML for some reason continues to spam the sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) event even after a complete state reset with a fresh window
     if (this->buttons["EXIT"]->isPressed()) {
-         //this->endState();
+        // this->endState();
     }
 
     if (this->buttons["EDITOR"]->isPressed()) {
         this->states->push(new EditorState(this->state_data));
     }
-    if (this->buttons["SETTINGS"]->isPressed()) {
+    if (this->buttons["SETTINGS"]->isPressed() && this->getKeyTime()) {
         this->states->push(new SettingsState(this->state_data));
     }
 

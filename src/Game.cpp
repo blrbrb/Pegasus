@@ -198,37 +198,39 @@ void Game::Update()
 {
     this->UpdateEvents();
 
-    if (this->states.empty()) {
-        this->endApplication();
-        this->window->close();
+    if (!this->states.empty()) {
+      if (this->window->hasFocus()) {
+
+        // update stack final
+        this->states.top()->update(this->dt);
+
+        if (this->states.top()->getQuit()) {
+
+          // LOG(INFO) << "Size of deque: " << this->states.size();
+
+
+          this->states.top()->endState();
+          delete this->states.top();
+          this->states.pop();
+          // DO NOT attempt to delete items from the states stack here
+          // popping them already frees the memory.
+          // using delete this->states.top() here will only result in an GL_free error when it attempts to free a deref. pointer to a surface
+
+          // DO NOT use this either:
+          //  delete this->states.top();
+          // it's better to just let .pop() do it's job properly and not introduce any more surface area for more issues in the future
+
+          // LOG(INFO) << "top of deque: " << this->states.size();
+        }
+      }
     }
+
     // Application end
     else {
-        if (this->window->hasFocus()) {
+      this->endApplication();
+      this->window->close();
 
-            // update stack final
-            this->states.top()->update(this->dt);
-
-            if (this->states.top()->getQuit()) {
-
-                // LOG(INFO) << "Size of deque: " << this->states.size();
-
-                // LOG(INFO) << "destroying state ";
-
-                this->states.pop();
-                // DO NOT attempt to delete items from the states stack here
-                // popping them already frees the memory.
-                // using delete this->states.top() here will only result in an GL_free error when it attempts to free a deref. pointer to a surface
-
-                // DO NOT use this either:
-                //  delete this->states.top();
-                // it's better to just let .pop() do it's job properly and not introduce any more surface area for more issues in the future
-
-                // LOG(INFO) << "top of deque: " << this->states.size();
-            }
-        }
-    }
-}
+}}
 
 void Game::UpdateEvents()
 {
@@ -265,7 +267,7 @@ void Game::UpdateEvents()
 
         if (const auto* closed = event->getIf<sf::Event::Closed>()) {
             if (!this->states.empty()) {
-                // LOG(INFO) << "destroying window...";
+
                 this->window->close();
             }
 
@@ -273,9 +275,10 @@ void Game::UpdateEvents()
             {
                updateViewport(resized->size,this->window->getView());
             }
-        }
+
+
     }
-}
+}}
 
 void Game::render()
 {
