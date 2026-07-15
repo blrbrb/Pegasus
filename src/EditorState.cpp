@@ -124,7 +124,7 @@ void EditorState::updatePauseMenuButtons()
     // Load the TileMap
     if (this->pMenu->isButtonPressed("Editor_Pause_Load_Button")) {
         try {
-            this->Tilemap->importTMX("Data/TileMap/test.tmx");
+            this->Tilemap->importTMX(std::filesystem::path("my-island.tmx"));
             //this->Tilemap->loadFromFile("Data/TileMap/text.slmp");
         }
 

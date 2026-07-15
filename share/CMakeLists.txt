@@ -5,6 +5,7 @@ FetchContent_Declare(SFML
     GIT_TAG 3.1.0
     GIT_SHALLOW ON
     EXCLUDE_FROM_ALL
+    BINARY_DIR ${CMAKE_BINARY_DIR}/_deps/sfml-build
     SYSTEM)
 
 add_subdirectory(sfml)

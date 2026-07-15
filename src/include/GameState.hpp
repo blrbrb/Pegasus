@@ -18,9 +18,8 @@ engineFramework
 #include "PlayerGUI.hpp"
 #include "State.hpp"
 #include "TileMap.hpp"
+#include "placeholder-character.h"
 
-enum GAME_MODES { DEFAULT_GAME = 0,
-};
 
 class State;
 class Blrb;

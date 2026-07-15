@@ -136,21 +136,14 @@ TileMap::TileMap(sf::Vector2f gridsize, int width, int height, std::string textu
     this->physicsrect.setOutlineThickness(1.f);
 }
 
-
-
-TileMap::TileMap(const std::string map_file)
+// TD import tileset
+TileMap::TileMap(const std::filesystem::path& tilemap)
 {
+  this->loadTileset("sheet.tsx");
+  this->importTMX(tilemap);
 
-    this->ToX = 0;
-    this->FromX = 0;
-    this->ToY = 0;
-    this->FromY = 0;
-    this->layer = 0;
 
-    // this->init_object_textures();
-    this->loadFromFile(map_file);
 }
-
 // Default Overload, if no other args are provided to the constructor use a randomly generated sequence of map tiles.
 TileMap::TileMap()
 {
@@ -413,6 +406,7 @@ bool TileMap::exportTMX(const std::filesystem::path& filename)
         tilesetNode->InsertEndChild(tile);
     }
     }
+    else {
     std::cout << "appending save to an existing map..." << std::endl;
     //tileset property is already a part of the current file, only need to worry about map diff
     tinyxml2::XMLElement* map = doc.FirstChildElement("map");
@@ -474,6 +468,7 @@ bool TileMap::exportTMX(const std::filesystem::path& filename)
         layerNode->InsertEndChild(dataNode);
         map->InsertEndChild(layerNode);
     }
+}
 
     return doc.SaveFile(filename.c_str()) == tinyxml2::XML_SUCCESS;
 
@@ -491,54 +486,6 @@ bool TileMap::importTMX(const std::filesystem::path& filename)
     tinyxml2::XMLElement* root = doc.FirstChildElement("map");
     if (!root) return false;
 
-    tinyxml2::XMLElement* tilesetElem = root->FirstChildElement("tileset");
-    if (!tilesetElem) {
-        std::cerr << "TMX Missing <tileset> element." << std::endl;
-        return "";
-    }
-
-    //iter through tileset data, register tiles with collision special properties etc
-    tinyxml2::XMLElement* tile_ID = tilesetElem->FirstChildElement("tile");
-
-    while(tile_ID)
-    {
-          tinyxml2::XMLElement* tileproperties = tile_ID->FirstChildElement("properties");
-          tinyxml2::XMLElement* property = tileproperties->FirstChildElement("property");
-          while(property){
-
-            std::string property_name = property->Attribute("name");
-
-          // TD: save individual tile properties, attach them to the tile ID in an std::map
-          // could also be a switch statement to handle cases where property_name == value
-          if(property_name.empty())
-          {
-            continue;
-          }
-          else if (property_name == "collision")
-          {
-            std::cout << "collision!" << '\n';
-            bool collision = tileproperties->BoolText();
-             this->collisionGIDRegister[tile_ID->IntAttribute("ID")] = collision;
-          }
-          else
-          {
-            //no property name, no need to waste cycles here
-            continue;
-          }
-            property = property->NextSiblingElement();
-          }
-          tile_ID = tile_ID->NextSiblingElement();
-    }
-    tinyxml2::XMLElement* texture = tilesetElem->FirstChildElement("image");
-    if (!texture) {
-        std::cerr << "TMX <tileset> is missing <image> attribute" << std::endl;
-        return "";
-    }
-
-    const char* sourceAttr = texture->Attribute("source");
-    if (!sourceAttr) {
-        std::cerr << "TMX <tileset><image> is missing an image source attribute, unable to find tileset texture " << std::endl;
-    }
 
 
     // 1. Read Map Attributes
@@ -551,10 +498,7 @@ bool TileMap::importTMX(const std::filesystem::path& filename)
     this->MaxSizeWorld_F.x = static_cast<float>(root->IntAttribute("width")) * this->grid_sizeF.x;
     this->MaxSizeWorld_F.y = static_cast<float>(root->IntAttribute("height")) * this->grid_sizeF.y;
 
-    if(!this->tileTextureSheet.loadFromFile((std::filesystem::weakly_canonical(sourceAttr).string())))
-    {
-        std::cerr << "unable to load tmx tileset texture" << std::endl;
-    };
+
 
     int layerCount = 0;
     for (tinyxml2::XMLElement* e = root->FirstChildElement("layer"); e != nullptr; e = e->NextSiblingElement("layer")) {
@@ -609,10 +553,9 @@ bool TileMap::importTMX(const std::filesystem::path& filename)
                 if (item.empty()) continue;
                 int x = tileCounter % this->MaxSizeWorldGrid.x;
                 int y = tileCounter / this->MaxSizeWorldGrid.x;
-                std::cout << "item" << std::endl;
 
                 int gid = std::stoi(item);
-                std::cout << "adding tile " << gid << std::endl;
+
                 if (gid != 0) {
                     // Create your tile instance (or fetch it from a tileset resource manager)
                     //Tile* newTile = new Tile(gid);
@@ -630,6 +573,69 @@ bool TileMap::importTMX(const std::filesystem::path& filename)
     }
 
      return true;
+}
+
+bool TileMap::loadTileset(const std::filesystem::path& tileset)
+{
+  tinyxml2::XMLDocument doc;
+  if (doc.LoadFile(tileset.c_str()) != tinyxml2::XML_SUCCESS) {
+    std::cerr << "Failed to open TSX file: " << tileset << std::endl;
+    return false;
+  }
+
+  tinyxml2::XMLElement* tilesetElement = doc.RootElement();
+  if (!tilesetElement) return false;
+
+  //iter through tileset data, register tiles with collision special properties etc
+  tinyxml2::XMLElement* tile_ID = tilesetElement->FirstChildElement("tile");
+
+  while(tile_ID)
+  {
+    tinyxml2::XMLElement* tileproperties = tile_ID->FirstChildElement("properties");
+    tinyxml2::XMLElement* property = tileproperties->FirstChildElement("property");
+    while(property){
+
+      std::string property_name = property->Attribute("name");
+
+      // TD: save individual tile properties, attach them to the tile ID in an std::map
+      // could also be a switch statement to handle cases where property_name == value
+      if(property_name.empty())
+      {
+        continue;
+      }
+      else if (property_name == "collision")
+      {
+
+        bool collision = tileproperties->BoolAttribute("value");
+        //int tileid = tile_ID->IntAttribute("ID");
+        this->collisionGIDRegister[tile_ID->IntAttribute("ID")] = collision;
+      }
+      else
+      {
+        //no property name, no need to waste cycles here
+        property = property->NextSiblingElement();
+      }
+      property = property->NextSiblingElement();
+    }
+    tile_ID = tile_ID->NextSiblingElement();
+  }
+  tinyxml2::XMLElement* texture = tilesetElement->FirstChildElement("image");
+  if (!texture) {
+    std::cerr << "TMX <tileset> is missing <image> attribute" << std::endl;
+    return "";
+  }
+
+  const char* sourceAttr = texture->Attribute("source");
+  if (!sourceAttr) {
+    std::cerr << "TMX <tileset><image> is missing an image source attribute, unable to find tileset texture " << std::endl;
+  }
+
+  if(!this->tileTextureSheet.loadFromFile((std::filesystem::weakly_canonical(sourceAttr).string())))
+  {
+    std::cerr << "unable to load tmx tileset texture" << std::endl;
+    return false;
+  };
+  return true;
 }
 sf::IntRect TileMap::calcTileRect(const int& gid, sf::Vector2i tileSize)
 {

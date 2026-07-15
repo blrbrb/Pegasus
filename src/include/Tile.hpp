@@ -55,23 +55,10 @@ protected:
     short type;
     short object_type;
     unsigned gid;
+    bool collison_enabled;
 
 public:
     Tile ( sf::Texture* texture = nullptr );
-    /**
-     * @brief tile constructor
-     *
-     * @param type p_type: TileType enum val
-     * @param x p_x: the horizontal on screen pixel coordinate
-     * @param y p_y: the vertical on screen pixel coordinate
-     * @param gridsizeF p_gridsizeF: the size of an individual tile on the tilemap (grid size)
-     * @param texture p_texture: the texture sheet to source the tiles from
-     * @param textureRect p_textureRect: the tile's texture rectangle within the current texture sheet
-     * @param collisionEnabled p_collisionEnabled: should this tile have collision?
-     */
-
-
-
     /////////////////////////////////////////////////
     /// \brief
     ///
@@ -182,7 +169,7 @@ public:
     virtual void update ( const float& dt ) = 0;
     virtual void render ( sf::RenderTarget& target, sf::Shader* shader = nullptr, sf::Vector2f LightPosition = sf::Vector2f() ) = 0;
 
-    bool collison_enabled;
+
 };
 
 #endif /* Tile_hpp */

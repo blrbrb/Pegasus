@@ -23,6 +23,8 @@ Player::Player(float x, float y, sf::Texture& textureSheet)
 
 Player::~Player() = default;
 
+
+
 Player::Player(const std::string& save_file, sf::Texture& textureSheet)
     : Entity(textureSheet)
 {
@@ -53,8 +55,8 @@ void Player::initAnimations()
    // this->animationcomponet->add_animation("WALK_LEFT", 5.f, 0, 0, 15, 0, 62, 74);
     //this->animationcomponet->add_animation("WALK_DOWN", 5.f, 0, 0, 15, 0, 62, 74);
 
-      this->animationcomponet->add_animation("WALK_LEFT", 5.f, 0, 0, 15, 0, 39, 57);
-       this->animationcomponet->add_animation("WALK_RIGHT", 5.f, 0, 1, 15, 0, 39, 57);
+      this->animationcomponet->add_animation("WALK_LEFT", 5.f, 0, 0, 15, 0, 42, 54);
+       this->animationcomponet->add_animation("WALK_RIGHT", 5.f, 0, 1, 15, 0, 42, 54);
     //this->animationcomponet->add_animation("WALK_UP", 5.f, 0, 3, 2, 3, 62, 74);
 
 

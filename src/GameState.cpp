@@ -16,7 +16,7 @@ GameState::GameState(StateData* state_data)
 
         this->initview();
         this->initdeferedrender();
-        this->initkeybinds();
+
         this->initfonts();
         this->initpausemenu();
         this->initTileMap();
@@ -143,17 +143,12 @@ void GameState::initkeybinds()
 void GameState::inittextures()
 {
 
-    if (!this->textures["PLAYER_SHEET"].loadFromFile(std::filesystem::path("Resources/Assets/Entity/PlayerSheets/test.png"))) {
+    if (!this->textures["PLAYER_SHEET"].loadFromMemory(placeholder_png, placeholder_png_len)) {
        // LOG(WARNING) << "std::optional<sf::Texture> could not find whatever";
-
         throw std::runtime_error("ERROR Could not load Player Sheet texture GameState lin 168");
     }
 
-    if (!this->textures["ENEMY_SHEET"].loadFromFile("Resources/Assets/Entity/EnemySheets/Blrb.png")) {
-        // LOG(WARNING) << "unable to load default enemy spritesheet/s Resources/Assets/Entity/EnemySheets/Blrb.png";
 
-        throw std::runtime_error("ERROR Could Not load Enemy Sheet textures GameState lin 175");
-    }
 }
 
 void GameState::initfonts()
@@ -198,9 +193,9 @@ void GameState::initpausemenu()
 
 void GameState::initTileMap()
 {
-    this->Tilemap = new TileMap(this->state_data->gridSize, 100, 100, "Resources/Assets/Tiles/sheet.png");
+    this->Tilemap = new TileMap(std::filesystem::path("my-island.tmx"));
 
-    this->Tilemap->importTMX("my-island.tmx");
+    //this->Tilemap->importTMX("my-island.tmx");
 
     std::cout << "init gamestate tilemap" << std::endl;
 }
@@ -240,7 +235,7 @@ void GameState::update(const float& dt)
 
 void GameState::updateInput(const float& dt)
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("CLOSE"))) && this->getKeyTime()) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape) && this->getKeyTime()) {
         if (!this->paused)
             this->pause();
         else
@@ -433,33 +428,28 @@ void GameState::updatePlayerInput(const float& dt)
 {
     // check for a quit
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("MOVE_RIGHT")))) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
         this->player->move(dt, 1.f, 0.f);
-        // this->log << "RIGHT" << std::endl;
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("MOVE_LEFT")))) {
-
-        this->player->move(dt, -1.f, 0.f);
         // this->log << "LEFT" << std::endl;
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("MOVE_UP")))) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+
+        this->player->move(dt, -1.f, 0.f);
+        // this->log << "RIGHT" << std::endl;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
         this->player->move(dt, 0.f, -1.f);
         // this->log << "UP" << std::endl;
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBinds.at("MOVE_DOWN")))) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
 
         this->player->move(dt, 0.f, 1.f);
         // this->log << "DOWN" << std::endl;
     }
 
-    // hide the player's inventory
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl) && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-        this->player->saveToFile("Data/new_pony.json");
-    }
 }
 
 void GameState::render(sf::RenderTarget* target)
@@ -476,19 +466,14 @@ void GameState::render(sf::RenderTarget* target)
 
 
     this->Tilemap->render(*this->rendertexture, this->view, this->ViewGridPosition, false);
-    // this->Tilemap->render()
-    // this->Tilemap->renderlighttile(this->renderTexture, &this->core_shader);
 
-    // target->mapPixelToCoords(static_cast<sf::Vector2i>(this->player->getCenter()));
     this->Tilemap->defferedRender(*this->rendertexture);
 
     this->player->render(*this->rendertexture);
     this->rendertexture->setView(this->rendertexture->getDefaultView());
 
     this->renderMapEditor(this->rendertexture);
-    //this->test_button->render(*this->rendertexture);
-    // the dialouge system needs to be rendered with the view set to the PlayerGUI's view, that way attached dialouge will fill the screen correctly.
-    // this->dialougeSystem->render(this->renderTexture);
+
 
     if (this->paused) {
         this->rendertexture->setView(this->rendertexture->getDefaultView());

@@ -23,8 +23,6 @@ Tile::Tile(short type, float x, float y, sf::Vector2f gridsizeF, sf::Texture& te
 
     this->type = type;
 
-
-
     this->calcGid(texturerect.position,texturerect.size,texture.getSize());
 
     this->object_type = object_type;

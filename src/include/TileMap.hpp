@@ -21,14 +21,27 @@
 class EnemySpawner;
 class Tile;
 class NormalTile;
-
 class Entity;
+
 /////////////////////////////////////////////////
 /// \brief tilemap
 /////////////////////////////////////////////////
-
 class TileMap {
 private:
+
+  /////////////////////////////////////////////////
+  /// \brief helper container for loading tiles from tiled .tsx tileset definitions
+  /////////////////////////////////////////////////
+  class tiledata
+  {
+  public:
+    tiledata(unsigned gid,sf::IntRect texture_rect, bool collision) : gid(gid){}
+  private:
+    sf::IntRect texture_rect;
+    unsigned gid;
+    bool collision;
+    std::map<unsigned, tiledata*> tiles;
+  };
 
     int layers;
     sf::Vector2i gridsizeI;
@@ -60,9 +73,12 @@ private:
     //unimplemented
     std::map<std::string, sf::Vector2i> geometry;
 
-    //for saving tile collision prop reading from .tmx files
-    //TD find a better way to do this
+    //std::map<unsigned, sf::IntRect> tileset;
+
+    //to quickly access tile property definitions by gid
     std::map<int, bool> collisionGIDRegister;
+    // to access tile property definitions loaded from the tiled .tsx file
+    std::map<unsigned, tiledata> tileRegister;
     /////////////////////////////////////////////////
     /// \brief erase all data
     ///
@@ -98,12 +114,7 @@ public:
     TileMap ( sf::Vector2f gridSize, int width, int height, std::string texture_file );
 
 
-    /////////////////////////////////////////////////
-    /// \brief load tile data from a plaintext file
-    /// \deprecated
-    /// \param map_file any object resolvable to std::filesystem::path
-    /////////////////////////////////////////////////
-    TileMap(const std::string map_file);
+    TileMap (const std::filesystem::path& tilemap);
 
     TileMap();
     virtual ~TileMap();
@@ -219,9 +230,6 @@ public:
    sf::IntRect calcTileRect ( const int& gid, sf::Vector2i tileSize );
 
 
-
-
-
   /////////////////////////////////////////////////
   /// \brief remove a tile at position x,y, layer z
   /// \param x tilemap grid X position const int
@@ -244,7 +252,8 @@ public:
   //
   bool saveToFile ( const std::string& filename );
 
-   /////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////
    /// \brief write the tilemap in csv format to a .tmx file
    /// compatible with tiled
    /// \param filename anything resolvable to const std::filesystem::path&
@@ -254,6 +263,7 @@ public:
    bool exportTMX ( const std::filesystem::path& filename );
    bool importTMX ( const std::filesystem::path& filename );
 
+   bool loadTileset (const std::filesystem::path& tileset);
 
    /////////////////////////////////////////////////
    /// \brief load the tilemap from plaintext
